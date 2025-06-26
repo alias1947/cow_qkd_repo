@@ -17,7 +17,7 @@ function App() {
 
   return (
     <div style={{ padding: 32 }}>
-      <h1>QKD Simulator</h1>
+      <h1>QKD Simulator - IISERB</h1>
       <QKDForm onSimulate={handleSimulate} />
       {params && <QKDNetwork protocol={params.protocol} />}
       {results && <Results results={results} />}

@@ -2,14 +2,21 @@ import React, { useState } from "react";
 
 export default function QKDForm({ onSimulate }) {
   const [protocol, setProtocol] = useState("dps");
-  const [num_pulses, setNumPulses] = useState(5000);
-  const [distance_km, setDistanceKm] = useState(25);
-  const [mu, setMu] = useState(0.18);
+  const [num_pulses, setNumPulses] = useState(10000);
+  const [distance_km, setDistanceKm] = useState(10);
+  const [mu, setMu] = useState(0.20);
   const [detector_efficiency, setDetectorEfficiency] = useState(0.9);
   const [dark_count_rate, setDarkCountRate] = useState(1e-8);
   const [pulse_repetition_rate, setPulseRepetitionRate] = useState(1);
   const [cow_monitor_pulse_ratio, setCowMonitorPulseRatio] = useState(0.1);
   const [cow_detection_threshold_photons, setCowDetectionThresholdPhotons] = useState(0);
+  const [phase_flip_prob, setPhaseFlipProb] = useState(0.05);
+  
+  // Fiber selection parameters with default values
+  const [fiber_length_km, setFiberLengthKm] = useState(10);
+  const [fiber_attenuation_db_per_km, setFiberAttenuationDbPerKm] = useState(0.2);
+  const [wavelength_nm, setwavelength_nm]=useState(1550)
+  const [fiber_type, setFiberType] = useState("standard_single_mode");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,6 +30,13 @@ export default function QKDForm({ onSimulate }) {
       pulse_repetition_rate: Number(pulse_repetition_rate),
       cow_monitor_pulse_ratio: Number(cow_monitor_pulse_ratio),
       cow_detection_threshold_photons: Number(cow_detection_threshold_photons),
+      // Fiber parameters
+      fiber_length_km: Number(fiber_length_km),
+      fiber_attenuation_db_per_km: Number(fiber_attenuation_db_per_km),
+      wavelength_nm: Number(wavelength_nm),
+      fiber_type: fiber_type,
+      // Phase flip noise
+      phase_flip_prob: Number(phase_flip_prob),
     });
   };
 
@@ -39,10 +53,10 @@ export default function QKDForm({ onSimulate }) {
         Pulses:
         <input type="number" value={num_pulses} onChange={e => setNumPulses(e.target.value)} />
       </label>
-      <label>
+      {/* <label>
         Distance (km):
         <input type="number" value={distance_km} onChange={e => setDistanceKm(e.target.value)} />
-      </label>
+      </label> */}
       <label>
         Mu:
         <input type="number" step="0.01" value={mu} onChange={e => setMu(e.target.value)} />
@@ -59,6 +73,48 @@ export default function QKDForm({ onSimulate }) {
         Pulse Repetition Rate (ns):
         <input type="number" value={pulse_repetition_rate} onChange={e => setPulseRepetitionRate(e.target.value)} />
       </label>
+      
+      {/* Fiber Selection Section */}
+      <div style={{ border: '1px solid #ccc', padding: '10px', margin: '10px 0', borderRadius: '5px' }}>
+        <h3>Fiber Configuration</h3>
+        <label>
+          Fiber Length (km):
+          <input 
+            type="number" 
+            step="0.1" 
+            value={fiber_length_km} 
+            onChange={e => setFiberLengthKm(e.target.value)} 
+          />
+        </label>
+        <label>
+          Wavelength (nm):
+          <input 
+            type="number" 
+            step="1" 
+            value={wavelength_nm} 
+            onChange={e => setwavelength_nm(e.target.value)} 
+          />
+        </label>
+        <label>
+          Fiber Attenuation (dB/km):
+          <input 
+            type="number" 
+            step="0.01" 
+            value={fiber_attenuation_db_per_km} 
+            onChange={e => setFiberAttenuationDbPerKm(e.target.value)} 
+          />
+        </label>
+        <label>
+          Fiber Type:
+          <select value={fiber_type} onChange={e => setFiberType(e.target.value)}>
+            <option value="standard_single_mode">SMF-28</option>
+            <option value="dispersion_shifted">Dispersion Shifted</option>
+            <option value="non_zero_dispersion_shifted">Non-Zero Dispersion Shifted</option>
+            <option value="photonic_crystal">Photonic Crystal Fiber</option>
+          </select>
+        </label>
+      </div>
+      
       {protocol === "cow" && (
         <>
           <label>
@@ -71,6 +127,10 @@ export default function QKDForm({ onSimulate }) {
           </label>
         </>
       )}
+      <label>
+        Phase Flip Probability (0-1):
+        <input type="number" step="0.001" min="0" max="1" value={phase_flip_prob} onChange={e => setPhaseFlipProb(e.target.value)} />
+      </label>
       <button type="submit">Run Simulation</button>
     </form>
   );

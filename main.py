@@ -4,28 +4,36 @@
 from Network import Network
 
 import math # Still used for QBER calculation, even if not formal post-processing
+import random
 
-def calculate_qber(alice_sifted_key, bob_sifted_key):
+def calculate_qber(alice_sifted_key, bob_sifted_key, dr=0.10, seed=None):
     """
-    Calculates the Quantum Bit Error Rate (QBER) between Alice's and Bob's sifted keys.
-    Assumes keys are aligned (same length, same order).
+    Calculates the QBER using a random sample (disclose rate, DR) of the sifted key.
+    Only a fraction (DR) of the key is publicly compared for QBER estimation.
     """
     if len(alice_sifted_key) != len(bob_sifted_key):
-        # This shouldn't happen with correct sifting, but good to check
         raise ValueError("Sifted keys must be of the same length to calculate QBER.")
 
-    if not alice_sifted_key: # Handle empty keys
+    key_length = len(alice_sifted_key)
+    if key_length == 0:
         return 0.0, 0
 
+    sample_size = max(1, int(dr * key_length))
+    indices = list(range(key_length))
+    if seed is not None:
+        random.seed(seed)
+    sample_indices = random.sample(indices, sample_size)
+
     num_errors = 0
-    for i in range(len(alice_sifted_key)):
-        if alice_sifted_key[i] != bob_sifted_key[i]:
+    for idx in sample_indices:
+        print("sample index")
+        if alice_sifted_key[idx] != bob_sifted_key[idx]:
             num_errors += 1
-    
-    qber = num_errors / len(alice_sifted_key)
+
+    qber = num_errors / sample_size
     return qber, num_errors
 
-def postprocessing(raw_key_length, qber, dr=0.03, error_correction_efficiency=1.2, privacy_amplification_ratio=0.5):
+def postprocessing(raw_key_length, qber, dr=0.10, error_correction_efficiency=1.2, privacy_amplification_ratio=0.5):
     """
     Simulates postprocessing as described in QKD theory:
     - Parameter estimation: uses a fraction DR of the key for QBER estimation
@@ -106,6 +114,13 @@ def run_point_to_point_simulation(num_pulses_per_link=10000, distance_km=20, mu=
     else:
         print("Raw Sifted Key Rate (bits/second): N/A (too few pulses)")
         
+    # --- Secure Key Rates ---
+    if total_time_s > 0:
+        secure_key_rate_bps = final_key_len / total_time_s
+        print(f"Secure Key Rate (bits/second): {secure_key_rate_bps:.2f} bps")
+    else:
+        print("Secure Key Rate (bits/second): N/A")
+  
     return final_key_len, qber
 
 def run_multi_node_trusted_relay_simulation(num_pulses_per_link=10000, link_distance_km=10, num_relays=1,
@@ -225,6 +240,19 @@ def run_point_to_point_cow_simulation(num_pulses_per_link=10000, distance_km=20,
     else:
         print("COW Sifted Key Rate (bits/second): N/A (too few pulses)")
         
+    # --- Secure Key Rates ---
+    if total_time_s > 0:
+        secure_key_rate_bps = final_key_len / total_time_s
+        print(f"Secure Key Rate (bits/second): {secure_key_rate_bps:.2f} bps")
+    else:
+        print("Secure Key Rate (bits/second): N/A")
+
+    if num_pulses_per_link > 0:
+        secure_key_rate_per_pulse = final_key_len / num_pulses_per_link
+        print(f"Secure Key Rate (bits/pulse): {secure_key_rate_per_pulse:.4f}")
+    else:
+        print("Secure Key Rate (bits/pulse): N/A")
+
     # TODO: Could add multi-node COW simulation example later
     return final_key_len, qber_cow
 

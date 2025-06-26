@@ -77,8 +77,9 @@ export default function Results({ results }) {
               <div>
                 <div><b>Sifted Key Length:</b> {results.sifted_key_length}</div>
                 <div><b>QBER:</b> {formatPercent(results.qber)}</div>
-                <div><b>Errors:</b> {results.num_errors}</div>
-                <div><b>Final Key Length:</b> {results.final_key_length}</div>
+                {/* <div><b>Errors:</b> {results.num_errors}</div> */}
+                <div><b>Secret Key Length:</b> {results.final_key_length}</div>
+                <div><b>Secure Key Rate (bps):</b> {results.secure_key_rate_bps ? results.secure_key_rate_bps.toFixed(2) : 'N/A'}</div>
               </div>
               <div style={{ 
                 padding: 12, 
@@ -90,6 +91,33 @@ export default function Results({ results }) {
               </div>
             </div>
           </div>
+
+          {/* Fiber Information Section */}
+          {results.fiber_type && (
+            <div style={{ 
+              padding: 16, 
+              backgroundColor: "#e3f2fd", 
+              borderRadius: 4, 
+              marginBottom: 16,
+              border: "1px solid #bbdefb"
+            }}>
+              <h3 style={{ marginTop: 0, color: "#1976d2" }}>Fiber Configuration</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+                <div>
+                  <div><b>Fiber Type:</b> {results.fiber_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+                  <div><b>Length:</b> {results.distance_km} km</div>
+                  <div><b>Wavelength:</b> {results.wavelength_nm} nm</div>
+                </div>
+                <div>
+                  <div><b>Attenuation:</b> {results.fiber_attenuation_db_per_km} dB/km</div>
+                  <div><b>Total Loss:</b> {(results.distance_km * results.fiber_attenuation_db_per_km).toFixed(2)} dB</div>
+                </div>
+                <div>
+                  <div><b>Transmission:</b> {formatPercent(Math.pow(10, -(results.distance_km * results.fiber_attenuation_db_per_km) / 10))}</div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {results.postprocessing && (
             <div style={{ marginTop: 16 }}>

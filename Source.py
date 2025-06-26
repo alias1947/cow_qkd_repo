@@ -76,7 +76,6 @@ class Sender:
                 return pulse_info
         return None
     
-
 class SenderCOW:
     def __init__(self, avg_photon_number=0.2, monitor_pulse_ratio=0.1):
         self.light_source = LightSource(avg_photon_number)
