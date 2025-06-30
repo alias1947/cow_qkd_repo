@@ -17,6 +17,7 @@ export default function QKDForm({ onSimulate }) {
   const [fiber_attenuation_db_per_km, setFiberAttenuationDbPerKm] = useState(0.2);
   const [wavelength_nm, setwavelength_nm]=useState(1550)
   const [fiber_type, setFiberType] = useState("standard_single_mode");
+  const [cow_extinction_ratio_db, setCowExtinctionRatioDb] = useState(20);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,6 +31,7 @@ export default function QKDForm({ onSimulate }) {
       pulse_repetition_rate: Number(pulse_repetition_rate),
       cow_monitor_pulse_ratio: Number(cow_monitor_pulse_ratio),
       cow_detection_threshold_photons: Number(cow_detection_threshold_photons),
+      cow_extinction_ratio_db: Number(cow_extinction_ratio_db),
       // Fiber parameters
       fiber_length_km: Number(fiber_length_km),
       fiber_attenuation_db_per_km: Number(fiber_attenuation_db_per_km),
@@ -121,10 +123,14 @@ export default function QKDForm({ onSimulate }) {
             COW Monitor Pulse Ratio:
             <input type="number" step="0.01" value={cow_monitor_pulse_ratio} onChange={e => setCowMonitorPulseRatio(e.target.value)} />
           </label>
-          <label>
-            COW Detection Threshold Photons:
+          <div className="form-group">
+            <label>COW Detection Threshold (Photons)</label>
             <input type="number" value={cow_detection_threshold_photons} onChange={e => setCowDetectionThresholdPhotons(e.target.value)} />
-          </label>
+          </div>
+          <div className="form-group">
+            <label>COW Extinction Ratio (dB)</label>
+            <input type="number" value={cow_extinction_ratio_db} onChange={e => setCowExtinctionRatioDb(e.target.value)} />
+          </div>
         </>
       )}
       <label>

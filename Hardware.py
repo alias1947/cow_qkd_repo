@@ -168,7 +168,7 @@ class ReceiverCOW:
         bob_inferred_bit = None # Initialize to None for inconclusive cases
         is_monitoring_click = False
 
-        if pulse_type == 'data':
+        if pulse_type.startswith('data'):
             # Simple COW logic: if the detector clicks, Bob infers a '1'. No click means '0'.
             # Errors (dark counts on a '0' slot, or photon loss on a '1' slot) are handled this way.
             if click:

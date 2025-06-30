@@ -5,14 +5,19 @@ export default function Results({ results }) {
   if (results.error) return <div style={{ color: "red" }}>{results.error}</div>;
 
   // Helper to format key as string
-  const formatKey = (key) =>
-    Array.isArray(key) ? key.slice(0, 100).join("") + (key.length > 100 ? "..." : "") : String(key);
+  const formatKey = (key) => {
+    if (!key) return "N/A (no key generated or returned)";
+    return Array.isArray(key) ? key.slice(0, 100).join("") + (key.length > 100 ? "..." : "") : String(key);
+  };
 
   // Helper to format percentage
   const formatPercent = (value) => (value * 100).toFixed(2) + "%";
 
   // Helper to format scientific notation
-  const formatScientific = (value) => value.toExponential(2);
+  const formatScientific = (value) => {
+    if (value === undefined || value === null) return 'N/A';
+    return value.toExponential(2);
+  };
 
   return (
     <div style={{ border: "1px solid #ccc", padding: 16, borderRadius: 8, backgroundColor: "#fff" }}>

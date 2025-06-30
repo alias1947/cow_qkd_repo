@@ -10,9 +10,11 @@ class LightSource:
             raise ValueError("Average photon number (mu) for WCP should be between 0 and 1.")
         self.mu = average_photon_number 
 
-    def generate_single_pulse_photon_count(self):
+    def generate_single_pulse_photon_count(self, mu=None):
+        if mu is None:
+            mu = self.mu
         num_photons = 0
-        L = math.exp(-self.mu)
+        L = math.exp(-mu)
         p = 1.0
         k = 0
         while p > L:
@@ -29,6 +31,31 @@ class PhaseModulator:
     
     def modulate_phase(self, current_phase, desired_phase_shift):
         return (current_phase + desired_phase_shift) % (2 * math.pi)
+
+class IntensityModulator:
+    """
+    Models an intensity modulator with a finite extinction ratio.
+    The extinction ratio is the ratio of maximum power (on) to minimum power (off).
+    """
+    def __init__(self, extinction_ratio_db=20.0):
+        if extinction_ratio_db <= 0:
+            raise ValueError("Extinction ratio must be a positive value in dB.")
+        self.extinction_ratio_db = extinction_ratio_db
+        # Convert dB to a linear ratio
+        self.extinction_ratio_linear = 10**(self.extinction_ratio_db / 10)
+
+    def modulate(self, base_mu, state):
+        """
+        Modulates the intensity of the light source.
+        Returns the effective average photon number (mu) for the given state.
+        """
+        if state == 'on':
+            return base_mu
+        elif state == 'off':
+            # For the 'off' state, mu is reduced by the extinction ratio
+            return base_mu / self.extinction_ratio_linear
+        else:
+            raise ValueError("Modulator state must be 'on' or 'off'")
 
 class Sender:
    
@@ -77,72 +104,99 @@ class Sender:
         return None
     
 class SenderCOW:
-    def __init__(self, avg_photon_number=0.2, monitor_pulse_ratio=0.1):
+    def __init__(self, avg_photon_number=0.2, monitor_pulse_ratio=0.1, extinction_ratio_db=20.0):
+        """
+        COW sender: prepares pulse pairs as per protocol.
+        - Data pairs: |0⟩|α⟩ (bit 0), |α⟩|0⟩ (bit 1), each with probability (1-f)/2
+        - Decoy/monitor pairs: |α⟩|α⟩, with probability f
+        - mu (avg_photon_number) must be < 1
+        """
+        if not (0 < avg_photon_number < 1):
+            raise ValueError("Average photon number (mu) for COW should be between 0 and 1.")
         self.light_source = LightSource(avg_photon_number)
         self.phase_modulator = PhaseModulator() # Not typically used for COW data encoding, but kept for consistency
+        self.intensity_modulator = IntensityModulator(extinction_ratio_db)
         self.mu = avg_photon_number
-        self.raw_key_bits = []  # Alice's chosen bits (for data pulses only)
+        self.raw_key_bits = []  # Alice's chosen bits (for data pairs only)
         self.sent_pulses_info = [] # Info about what was actually sent
         self.data_phase = 0.0 # Fixed phase for COW data pulses ('1') and monitoring pulses
-        self.monitor_pulse_ratio = monitor_pulse_ratio # Fraction of pulses used for monitoring pairs
+        self.monitor_pulse_ratio = monitor_pulse_ratio # f: Fraction of pairs used for monitoring/decoy
 
     def prepare_pulse_train(self, num_total_pulses):
+        """
+        Prepares a sequence of pulse pairs for COW protocol.
+        Each pair is either:
+        - Data: |0⟩|α⟩ (bit 0) or |α⟩|0⟩ (bit 1), each with probability (1-f)/2
+        - Decoy: |α⟩|α⟩, with probability f
+        Returns a flat list of pulses (dicts) with time_slot, photon_count, phase, intended_bit, pulse_type.
+        """
         self.raw_key_bits = []
         self.sent_pulses_info = []
-        
-        pulse_type_sequence = ['data'] * num_total_pulses # Initialize all as data
-        num_monitor_pairs = int(num_total_pulses * self.monitor_pulse_ratio / 2)
-        
-        # Ensure we don't try to place more monitor pairs than available slots
-        # A monitor pair needs two consecutive slots.
-        num_monitor_pairs = min(num_monitor_pairs, (num_total_pulses - 1) // 2)
-
-        available_start_indices = list(range(num_total_pulses - 1)) # Indices where a pair can start (i and i+1)
-        random.shuffle(available_start_indices)
-        
-        placed_monitor_pairs = 0
-        occupied_indices = set() # To ensure no overlap between monitor pairs or data pulses overwritten
-
-        for i in available_start_indices:
-            if placed_monitor_pairs < num_monitor_pairs:
-                # Check if current index and next index are free
-                if i not in occupied_indices and (i + 1) not in occupied_indices:
-                    pulse_type_sequence[i] = 'monitor_first'
-                    pulse_type_sequence[i+1] = 'monitor_second'
-                    occupied_indices.add(i)
-                    occupied_indices.add(i+1)
-                    placed_monitor_pairs += 1
+        f = self.monitor_pulse_ratio
+        num_pairs = num_total_pulses // 2
+        time_slot = 0
+        mu_on = self.intensity_modulator.modulate(self.mu, 'on')
+        mu_off = self.intensity_modulator.modulate(self.mu, 'off')
+        for _ in range(num_pairs):
+            r = random.random()
+            if r < f:
+                # Decoy/monitor pair: |α⟩|α⟩
+                self.sent_pulses_info.append({
+                    'time_slot': time_slot,
+                    'photon_count': self.light_source.generate_single_pulse_photon_count(mu_on),
+                    'phase': self.data_phase,
+                    'intended_bit': None,
+                    'pulse_type': 'monitor_first'
+                })
+                time_slot += 1
+                self.sent_pulses_info.append({
+                    'time_slot': time_slot,
+                    'photon_count': self.light_source.generate_single_pulse_photon_count(mu_on),
+                    'phase': self.data_phase,
+                    'intended_bit': None,
+                    'pulse_type': 'monitor_second'
+                })
+                time_slot += 1
             else:
-                break
-        
-        for i in range(num_total_pulses):
-            time_slot = i 
-            pulse_type = pulse_type_sequence[i]
-            
-            photon_count = 0
-            intended_bit = None # Only for data pulses, None for monitoring pulses
-            
-            if pulse_type == 'data':
-                current_secret_bit = random.randint(0, 1) # Alice's choice for data bit
-                self.raw_key_bits.append(current_secret_bit) # Store Alice's intended key bit
-                intended_bit = current_secret_bit
-                if current_secret_bit == 1: # Send a pulse for '1'
-                    photon_count = self.light_source.generate_single_pulse_photon_count()
-                else: # Send vacuum for '0'
-                    photon_count = 0
-            
-            elif pulse_type == 'monitor_first' or pulse_type == 'monitor_second':
-                # Monitoring pulses are always coherent pulses (non-vacuum)
-                photon_count = self.light_source.generate_single_pulse_photon_count()
-                intended_bit = None # Monitoring pulses don't encode key bits
-
-            self.sent_pulses_info.append({
-                'time_slot': time_slot,
-                'photon_count': photon_count,
-                'phase': self.data_phase, # Fixed phase for COW pulses (intensity-encoded)
-                'intended_bit': intended_bit, # Alice's bit for data pulses (None for monitor)
-                'pulse_type': pulse_type # 'data', 'monitor_first', 'monitor_second'
-            })
+                # Data pair: randomly choose bit 0 or 1
+                bit = random.randint(0, 1)
+                self.raw_key_bits.append(bit)
+                if bit == 0:
+                    # |0⟩|α⟩
+                    self.sent_pulses_info.append({
+                        'time_slot': time_slot,
+                        'photon_count': self.light_source.generate_single_pulse_photon_count(mu_off),
+                        'phase': self.data_phase,
+                        'intended_bit': bit,
+                        'pulse_type': 'data_first'
+                    })
+                    time_slot += 1
+                    self.sent_pulses_info.append({
+                        'time_slot': time_slot,
+                        'photon_count': self.light_source.generate_single_pulse_photon_count(mu_on),
+                        'phase': self.data_phase,
+                        'intended_bit': bit,
+                        'pulse_type': 'data_second'
+                    })
+                    time_slot += 1
+                else:
+                    # |α⟩|0⟩
+                    self.sent_pulses_info.append({
+                        'time_slot': time_slot,
+                        'photon_count': self.light_source.generate_single_pulse_photon_count(mu_on),
+                        'phase': self.data_phase,
+                        'intended_bit': bit,
+                        'pulse_type': 'data_first'
+                    })
+                    time_slot += 1
+                    self.sent_pulses_info.append({
+                        'time_slot': time_slot,
+                        'photon_count': self.light_source.generate_single_pulse_photon_count(mu_off),
+                        'phase': self.data_phase,
+                        'intended_bit': bit,
+                        'pulse_type': 'data_second'
+                    })
+                    time_slot += 1
         return self.sent_pulses_info
 
     def get_sent_pulse_info(self, time_slot):

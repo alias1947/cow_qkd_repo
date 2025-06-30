@@ -26,7 +26,7 @@ def calculate_qber(alice_sifted_key, bob_sifted_key, dr=0.10, seed=None):
 
     num_errors = 0
     for idx in sample_indices:
-        print("sample index")
+        # print("sample index")
         if alice_sifted_key[idx] != bob_sifted_key[idx]:
             num_errors += 1
 
@@ -186,7 +186,7 @@ def run_multi_node_trusted_relay_simulation(num_pulses_per_link=10000, link_dist
 def run_point_to_point_cow_simulation(num_pulses_per_link=10000, distance_km=20, mu=0.1,
                                       detector_efficiency=0.9, dark_count_rate_per_ns=1e-7,
                                       pulse_repetition_rate_ns=1, cow_monitor_pulse_ratio=0.1,
-                                      cow_detection_threshold_photons=0):
+                                      cow_detection_threshold_photons=0, cow_extinction_ratio_db=20.0):
     """
     Runs a single point-to-point COW-QKD simulation and prints key metrics, including theory-relevant postprocessing.
     QBER should be in the range 3-10% for practical QKD. Prints a warning if outside this range.
@@ -197,7 +197,8 @@ def run_point_to_point_cow_simulation(num_pulses_per_link=10000, distance_km=20,
     # Pass COW specific parameters when adding nodes for COW simulation
     node_alice = temp_network.add_node('Alice', avg_photon_number=mu, 
                                        cow_monitor_pulse_ratio=cow_monitor_pulse_ratio,
-                                       cow_detection_threshold_photons=cow_detection_threshold_photons)
+                                       cow_detection_threshold_photons=cow_detection_threshold_photons,
+                                       cow_extinction_ratio_db=cow_extinction_ratio_db)
     node_bob = temp_network.add_node('Bob', detector_efficiency=detector_efficiency,
                                       dark_count_rate=dark_count_rate_per_ns,
                                       cow_monitor_pulse_ratio=cow_monitor_pulse_ratio, # Bob also needs these for receiver init
@@ -256,6 +257,9 @@ def run_point_to_point_cow_simulation(num_pulses_per_link=10000, distance_km=20,
     # TODO: Could add multi-node COW simulation example later
     return final_key_len, qber_cow
 
+def run_network_simulation_from_config(config_path):
+    # Implementation of run_network_simulation_from_config function
+    pass
 
 if __name__ == "__main__":
     # Common simulation parameters
@@ -307,7 +311,8 @@ if __name__ == "__main__":
         'dark_count_rate_per_ns': 1e-10,
         'pulse_repetition_rate_ns': 1,
         'cow_monitor_pulse_ratio': 0.2, # 20% of pulses for monitoring
-        'cow_detection_threshold_photons': 0 # Simplistic: any click is a potential '1' if detector is good
+        'cow_detection_threshold_photons': 0, # Simplistic: any click is a potential '1' if detector is good
+        'cow_extinction_ratio_db': 20.0 # Typical value for an intensity modulator
     }
     final_key_len_cow_ptp, qber_cow_ptp = run_point_to_point_cow_simulation(
         distance_km=20,
