@@ -11,15 +11,28 @@ function App() {
   const handleSimulate = async (formParams) => {
     setParams(formParams);
     setResults(null);
-    const res = await axios.post("http://localhost:8000/simulate", formParams);
-    setResults(res.data);
+    try {
+      console.log("Sending to backend:", formParams);
+      const res = await axios.post("http://localhost:8000/simulate", formParams);
+      console.log("Received from backend:", res.data);
+      // Ensure we are setting the array to the results state
+      if (res.data && Array.isArray(res.data.results)) {
+        setResults(res.data.results);
+      } else {
+        setResults([{ error: "Invalid response from server." }]);
+      }
+    } catch (error) {
+      console.error("Simulation request failed:", error);
+      const errorMsg = error.response ? JSON.stringify(error.response.data) : error.message;
+      setResults([{ error: `Request Failed: ${errorMsg}` }]);
+    }
   };
 
   return (
     <div style={{ padding: 32 }}>
       <h1>QKD Simulator - IISERB</h1>
       <QKDForm onSimulate={handleSimulate} />
-      {params && <QKDNetwork protocol={params.protocol} />}
+      {params && <QKDNetwork nodes={params.nodes} links={params.channels} protocol={params.protocol} />}
       {results && <Results results={results} />}
     </div>
   );

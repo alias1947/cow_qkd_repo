@@ -1,259 +1,124 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+// Helper to format key as string
+const formatKey = (key) => {
+  if (!key) return "N/A";
+  return Array.isArray(key) ? key.slice(0, 100).join("") + (key.length > 100 ? "..." : "") : String(key);
+};
+
+// Helper to format percentage
+const formatPercent = (value) => (value * 100).toFixed(2) + "%";
+
+// Helper for scientific notation
+const formatScientific = (value) => {
+    if (value === undefined || value === null) return 'N/A';
+    return value.toExponential(2);
+};
+
 
 export default function Results({ results }) {
   const [tab, setTab] = useState("summary");
-  if (results.error) return <div style={{ color: "red" }}>{results.error}</div>;
+  const [selectedChannelId, setSelectedChannelId] = useState(null);
 
-  // Helper to format key as string
-  const formatKey = (key) => {
-    if (!key) return "N/A (no key generated or returned)";
-    return Array.isArray(key) ? key.slice(0, 100).join("") + (key.length > 100 ? "..." : "") : String(key);
-  };
+  useEffect(() => {
+    if (results && results.length > 0) {
+      setSelectedChannelId(results[0].channel_id);
+    }
+  }, [results]);
 
-  // Helper to format percentage
-  const formatPercent = (value) => (value * 100).toFixed(2) + "%";
+  if (!results || results.length === 0) {
+    return <div style={{ color: "red" }}>No results to display.</div>;
+  }
+  if (results[0].error) return <div style={{ color: "red" }}>{results[0].error}</div>;
 
-  // Helper to format scientific notation
-  const formatScientific = (value) => {
-    if (value === undefined || value === null) return 'N/A';
-    return value.toExponential(2);
-  };
+  const selectedResult = results.find(r => r.channel_id === selectedChannelId);
 
   return (
     <div style={{ border: "1px solid #ccc", padding: 16, borderRadius: 8, backgroundColor: "#fff" }}>
       <h2>Simulation Results</h2>
       <div style={{ marginBottom: 16, borderBottom: "1px solid #eee", paddingBottom: 8 }}>
-        <button 
-          onClick={() => setTab("summary")} 
-          disabled={tab === "summary"}
-          style={{ 
-            padding: "8px 16px",
-            marginRight: 8,
-            backgroundColor: tab === "summary" ? "#007bff" : "#f8f9fa",
-            color: tab === "summary" ? "white" : "black",
-            border: "1px solid #dee2e6",
-            borderRadius: 4,
-            cursor: "pointer"
-          }}
-        >
-          Summary
-        </button>
-        <button 
-          onClick={() => setTab("keys")} 
-          disabled={tab === "keys"}
-          style={{ 
-            padding: "8px 16px",
-            marginRight: 8,
-            backgroundColor: tab === "keys" ? "#007bff" : "#f8f9fa",
-            color: tab === "keys" ? "white" : "black",
-            border: "1px solid #dee2e6",
-            borderRadius: 4,
-            cursor: "pointer"
-          }}
-        >
-          Key Comparison
-        </button>
-        <button 
-          onClick={() => setTab("theory")} 
-          disabled={tab === "theory"}
-          style={{ 
-            padding: "8px 16px",
-            backgroundColor: tab === "theory" ? "#007bff" : "#f8f9fa",
-            color: tab === "theory" ? "white" : "black",
-            border: "1px solid #dee2e6",
-            borderRadius: 4,
-            cursor: "pointer"
-          }}
-        >
-          Theory Details
-        </button>
+        <button onClick={() => setTab("summary")} disabled={tab === "summary"} style={{ marginRight: 8 }}>Summary</button>
+        <button onClick={() => setTab("keys")} disabled={tab === "keys"} style={{ marginRight: 8 }}>Key Comparison</button>
+        <button onClick={() => setTab("theory")} disabled={tab === "theory"}>Theory Details</button>
       </div>
 
+      {(tab === "keys" || tab === "theory") && (
+        <div style={{ marginBottom: 16 }}>
+          <label>Select Channel: 
+            <select value={selectedChannelId} onChange={e => setSelectedChannelId(Number(e.target.value))}>
+              {results.map(r => (
+                <option key={r.channel_id} value={r.channel_id}>
+                  Channel {r.channel_id} (Node {r.from} to Node {r.to})
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      )}
+
       {tab === "summary" && (
+         <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #000" }}>
+                <th style={{ padding: 8, textAlign: "left" }}>Channel</th>
+                <th style={{ padding: 8, textAlign: "left" }}>Protocol</th>
+                <th style={{ padding: 8, textAlign: "left" }}>QBER</th>
+                <th style={{ padding: 8, textAlign: "left" }}>Final Key Len</th>
+                <th style={{ padding: 8, textAlign: "left" }}>SKR (bps)</th>
+                <th style={{ padding: 8, textAlign: "left" }}>Compliance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {results.map((result) => (
+                <tr key={result.channel_id} style={{ borderBottom: "1px solid #ccc" }}>
+                  <td style={{ padding: 8 }}>{`Node ${result.from} -> Node ${result.to}`}</td>
+                  <td style={{ padding: 8 }}>{result.protocol.toUpperCase()}</td>
+                  <td style={{ padding: 8 }}>{formatPercent(result.qber)}</td>
+                  <td style={{ padding: 8 }}>{result.final_key_length}</td>
+                  <td style={{ padding: 8 }}>{result.secure_key_rate_bps ? result.secure_key_rate_bps.toFixed(2) : 'N/A'}</td>
+                  <td style={{ padding: 8, color: result.theory_compliance ? "green" : "red" }}>
+                    {result.theory_message}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+      )}
+
+      {tab === "keys" && selectedResult && (
         <div>
-          <div style={{ 
-            padding: 16, 
-            backgroundColor: "#f8f9fa", 
-            borderRadius: 4, 
-            marginBottom: 16 
-          }}>
-            <h3 style={{ marginTop: 0 }}>Protocol: {results.protocol.toUpperCase()}</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+          <h3>Key Comparison for Channel {selectedResult.channel_id} (First 100 bits)</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div><b>Alice's Key:</b><div style={{ wordBreak: "break-all", fontFamily: "monospace" }}>{formatKey(selectedResult.alice_key)}</div></div>
+            <div><b>Bob's Key:</b><div style={{ wordBreak: "break-all", fontFamily: "monospace" }}>{formatKey(selectedResult.bob_key)}</div></div>
+          </div>
+        </div>
+      )}
+
+      {tab === "theory" && selectedResult && (
+        <div>
+          <h3>Theory Details for Channel {selectedResult.channel_id}</h3>
+           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
               <div>
-                <div><b>Sifted Key Length:</b> {results.sifted_key_length}</div>
-                <div><b>QBER:</b> {formatPercent(results.qber)}</div>
-                {/* <div><b>Errors:</b> {results.num_errors}</div> */}
-                <div><b>Secret Key Length:</b> {results.final_key_length}</div>
-                <div><b>Secure Key Rate (bps):</b> {results.secure_key_rate_bps ? results.secure_key_rate_bps.toFixed(2) : 'N/A'}</div>
+                <h4>Protocol Details</h4>
+                <div><b>Encoding:</b> Phase difference between consecutive pulses (0, π)</div>
+                <div><b>Detection:</b> Mach-Zehnder interferometer</div>
               </div>
-              <div style={{ 
-                padding: 12, 
-                backgroundColor: results.theory_compliance ? "#d4edda" : "#f8d7da",
-                borderRadius: 4,
-                border: `1px solid ${results.theory_compliance ? "#c3e6cb" : "#f5c6cb"}`
-              }}>
-                <b>{results.theory_message}</b>
+              <div>
+                <h4>Channel Parameters</h4>
+                <div><b>Fiber Length:</b> {selectedResult.parameters.channel.fiber_length_km} km</div>
+                <div><b>Attenuation:</b> {selectedResult.parameters.channel.fiber_attenuation_db_per_km} dB/km</div>
               </div>
-            </div>
-          </div>
-
-          {/* Fiber Information Section */}
-          {results.fiber_type && (
-            <div style={{ 
-              padding: 16, 
-              backgroundColor: "#e3f2fd", 
-              borderRadius: 4, 
-              marginBottom: 16,
-              border: "1px solid #bbdefb"
-            }}>
-              <h3 style={{ marginTop: 0, color: "#1976d2" }}>Fiber Configuration</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
-                <div>
-                  <div><b>Fiber Type:</b> {results.fiber_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
-                  <div><b>Length:</b> {results.distance_km} km</div>
-                  <div><b>Wavelength:</b> {results.wavelength_nm} nm</div>
-                </div>
-                <div>
-                  <div><b>Attenuation:</b> {results.fiber_attenuation_db_per_km} dB/km</div>
-                  <div><b>Total Loss:</b> {(results.distance_km * results.fiber_attenuation_db_per_km).toFixed(2)} dB</div>
-                </div>
-                <div>
-                  <div><b>Transmission:</b> {formatPercent(Math.pow(10, -(results.distance_km * results.fiber_attenuation_db_per_km) / 10))}</div>
-                </div>
+               <div>
+                <h4>Node {selectedResult.from} (Alice) Parameters</h4>
+                <div><b>Avg. Photon Number (μ):</b> {selectedResult.parameters.node_a.mu}</div>
               </div>
-            </div>
-          )}
-
-          {results.postprocessing && (
-            <div style={{ marginTop: 16 }}>
-              <h3>Postprocessing Breakdown</h3>
-              <div style={{ 
-                display: "grid", 
-                gridTemplateColumns: "repeat(3, 1fr)", 
-                gap: 16,
-                marginTop: 8 
-              }}>
-                <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-                  <div><b>Parameter Estimation</b></div>
-                  <div>Key Length: {results.postprocessing.after_parameter_estimation}</div>
-                  <div>DR: {formatPercent(results.postprocessing.dr)}</div>
-                </div>
-                <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-                  <div><b>Error Correction</b></div>
-                  <div>Key Length: {results.postprocessing.after_error_correction}</div>
-                  <div>EC Fraction: {formatPercent(results.postprocessing.ec_fraction)}</div>
-                </div>
-                <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-                  <div><b>Privacy Amplification</b></div>
-                  <div>Key Length: {results.postprocessing.after_privacy_amplification}</div>
-                  <div>PA Ratio: {formatPercent(results.postprocessing.privacy_amplification_ratio)}</div>
-                </div>
+              <div>
+                <h4>Node {selectedResult.to} (Bob) Parameters</h4>
+                <div><b>Detector Efficiency:</b> {formatPercent(selectedResult.parameters.node_b.detector_efficiency)}</div>
+                <div><b>Dark Count Rate:</b> {formatScientific(selectedResult.parameters.node_b.dark_count_rate)}</div>
               </div>
-            </div>
-          )}
-
-          {results.monitoring_info && (
-            <div style={{ marginTop: 16 }}>
-              <h3>COW Monitoring Results</h3>
-              <div style={{ 
-                display: "grid", 
-                gridTemplateColumns: "repeat(2, 1fr)", 
-                gap: 16,
-                marginTop: 8 
-              }}>
-                <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-                  <div><b>Monitor Pairs</b></div>
-                  <div>Successful: {results.monitoring_info.successful_monitor_pairs}</div>
-                  <div>Attempted: {results.monitoring_info.attempted_monitor_pairs}</div>
-                  <div>Success Rate: {formatPercent(
-                    results.monitoring_info.successful_monitor_pairs / 
-                    results.monitoring_info.attempted_monitor_pairs
-                  )}</div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {tab === "keys" && (
-        <div>
-          <h3>Key Comparison (First 100 bits)</h3>
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(2, 1fr)", 
-            gap: 16,
-            marginTop: 8 
-          }}>
-            <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-              <b>Alice's Key:</b>
-              <div style={{ 
-                wordBreak: "break-all", 
-                fontFamily: "monospace",
-                fontSize: "14px",
-                marginTop: 8,
-                padding: 8,
-                backgroundColor: "#fff",
-                borderRadius: 4
-              }}>
-                {formatKey(results.alice_key)}
-              </div>
-            </div>
-            <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-              <b>Bob's Key:</b>
-              <div style={{ 
-                wordBreak: "break-all", 
-                fontFamily: "monospace",
-                fontSize: "14px",
-                marginTop: 8,
-                padding: 8,
-                backgroundColor: "#fff",
-                borderRadius: 4
-              }}>
-                {formatKey(results.bob_key)}
-              </div>
-            </div>
-          </div>
-          <div style={{ marginTop: 8, fontSize: 12, color: '#888' }}>
-            (Only the first 100 bits are shown for readability.)
-          </div>
-        </div>
-      )}
-
-      {tab === "theory" && (
-        <div>
-          <h3>Theory Details</h3>
-          <div style={{ 
-            display: "grid", 
-            gridTemplateColumns: "repeat(2, 1fr)", 
-            gap: 16,
-            marginTop: 8 
-          }}>
-            <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-              <h4>Protocol Details</h4>
-              {results.protocol === "dps" ? (
-                <>
-                  <div><b>Encoding:</b> Phase difference between consecutive pulses (0, π)</div>
-                  <div><b>Detection:</b> Mach-Zehnder interferometer with two detectors</div>
-                  <div><b>Sifting:</b> Based on detector clicks and phase difference</div>
-                </>
-              ) : (
-                <>
-                  <div><b>Encoding:</b> Vacuum + coherent pulse, intensity modulated</div>
-                  <div><b>Detection:</b> Single detector with threshold</div>
-                  <div><b>Sifting:</b> Keep bits where Alice and Bob agree on data pulses</div>
-                  <div><b>Monitoring:</b> Pairs of monitoring pulses to detect eavesdropping</div>
-                </>
-              )}
-            </div>
-            <div style={{ padding: 12, backgroundColor: "#e9ecef", borderRadius: 4 }}>
-              <h4>Physical Parameters</h4>
-              <div><b>Average Photon Number (μ):</b> {results.mu}</div>
-              <div><b>Detector Efficiency:</b> {formatPercent(results.detector_efficiency)}</div>
-              <div><b>Dark Count Rate:</b> {formatScientific(results.dark_count_rate)} per ns</div>
-              <div><b>Distance:</b> {results.distance_km} km</div>
-            </div>
-          </div>
+           </div>
         </div>
       )}
     </div>
