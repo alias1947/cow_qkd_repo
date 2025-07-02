@@ -1,8 +1,8 @@
-from Source import Sender
-from Hardware import Receiver, OpticalChannel
+from simulation.Source import Sender
+from simulation.Hardware import Receiver, OpticalChannel
 # Import COW components
-from Source import SenderCOW
-from Hardware import ReceiverCOW
+from simulation.Source import SenderCOW
+from simulation.Hardware import ReceiverCOW
 
 import math 
 import random

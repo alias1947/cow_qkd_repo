@@ -1,7 +1,7 @@
 # main_simulation.py
 
 # We only import the Network class, as it manages the Alice/Bob components internally
-from Network import Network
+from simulation.Network import Network
 
 import math # Still used for QBER calculation, even if not formal post-processing
 import random

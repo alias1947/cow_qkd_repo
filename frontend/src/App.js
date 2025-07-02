@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import QKDForm from "./QKDForm";
-import QKDNetwork from "./QKDNetwork";
-import Results from "./Results";
+import QKDForm from "./components/QKDForm";
+import QKDNetwork from "./components/QKDNetwork";
+import Results from "./components/Results";
 import axios from "axios";
 
 function App() {
