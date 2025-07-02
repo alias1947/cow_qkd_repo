@@ -1,32 +1,267 @@
-import React from "react";
-import ReactFlow, { MiniMap, Controls } from "react-flow-renderer";
+import React, { useCallback, useState } from "react";
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+} from "react-flow-renderer";
+import { v4 as uuidv4 } from 'uuid';
 
-export default function QKDNetwork({ nodes: nodeData, links: linkData, protocol }) {
-  // Spread nodes horizontally for clarity
-  const nodes = nodeData.map((node, i) => ({
-    id: String(node.id),
-    data: { label: `Node ${node.id}` },
-    position: { x: i * 200, y: 100 },
-    style: { background: "#aaf", border: '2px solid #333', borderRadius: 8, width: 80, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }
-  }));
+const defaultNodeParams = () => ({
+  detector_efficiency: 0.9,
+  dark_count_rate: 1e-8,
+  mu: 0.2,
+});
+const defaultEdgeParams = () => ({
+  fiber_length_km: 10,
+  fiber_attenuation_db_per_km: 0.2,
+  wavelength_nm: 1550,
+  fiber_type: "standard_single_mode",
+  phase_flip_prob: 0.05,
+});
 
-  const edges = linkData.map(link => ({
-    id: `e${link.from}-${link.to}`,
-    source: String(link.from),
-    target: String(link.to),
-    label: `${protocol.toUpperCase()}-QKD (Ch ${link.id})`,
-    animated: true,
-    style: { stroke: '#333', strokeWidth: 2 },
-    labelStyle: { fill: '#333', fontWeight: 600 }
-  }));
+const nodeStyle = {
+  background: "#e3f2fd",
+  border: "2px solid #1976d2",
+  borderRadius: 10,
+  width: 90,
+  height: 50,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 600,
+  fontSize: 16,
+  color: "#1976d2",
+};
+
+function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSelectedType }) {
+  if (!selected) {
+    return (
+      <div style={{ padding: 16, color: '#888' }}>
+        <div>Select a node or channel to edit parameters.</div>
+        {edges && edges.length > 0 && (
+          <div style={{ marginTop: 16 }}>
+            <b>Channels:</b>
+            <ul style={{ paddingLeft: 16 }}>
+              {edges.map(e => (
+                <li key={e.id} style={{ marginBottom: 4 }}>
+                  Channel {e.id} (Node {e.source} → Node {e.target})
+                  <button style={{ marginLeft: 8, fontSize: 12, padding: '2px 8px', borderRadius: 4, border: '1px solid #1976d2', background: '#e3f2fd', color: '#1976d2', cursor: 'pointer' }}
+                    onClick={() => { setSelected(e); setSelectedType('edge'); }}>
+                    Edit
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  }
+  if (type === 'node') {
+    return (
+      <div style={{ padding: 16 }}>
+        <h4>Node {selected.data.label}</h4>
+        <label>Detector Efficiency:<br/>
+          <input type="number" step="0.01" value={selected.data.detector_efficiency}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, detector_efficiency: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Dark Count Rate:<br/>
+          <input type="number" step="any" value={selected.data.dark_count_rate}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, dark_count_rate: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Mu:<br/>
+          <input type="number" step="0.01" value={selected.data.mu}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, mu: Number(e.target.value) } })} />
+        </label><br/>
+        <button style={{ marginTop: 12, color: 'white', background: '#d32f2f', border: 'none', borderRadius: 4, padding: '6px 12px' }} onClick={() => onRemove(selected.id)}>Remove Node</button>
+      </div>
+    );
+  }
+  if (type === 'edge') {
+    return (
+      <div style={{ padding: 16 }}>
+        <h4>Channel {selected.id}</h4>
+        <label>Fiber Length (km):<br/>
+          <input type="number" step="0.1" value={selected.data.fiber_length_km}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, fiber_length_km: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Attenuation (dB/km):<br/>
+          <input type="number" step="0.01" value={selected.data.fiber_attenuation_db_per_km}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, fiber_attenuation_db_per_km: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Wavelength (nm):<br/>
+          <input type="number" step="1" value={selected.data.wavelength_nm}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, wavelength_nm: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Fiber Type:<br/>
+          <select value={selected.data.fiber_type} onChange={e => onChange({ ...selected, data: { ...selected.data, fiber_type: e.target.value } })}>
+            <option value="standard_single_mode">SMF-28</option>
+            <option value="dispersion_shifted">Dispersion Shifted</option>
+            <option value="non_zero_dispersion_shifted">Non-Zero Dispersion Shifted</option>
+            <option value="photonic_crystal">Photonic Crystal Fiber</option>
+          </select>
+        </label><br/>
+        <label>Phase Flip Probability (0-1):<br/>
+          <input type="number" step="0.001" min="0" max="1" value={selected.data.phase_flip_prob}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, phase_flip_prob: Number(e.target.value) } })} />
+        </label><br/>
+        <button style={{ marginTop: 12, color: 'white', background: '#d32f2f', border: 'none', borderRadius: 4, padding: '6px 12px' }} onClick={() => onRemove(selected.id)}>Remove Channel</button>
+      </div>
+    );
+  }
+  return null;
+}
+
+export default function QKDNetwork({ onNetworkChange }) {
+  const [nodes, setNodes, onNodesChange] = useNodesState([
+    { id: '1', position: { x: 0, y: 100 }, data: { label: '1', ...defaultNodeParams() }, style: nodeStyle },
+    { id: '2', position: { x: 200, y: 100 }, data: { label: '2', ...defaultNodeParams() }, style: nodeStyle },
+  ]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [selected, setSelected] = useState(null);
+  const [selectedType, setSelectedType] = useState(null);
+  const [history, setHistory] = useState([]);
+
+  // Helper to push current state to history
+  const pushHistory = useCallback(() => {
+    setHistory(h => [...h, { nodes: JSON.parse(JSON.stringify(nodes)), edges: JSON.parse(JSON.stringify(edges)) }]);
+  }, [nodes, edges]);
+
+  // Undo handler
+  const handleUndo = () => {
+    setHistory(h => {
+      if (h.length === 0) return h;
+      const prev = h[h.length - 1];
+      setNodes(prev.nodes);
+      setEdges(prev.edges);
+      return h.slice(0, -1);
+    });
+    setSelected(null);
+    setSelectedType(null);
+  };
+
+  // Add node
+  const addNode = useCallback(() => {
+    pushHistory();
+    const newId = uuidv4().slice(0, 8);
+    setNodes((nds) => [
+      ...nds,
+      {
+        id: newId,
+        position: { x: nds.length * 200, y: 100 },
+        data: { label: String(nds.length + 1), ...defaultNodeParams() },
+        style: nodeStyle,
+      },
+    ]);
+  }, [setNodes, pushHistory]);
+
+  // Remove node and its edges
+  const removeNode = useCallback((id) => {
+    pushHistory();
+    setNodes((nds) => nds.filter((n) => n.id !== id));
+    setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
+    setSelected(null);
+    setSelectedType(null);
+  }, [setNodes, setEdges, pushHistory]);
+
+  // Remove edge
+  const removeEdge = useCallback((id) => {
+    pushHistory();
+    setEdges((eds) => eds.filter((e) => e.id !== id));
+    setSelected(null);
+    setSelectedType(null);
+  }, [setEdges, pushHistory]);
+
+  // On connect (draw edge)
+  const onConnect = useCallback((params) => {
+    pushHistory();
+    setEdges((eds) => addEdge({ ...params, id: uuidv4().slice(0, 8), data: { ...defaultEdgeParams() }, animated: true, style: { stroke: '#333', strokeWidth: 2 } }, eds));
+  }, [setEdges, pushHistory]);
+
+  // On element click
+  const onElementClick = useCallback((event, element) => {
+    if (element.source) {
+      setSelected(edges.find(e => e.id === element.id));
+      setSelectedType('edge');
+    } else {
+      setSelected(nodes.find(n => n.id === element.id));
+      setSelectedType('node');
+    }
+  }, [nodes, edges]);
+
+  // On node/edge parameter change
+  const onSidebarChange = (updated) => {
+    pushHistory();
+    if (selectedType === 'node') {
+      setNodes((nds) => nds.map(n => n.id === updated.id ? updated : n));
+      setSelected(updated);
+    } else if (selectedType === 'edge') {
+      setEdges((eds) => eds.map(e => e.id === updated.id ? updated : e));
+      setSelected(updated);
+    }
+  };
+
+  // Notify parent of network change
+  React.useEffect(() => {
+    if (onNetworkChange) {
+      // Convert nodes/edges to simulation format
+      onNetworkChange({
+        nodes: nodes.map(n => ({
+          id: Number(n.data.label),
+          detector_efficiency: n.data.detector_efficiency,
+          dark_count_rate: n.data.dark_count_rate,
+          mu: n.data.mu,
+        })),
+        channels: edges.map((e, idx) => ({
+          id: idx + 1,
+          from: Number(nodes.find(n => n.id === e.source).data.label),
+          to: Number(nodes.find(n => n.id === e.target).data.label),
+          fiber_length_km: e.data.fiber_length_km,
+          fiber_attenuation_db_per_km: e.data.fiber_attenuation_db_per_km,
+          wavelength_nm: e.data.wavelength_nm,
+          fiber_type: e.data.fiber_type,
+          phase_flip_prob: e.data.phase_flip_prob,
+        })),
+      });
+    }
+  }, [nodes, edges, onNetworkChange]);
 
   return (
-    <div style={{ height: 400, marginBottom: 32, border: '1px solid #ccc', borderRadius: 8 }}>
-      <h3>Network Topology</h3>
-      <ReactFlow nodes={nodes} edges={edges} fitView>
-        <MiniMap />
-        <Controls />
-      </ReactFlow>
+    <div style={{ display: 'flex', height: 420, marginBottom: 32, border: '1px solid #ccc', borderRadius: 8, background: '#f7fafd' }}>
+      <div style={{ flex: 1, position: 'relative' }}>
+        <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10, display: 'flex', gap: 8 }}>
+          <button onClick={addNode} className="qkd-btn">+ Add Node</button>
+          <button onClick={handleUndo} className="qkd-btn" disabled={history.length === 0}>Undo</button>
+        </div>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={onElementClick}
+          onEdgeClick={onElementClick}
+          fitView
+        >
+          <MiniMap />
+          <Controls />
+          <Background color="#e3f2fd" gap={16} />
+        </ReactFlow>
+      </div>
+      <div style={{ width: 320, borderLeft: '1px solid #bbb', background: '#fff', borderRadius: '0 8px 8px 0', boxShadow: '-2px 0 8px #0001' }}>
+        <Sidebar
+          selected={selected}
+          onChange={onSidebarChange}
+          onRemove={selectedType === 'node' ? removeNode : removeEdge}
+          type={selectedType}
+          edges={edges}
+          setSelected={setSelected}
+          setSelectedType={setSelectedType}
+        />
+      </div>
     </div>
   );
 } 
