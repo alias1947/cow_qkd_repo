@@ -1,10 +1,11 @@
-from Source import Sender
-from Hardware import Receiver, OpticalChannel
+from simulation.Source import Sender
+from simulation.Hardware import Receiver, OpticalChannel
 # Import COW components
-from Source import SenderCOW
-from Hardware import ReceiverCOW
+from simulation.Source import SenderCOW
+from simulation.Hardware import ReceiverCOW
 
 import math 
+import random
 
 class Node:
     """
@@ -13,7 +14,8 @@ class Node:
     """
     def __init__(self, node_id, avg_photon_number=0.2, detector_efficiency=0.9, dark_count_rate=1e-7, 
                  # COW specific params, can be None if not used for COW
-                 cow_monitor_pulse_ratio=0.1, cow_detection_threshold_photons=0):
+                 cow_monitor_pulse_ratio=0.1, cow_detection_threshold_photons=0,
+                 cow_extinction_ratio_db=20.0):
         self.node_id = node_id
         # Initialize DPS components. These will be reset at the start of a new QKD session
         # via the generate_and_share_key methods to ensure fresh state.
@@ -26,7 +28,10 @@ class Node:
         # Initialize COW components
         self.cow_monitor_pulse_ratio = cow_monitor_pulse_ratio
         self.cow_detection_threshold_photons = cow_detection_threshold_photons
-        self.cow_sender = SenderCOW(self.avg_photon_number, monitor_pulse_ratio=self.cow_monitor_pulse_ratio)
+        self.cow_extinction_ratio_db = cow_extinction_ratio_db
+        self.cow_sender = SenderCOW(self.avg_photon_number, 
+                                    monitor_pulse_ratio=self.cow_monitor_pulse_ratio,
+                                    extinction_ratio_db=self.cow_extinction_ratio_db)
         self.cow_receiver = ReceiverCOW(self.detector_efficiency, self.dark_count_rate, 
                                         detection_threshold_photons=self.cow_detection_threshold_photons)
         
@@ -38,16 +43,18 @@ class Node:
         """Adds an optical channel link to a neighbor."""
         self.connected_links[neighbor_node_id] = channel_instance
 
-    def generate_and_share_key(self, target_node, num_pulses, pulse_repetition_rate_ns):
+    def generate_and_share_key(self, target_node, num_pulses, pulse_repetition_rate_ns, phase_flip_prob=0.0):
         """
         Implements DPS QKD as per theory:
         - Encoding: phase difference between consecutive pulses (0, π)
         - Sifting: based on detector clicks and phase difference
         - 2 detectors, Mach-Zehnder interferometer
+        - phase_flip_prob: probability of phase flip noise in the channel
         """
         print(f"--- Node {self.node_id} initiating DPS-QKD with Node {target_node.node_id} ---")
         
         # Re-initialize sender and receiver for a new QKD session to ensure clean state (e.g., last_sent_phase)
+        #for DPS
         self.qkd_sender = Sender(self.avg_photon_number)
         target_node.qkd_receiver = Receiver(target_node.detector_efficiency, target_node.dark_count_rate)
 
@@ -67,10 +74,14 @@ class Node:
         channel_processed_pulses = []
         for pulse in alice_pulses_sent_info:
             received_photons = channel.transmit_pulse(pulse['photon_count'])
+            # Apply phase flip noise
+            modulated_phase = pulse['modulated_phase']
+            if random.random() < phase_flip_prob:
+                modulated_phase = (modulated_phase + math.pi) % (2 * math.pi)
             channel_processed_pulses.append({
                 'time_slot': pulse['time_slot'],
                 'received_photon_count': received_photons,
-                'modulated_phase': pulse['modulated_phase'] 
+                'modulated_phase': modulated_phase 
             })
 
         bob_clicks_and_inferred_bits = []
@@ -134,6 +145,7 @@ class Node:
                 bob_sifted_key.append(bob_measurement_info_for_pn['bob_inferred_bit'])
                 
         print(f"DPS Sifting complete. Raw key length: {len(alice_sifted_key)}")
+        print(f"sifted key are: {bob_sifted_key}")
         self.shared_keys[target_node.node_id] = alice_sifted_key
         target_node.shared_keys[self.node_id] = bob_sifted_key
         self.traffic_log.append({
@@ -145,18 +157,20 @@ class Node:
         print("[DPS QKD] Sifting and measurement complete. Theory-compliant implementation.")
         return alice_sifted_key, bob_sifted_key
 
-    def generate_and_share_key_cow(self, target_node, num_pulses, pulse_repetition_rate_ns, 
-                                   monitor_pulse_ratio=0.1, detection_threshold_photons=0):
+    def generate_and_share_key_cow(self, target_node, num_pulses, pulse_repetition_rate_ns,
+                                   monitor_pulse_ratio=0.1, detection_threshold_photons=0, phase_flip_prob=0.0):
         """
         Implements COW QKD as per theory:
         - Encoding: vacuum + coherent pulse, intensity modulated
-        - Sifting: keep bits where Alice and Bob agree on data pulses
+        - Sifting: keep bits where Alice and Bob agree on data pulses (using correct pulse in each pair)
         - Monitoring: pairs of monitoring pulses to detect eavesdropping
         """
         print(f"--- Node {self.node_id} initiating COW-QKD with Node {target_node.node_id} ---")
 
         # Re-initialize COW sender and receiver for a new QKD session
-        self.cow_sender = SenderCOW(self.avg_photon_number, monitor_pulse_ratio=monitor_pulse_ratio)
+        self.cow_sender = SenderCOW(self.avg_photon_number, 
+                                    monitor_pulse_ratio=monitor_pulse_ratio,
+                                    extinction_ratio_db=self.cow_extinction_ratio_db)
         target_node.cow_receiver = ReceiverCOW(
             target_node.detector_efficiency,
             target_node.dark_count_rate,
@@ -173,13 +187,18 @@ class Node:
 
         bob_received_signals = []
         for i, sent_pulse in enumerate(alice_sent_pulses_info):
-            # Ensure time_slot matches the index for simplicity in this simulation
-            time_slot = i # Or sent_pulse['time_slot'] if it's explicitly set as i
+            time_slot = i
             photons_sent = sent_pulse['photon_count']
             pulse_type = sent_pulse['pulse_type']
-            
+            original_phase = sent_pulse['phase']
+
             received_photons_at_bob = channel.transmit_pulse(photons_sent)
-            
+
+            # Apply phase flip noise to the transmitted pulse
+            final_phase = original_phase
+            if random.random() < phase_flip_prob:
+                final_phase = (original_phase + math.pi) % (2 * math.pi)
+
             # Bob measures the pulse
             click, bob_inferred_bit, is_monitoring_click = target_node.cow_receiver.measure_pulse(
                 time_slot, 
@@ -189,71 +208,90 @@ class Node:
             bob_received_signals.append({
                 'time_slot': time_slot,
                 'alice_pulse_type': pulse_type,
-                'alice_intended_bit': sent_pulse['intended_bit'], # Alice's bit for this data slot (None for monitor)
+                'alice_intended_bit': sent_pulse['intended_bit'],
                 'received_photons': received_photons_at_bob,
                 'click': click,
-                'bob_inferred_bit': bob_inferred_bit, # Bob's inferred bit for data slots (None if inconclusive)
-                'is_monitoring_click': is_monitoring_click # If Bob got a click for a monitor pulse
+                'bob_inferred_bit': bob_inferred_bit,
+                'is_monitoring_click': is_monitoring_click,
+                'final_phase': final_phase
             })
 
+
         # 3. Sifting Process (Classical communication between Alice and Bob)
+        print(f"bob received key pulse types: {[signal['alice_pulse_type'] for signal in bob_received_signals]}")
         alice_sifted_key_cow = []
         bob_sifted_key_cow = []
-        
-        # Alice announces the type and intended bit for each pulse.
-        # Bob announces his measurement outcome for each pulse.
-        # They compare and keep valid key bits.
-
-        for i in range(len(alice_sent_pulses_info)):
-            alice_pulse_info = alice_sent_pulses_info[i]
-            bob_signal_info = bob_received_signals[i]
-
-            if alice_pulse_info['pulse_type'] == 'data':
-                alice_bit = alice_pulse_info['intended_bit'] # Alice's original data bit for this slot
-                bob_bit = bob_signal_info['bob_inferred_bit'] # Bob's inferred bit for this slot
-
-                # For data pulses, a bit is kept if Alice sent '1' AND Bob inferred '1'
-                # OR if Alice sent '0' AND Bob inferred '0'.
-                # In COW, '1' is a pulse, '0' is vacuum.
-                # If Alice sent '1' and Bob got a click (inferred 1), it's a match.
-                # If Alice sent '0' and Bob got no click (inferred 0), it's a match.
-                
-                # Crucial for COW sifting: only keep data bits where Alice intended '1' and Bob detected a '1'
-                # Or, if Alice intended '0' (vacuum) and Bob correctly detected '0' (no click)
-                if alice_bit == 1 and bob_bit == 1:
-                    alice_sifted_key_cow.append(alice_bit)
-                    bob_sifted_key_cow.append(bob_bit)
-                elif alice_bit == 0 and bob_bit == 0:
-                     alice_sifted_key_cow.append(alice_bit)
-                     bob_sifted_key_cow.append(bob_bit)
-                # If bob_bit is None (inconclusive due to ambiguous click in receiver), or mismatch, discard.
-
-        # 4. Monitoring Check (Classical communication between Alice and Bob)
-        successful_monitor_pairs = 0
-        attempted_monitor_pairs = 0
-        
-        # Alice reveals the original type of all pulses. Bob reveals his click status for monitoring pulses.
-        for i in range(len(alice_sent_pulses_info) - 1):
+        # debug_pairs_printed = 0
+        i = 0
+        while i < len(alice_sent_pulses_info) - 1:
             p1_alice = alice_sent_pulses_info[i]
             p2_alice = alice_sent_pulses_info[i+1]
             p1_bob = bob_received_signals[i]
             p2_bob = bob_received_signals[i+1]
 
-            # Check if it's a declared monitor pair from Alice's side
+            # Monitor pair: both monitor_first and monitor_second
+            if p1_alice['pulse_type'] == 'monitor_first' and p2_alice['pulse_type'] == 'monitor_second':
+                i += 2
+                continue
+            # Data pair: data_first and data_second
+            if p1_alice['pulse_type'].startswith('data') and p2_alice['pulse_type'].startswith('data'):
+                # Only keep if exactly one click in the pair
+                if p1_bob['click'] != p2_bob['click']:
+                    if p1_bob['click']:
+                        # Click in first pulse: infer bit 1
+                        alice_sifted_key_cow.append(1)
+                        bob_sifted_key_cow.append(1)
+                        debug_info = {
+                            'pair_index': i//2,
+                            'alice_bit': 1,
+                            'pulse_used': 'first',
+                            'photon_count': p1_alice['photon_count'],
+                            'bob_inferred_bit': 1,
+                            'bob_click': True
+                        }
+                    elif p2_bob['click']:
+                        # Click in second pulse: infer bit 0
+                        alice_sifted_key_cow.append(0)
+                        bob_sifted_key_cow.append(0)
+                        # debug_info = {
+                        #     'pair_index': i//2,
+                        #     'alice_bit': 0,
+                        #     'pulse_used': 'second',
+                        #     'photon_count': p2_alice['photon_count'],
+                        #     'bob_inferred_bit': 0,
+                        #     'bob_click': True
+                        # }
+                    # if debug_pairs_printed < 10:
+                    #     print(f"[DEBUG COW PAIR {debug_info['pair_index']}] Alice bit: {debug_info['alice_bit']}, Pulse used: {debug_info['pulse_used']}, "
+                    #           f"Photon count: {debug_info['photon_count']}, Bob inferred: {debug_info['bob_inferred_bit']}, Bob click: {debug_info['bob_click']}", flush=True)
+                    #     debug_pairs_printed += 1
+                i += 2
+                continue
+            i += 1
+
+        # 4. Monitoring Check (Classical communication between Alice and Bob)
+        successful_monitor_pairs = 0
+        attempted_monitor_pairs = 0
+        i = 0
+        while i < len(alice_sent_pulses_info) - 1:
+            p1_alice = alice_sent_pulses_info[i]
+            p2_alice = alice_sent_pulses_info[i+1]
+            p1_bob = bob_received_signals[i]
+            p2_bob = bob_received_signals[i+1]
             if p1_alice['pulse_type'] == 'monitor_first' and p2_alice['pulse_type'] == 'monitor_second':
                 attempted_monitor_pairs += 1
-                # Check if Bob successfully detected *both* pulses in the monitoring pair.
-                # In COW, detection of both pulses in a monitor pair indicates no eavesdropping.
-                if p1_bob['is_monitoring_click'] and p2_bob['is_monitoring_click']:
+                phases_match = math.isclose(p1_bob['final_phase'], p2_bob['final_phase'], abs_tol=1e-9)
+                if p1_bob['is_monitoring_click'] and p2_bob['is_monitoring_click'] and phases_match:
                     successful_monitor_pairs += 1
-        
+                i += 2
+            else:
+                i += 1
+
         print(f"COW Sifting: Attempted data bits: {len(self.cow_sender.get_intended_key_bits())}, Sifted Key Length: {len(alice_sifted_key_cow)}")
-        
         if attempted_monitor_pairs > 0:
             monitoring_success_rate = successful_monitor_pairs / attempted_monitor_pairs
             print(f"COW Monitoring: {successful_monitor_pairs}/{attempted_monitor_pairs} pairs successfully detected (Rate: {monitoring_success_rate:.2f})")
-            # The threshold for warning can be adjusted based on expected channel loss and Eve's presence
-            if monitoring_success_rate < 0.9: # A high success rate is expected in absence of Eve for monitor pulses
+            if monitoring_success_rate < 0.9:
                 print("WARNING: Monitoring success rate is low. Possible eavesdropping or high channel loss!")
             else:
                 print("Monitoring success rate is high. No significant eavesdropping detected based on monitor pulses.")
@@ -271,8 +309,9 @@ class Node:
             'successful_monitor_pairs': successful_monitor_pairs,
             'attempted_monitor_pairs': attempted_monitor_pairs
         })
-        # At the end, print a summary
+        print(f"sifted key : {bob_sifted_key_cow}")
         print("[COW QKD] Sifting, decoy, and monitoring complete. Theory-compliant implementation.")
+        
         return alice_sifted_key_cow, bob_sifted_key_cow
 
     def get_raw_sifted_key_with_neighbor(self, neighbor_id):
@@ -294,17 +333,28 @@ class Node:
         print(f"Node {self.node_id} (relay) is holding the end-to-end key segment. Ready to extend to {receiver_node_id}.")
         return key_to_relay # The relay just passes the key content to the next segment's context.
 
-
 class Network:
     def __init__(self):
         self.nodes = {} # {node_id: Node_instance}
 
-    def add_node(self, node_id, **kwargs):
-        """Adds a new node to the network."""
+    def add_node(self, node_id, avg_photon_number=0.2, detector_efficiency=0.9, dark_count_rate=1e-7,
+                 # COW specific params
+                 cow_monitor_pulse_ratio=0.1, cow_detection_threshold_photons=0,
+                 cow_extinction_ratio_db=20.0):
+        """
+        Adds a new node to the network.
+        Node-specific parameters like avg_photon_number for a sender (Alice)
+        or detector_efficiency for a receiver (Bob) can be specified here.
+        """
         if node_id in self.nodes:
-            raise ValueError(f"Node {node_id} already exists.")
-        self.nodes[node_id] = Node(node_id, **kwargs)
-        return self.nodes[node_id]
+            raise ValueError(f"Node with ID {node_id} already exists.")
+        
+        new_node = Node(node_id, avg_photon_number, detector_efficiency, dark_count_rate,
+                        cow_monitor_pulse_ratio, cow_detection_threshold_photons,
+                        cow_extinction_ratio_db)
+        self.nodes[node_id] = new_node
+        print(f"Node {node_id} added to the network.")
+        return new_node
 
     def connect_nodes(self, node1_id, node2_id, distance_km, attenuation_db_per_km=0.2):
         node1 = self.nodes.get(node1_id)

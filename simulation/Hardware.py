@@ -168,18 +168,13 @@ class ReceiverCOW:
         bob_inferred_bit = None # Initialize to None for inconclusive cases
         is_monitoring_click = False
 
-        if pulse_type == 'data':
+        if pulse_type.startswith('data'):
+            # Simple COW logic: if the detector clicks, Bob infers a '1'. No click means '0'.
+            # Errors (dark counts on a '0' slot, or photon loss on a '1' slot) are handled this way.
             if click:
-                # In COW, a click for a data pulse usually implies a '1' was sent.
-                # The threshold can help filter out clicks that are likely dark counts if threshold > 0.
-                if incident_photons > self.detection_threshold_photons: # Only if actual photons detected above threshold
-                    bob_inferred_bit = 1
-                else:
-                    # If a click occurred but the number of incident photons was too low (e.g., only dark count),
-                    # this measurement is inconclusive and should be discarded.
-                    bob_inferred_bit = None # Inconclusive if click is ambiguous
-            else: # No click (either Alice sent vacuum or photon was lost)
-                bob_inferred_bit = 0 # If Alice sent '1' and it was lost, Bob infers '0'. If Alice sent '0' (vacuum), Bob infers '0'.
+                bob_inferred_bit = 1
+            else: # No click
+                bob_inferred_bit = 0
 
         elif pulse_type == 'monitor_first' or pulse_type == 'monitor_second':
             if click:
@@ -190,7 +185,7 @@ class ReceiverCOW:
             'time_slot': time_slot,
             'incident_photons': incident_photons,
             'click': click,
-            'bob_inferred_bit': bob_inferred_bit, # Only for data pulses, None if inconclusive
+            'bob_inferred_bit': bob_inferred_bit, # Only for data pulses
             'is_monitoring_click': is_monitoring_click, # For monitoring pulses
             'pulse_type': pulse_type
         })
@@ -204,3 +199,43 @@ class ReceiverCOW:
 
     def get_all_received_info(self):
         return self.received_pulses_info
+
+
+#writing code for Fiber selction from ui , and provided definit params
+class SMF:
+    def __init__(
+        self,
+        length_km=20.0,
+        attenuation_db_per_km=0.2,
+        fiber_type="single_mode_fiber"
+    ):
+        """
+        Models an optical fiber for QKD simulation.
+
+        Args:
+            length_km (float): Length of the fiber in kilometers.
+            attenuation_db_per_km (float): Attenuation (loss) per kilometer in dB.
+            fiber_type (str): Type of fiber (for future extension).
+        """
+        self.length_km = length_km
+        self.attenuation_db_per_km = attenuation_db_per_km
+        self.fiber_type = fiber_type
+
+    def total_attenuation_db(self):
+        """Returns the total attenuation in dB for the fiber."""
+        return self.length_km * self.attenuation_db_per_km
+
+    def transmission_probability(self):
+        """
+        Returns the probability that a photon is transmitted through the fiber.
+        Uses the formula: T = 10^(-total_attenuation_db/10)
+        """
+        total_db = self.total_attenuation_db()
+        return 10 ** (-total_db / 10)
+
+    def __repr__(self):
+        return (
+            f"Fiber(length_km={self.length_km}, "
+            f"attenuation_db_per_km={self.attenuation_db_per_km}, "
+            f"type='{self.fiber_type}')"
+        )

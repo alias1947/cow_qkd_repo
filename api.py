@@ -1,104 +1,184 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from Network import Network
+from pydantic import BaseModel, Field
+from typing import List
+from simulation.Network import Network
 from main import calculate_qber, postprocessing
 
 app = FastAPI()
 
-# Allow frontend to call API
+# Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-class SimParams(BaseModel):
-    protocol: str  # "dps" or "cow"
-    num_pulses: int
-    distance_km: float
-    mu: float
+class NodeModel(BaseModel):
+    id: int
     detector_efficiency: float
     dark_count_rate: float
+    mu: float
+
+class ChannelModel(BaseModel):
+    id: int
+    from_: int = Field(..., alias='from')
+    to: int
+    fiber_length_km: float
+    fiber_attenuation_db_per_km: float
+    wavelength_nm: int
+    fiber_type: str
+
+class SimParams(BaseModel):
+    protocol: str
+    num_pulses: int
     pulse_repetition_rate: float
-    cow_monitor_pulse_ratio: float = 0.2
-    cow_detection_threshold_photons: int = 0
+    phase_flip_prob: float
+    nodes: List[NodeModel]
+    channels: List[ChannelModel]
+    # COW-specific, now global for any COW simulation
+    cow_monitor_pulse_ratio: float
+    cow_detection_threshold_photons: float
+    cow_extinction_ratio_db: float
+
+@app.get("/")
+def read_root():
+    return {"message": "QKD Simulation API"}
 
 @app.post("/simulate")
 def simulate(params: SimParams):
+    """
+    Multi-node DPS simulation endpoint.
+    """
     net = Network()
+    node_map = {}
+    # Add all nodes
+    for n in params.nodes:
+        node = net.add_node(
+            f"Node_{n.id}",
+            avg_photon_number=n.mu,
+            detector_efficiency=n.detector_efficiency,
+            dark_count_rate=n.dark_count_rate
+        )
+        node_map[n.id] = node
+
+    results = []
     if params.protocol == "dps":
-        alice = net.add_node('Alice', avg_photon_number=params.mu)
-        bob = net.add_node('Bob', detector_efficiency=params.detector_efficiency,
-                           dark_count_rate=params.dark_count_rate)
-        net.connect_nodes('Alice', 'Bob', distance_km=params.distance_km)
-        alice_key, bob_key = alice.generate_and_share_key(
-            bob, params.num_pulses, params.pulse_repetition_rate
-        )
-        qber, num_errors = calculate_qber(alice_key, bob_key)
-        final_key_len, postproc = postprocessing(len(alice_key), qber)
-        theory_compliance = (0.03 <= qber <= 0.10)
-        return {
-            "protocol": "dps",
-            "alice_key": alice_key,
-            "bob_key": bob_key,
-            "sifted_key_length": len(alice_key),
-            "qber": qber,
-            "num_errors": num_errors,
-            "final_key_length": final_key_len,
-            "postprocessing": postproc,
-            "theory_compliance": theory_compliance,
-            "theory_message": "QBER is within the practical range (3-10%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range (3-10%) for QKD!",
-            "mu": params.mu,
-            "detector_efficiency": params.detector_efficiency,
-            "dark_count_rate": params.dark_count_rate,
-            "distance_km": params.distance_km
-        }
+        # For each channel, run DPS
+        for ch in params.channels:
+            node_a = node_map.get(ch.from_)
+            node_b = node_map.get(ch.to)
+            if not node_a or not node_b:
+                continue
+            net.connect_nodes(
+                node_a.node_id, node_b.node_id,
+                distance_km=ch.fiber_length_km,
+                attenuation_db_per_km=ch.fiber_attenuation_db_per_km
+            )
+            # Use node-specific and channel-specific params
+            alice_key, bob_key = node_a.generate_and_share_key(
+                node_b,
+                params.num_pulses,
+                params.pulse_repetition_rate,
+                phase_flip_prob=getattr(ch, 'phase_flip_prob', params.phase_flip_prob)
+            )
+            qber, num_errors = calculate_qber(alice_key, bob_key)
+            final_key_len, postproc = postprocessing(len(alice_key), qber)
+            total_time_s = (params.num_pulses * params.pulse_repetition_rate) / 1e9 if params.num_pulses > 0 else 0
+            secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
+            theory_compliance = (0.03 <= qber <= 0.11)
+            theory_message = "QBER is within the practical range (3-11%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
+            
+            # Find the original node and channel data to include in the results
+            node_a_params = next((n for n in params.nodes if n.id == ch.from_), None)
+            node_b_params = next((n for n in params.nodes if n.id == ch.to), None)
+
+            results.append({
+                "channel_id": ch.id,
+                "from": ch.from_,
+                "to": ch.to,
+                "protocol": "dps",
+                "qber": qber,
+                "final_key_length": final_key_len,
+                "secure_key_rate_bps": secure_key_rate_bps,
+                "sifted_key_length": len(alice_key),
+                "num_errors": num_errors,
+                "postprocessing": postproc,
+                "theory_compliance": theory_compliance,
+                "theory_message": theory_message,
+                "alice_key": alice_key,
+                "bob_key": bob_key,
+                "parameters": {
+                    "node_a": node_a_params.dict() if node_a_params else {},
+                    "node_b": node_b_params.dict() if node_b_params else {},
+                    "channel": ch.dict()
+                }
+            })
+
     elif params.protocol == "cow":
-        alice = net.add_node('Alice', avg_photon_number=params.mu,
-                             cow_monitor_pulse_ratio=params.cow_monitor_pulse_ratio,
-                             cow_detection_threshold_photons=params.cow_detection_threshold_photons)
-        bob = net.add_node('Bob', detector_efficiency=params.detector_efficiency,
-                           dark_count_rate=params.dark_count_rate,
-                           cow_monitor_pulse_ratio=params.cow_monitor_pulse_ratio,
-                           cow_detection_threshold_photons=params.cow_detection_threshold_photons)
-        net.connect_nodes('Alice', 'Bob', distance_km=params.distance_km)
-        alice_key, bob_key = alice.generate_and_share_key_cow(
-            bob, params.num_pulses, params.pulse_repetition_rate,
-            monitor_pulse_ratio=params.cow_monitor_pulse_ratio,
-            detection_threshold_photons=params.cow_detection_threshold_photons
-        )
-        qber, num_errors = calculate_qber(alice_key, bob_key)
-        final_key_len, postproc = postprocessing(len(alice_key), qber)
-        # Monitoring/decoy results: get from traffic_log
-        monitoring_info = None
-        if alice.traffic_log:
-            for entry in alice.traffic_log[::-1]:
-                if entry.get('type') == 'key_generation_cow':
-                    monitoring_info = {
-                        'successful_monitor_pairs': entry.get('successful_monitor_pairs'),
-                        'attempted_monitor_pairs': entry.get('attempted_monitor_pairs')
+        # Run COW simulation for each channel
+        for ch in params.channels:
+            node_a = node_map.get(ch.from_)
+            node_b = node_map.get(ch.to)
+            if not node_a or not node_b:
+                continue
+
+            net.connect_nodes(
+                node_a.node_id, node_b.node_id,
+                distance_km=ch.fiber_length_km,
+                attenuation_db_per_km=ch.fiber_attenuation_db_per_km
+            )
+
+            # Note: Using global COW params for now, but per-channel phase flip
+            alice_key, bob_key = node_a.generate_and_share_key_cow(
+                node_b,
+                params.num_pulses,
+                params.pulse_repetition_rate,
+                monitor_pulse_ratio=params.cow_monitor_pulse_ratio,
+                detection_threshold_photons=int(params.cow_detection_threshold_photons),
+                phase_flip_prob=getattr(ch, 'phase_flip_prob', params.phase_flip_prob)
+            )
+            qber, num_errors = calculate_qber(alice_key, bob_key)
+            final_key_len, postproc = postprocessing(len(alice_key), qber)
+            total_time_s = (params.num_pulses * params.pulse_repetition_rate) / 1e9 if params.num_pulses > 0 else 0
+            secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
+            theory_compliance = (0.03 <= qber <= 0.10)
+            theory_message = "QBER is within the practical range (3-10%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
+
+            node_a_params = next((n for n in params.nodes if n.id == ch.from_), None)
+            node_b_params = next((n for n in params.nodes if n.id == ch.to), None)
+
+            results.append({
+                "channel_id": ch.id,
+                "from": ch.from_,
+                "to": ch.to,
+                "protocol": "cow",
+                "qber": qber,
+                "final_key_length": final_key_len,
+                "secure_key_rate_bps": secure_key_rate_bps,
+                "sifted_key_length": len(alice_key),
+                "num_errors": num_errors,
+                "postprocessing": postproc,
+                "theory_compliance": theory_compliance,
+                "theory_message": theory_message,
+                "alice_key": alice_key,
+                "bob_key": bob_key,
+                "parameters": {
+                    "node_a": node_a_params.dict() if node_a_params else {},
+                    "node_b": node_b_params.dict() if node_b_params else {},
+                    "channel": ch.dict(),
+                    "cow_globals": {
+                        "monitor_pulse_ratio": params.cow_monitor_pulse_ratio,
+                        "detection_threshold_photons": params.cow_detection_threshold_photons,
+                        "extinction_ratio_db": params.cow_extinction_ratio_db,
                     }
-                    break
-        theory_compliance = (0.03 <= qber <= 0.10)
-        return {
-            "protocol": "cow",
-            "alice_key": alice_key,
-            "bob_key": bob_key,
-            "sifted_key_length": len(alice_key),
-            "qber": qber,
-            "num_errors": num_errors,
-            "final_key_length": final_key_len,
-            "postprocessing": postproc,
-            "monitoring_info": monitoring_info,
-            "theory_compliance": theory_compliance,
-            "theory_message": "QBER is within the practical range (3-10%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range (3-10%) for QKD!",
-            "mu": params.mu,
-            "detector_efficiency": params.detector_efficiency,
-            "dark_count_rate": params.dark_count_rate,
-            "distance_km": params.distance_km
-        }
-    else:
-        return {"error": "Unknown protocol"} 
+                }
+            })
+
+    return {"results": results}
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000) 
