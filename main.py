@@ -54,7 +54,15 @@ def postprocessing(raw_key_length, qber, dr=0.10, error_correction_efficiency=1.
     key_after_ec = key_after_dr * (1 - ec_fraction)
     # Privacy amplification: further compress
     key_after_pa = key_after_ec * (1 - privacy_amplification_ratio)
-    return int(key_after_pa), {
+    
+    # Ensure final key length is not negative
+    final_key_length = max(0, int(key_after_pa))
+    
+    # Warn if QBER is too high for secure key generation
+    if qber > 0.11:  # 11% is typically the upper limit for BB84
+        print(f"WARNING: QBER ({qber:.4f}) is too high for secure key generation!")
+    
+    return final_key_length, {
         'after_parameter_estimation': int(key_after_dr),
         'after_error_correction': int(key_after_ec),
         'after_privacy_amplification': int(key_after_pa),

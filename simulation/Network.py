@@ -3,6 +3,9 @@ from simulation.Hardware import Receiver, OpticalChannel
 # Import COW components
 from simulation.Source import SenderCOW
 from simulation.Hardware import ReceiverCOW
+# Import BB84 components
+from simulation.Source import SenderBB84
+from simulation.Hardware import ReceiverBB84
 
 import math 
 import random
@@ -34,6 +37,10 @@ class Node:
                                     extinction_ratio_db=self.cow_extinction_ratio_db)
         self.cow_receiver = ReceiverCOW(self.detector_efficiency, self.dark_count_rate, 
                                         detection_threshold_photons=self.cow_detection_threshold_photons)
+        
+        # Initialize BB84 components
+        self.bb84_sender = SenderBB84(self.avg_photon_number)
+        self.bb84_receiver = ReceiverBB84(self.detector_efficiency, self.dark_count_rate)
         
         self.connected_links = {}
         self.shared_keys = {}     
@@ -241,14 +248,14 @@ class Node:
                         # Click in first pulse: infer bit 1
                         alice_sifted_key_cow.append(1)
                         bob_sifted_key_cow.append(1)
-                        debug_info = {
-                            'pair_index': i//2,
-                            'alice_bit': 1,
-                            'pulse_used': 'first',
-                            'photon_count': p1_alice['photon_count'],
-                            'bob_inferred_bit': 1,
-                            'bob_click': True
-                        }
+                        # debug_info = {
+                        #     'pair_index': i//2,
+                        #     'alice_bit': 1,
+                        #     'pulse_used': 'first',
+                        #     'photon_count': p1_alice['photon_count'],
+                        #     'bob_inferred_bit': 1,
+                        #     'bob_click': True
+                        # }
                     elif p2_bob['click']:
                         # Click in second pulse: infer bit 0
                         alice_sifted_key_cow.append(0)
@@ -313,6 +320,135 @@ class Node:
         print("[COW QKD] Sifting, decoy, and monitoring complete. Theory-compliant implementation.")
         
         return alice_sifted_key_cow, bob_sifted_key_cow
+
+    def generate_and_share_key_bb84(self, target_node, num_pulses, pulse_repetition_rate_ns, phase_flip_prob=0.0):
+        """
+        Implements BB84 QKD as per theory:
+        - Encoding: four quantum states in two bases (rectilinear and diagonal)
+        - Sifting: keep bits where Alice and Bob used the same basis
+        - Classical communication for basis comparison
+        """
+        print(f"--- Node {self.node_id} initiating BB84-QKD with Node {target_node.node_id} ---")
+
+        # Re-initialize BB84 sender and receiver for a new QKD session
+        self.bb84_sender = SenderBB84(self.avg_photon_number)
+        target_node.bb84_receiver = ReceiverBB84(
+            target_node.detector_efficiency,
+            target_node.dark_count_rate
+        )
+
+        # Step 1: Alice generates random bits and encodes them in randomly chosen bases
+        alice_sent_pulses_info = []
+        for i in range(num_pulses):
+            time_slot = i * pulse_repetition_rate_ns
+            encoded_state, photon_count, chosen_bit, chosen_basis = self.bb84_sender.prepare_and_send_pulse(time_slot)
+            alice_sent_pulses_info.append(self.bb84_sender.get_pulse_info(time_slot))
+
+        # Step 2: Transmit pulses over the optical channel
+        channel = self.connected_links.get(target_node.node_id)
+        if not channel:
+            raise ValueError(f"No channel defined between {self.node_id} and {target_node.node_id}")
+
+        bob_received_signals = []
+        for sent_pulse in alice_sent_pulses_info:
+            received_photons = channel.transmit_pulse(sent_pulse['photon_count'])
+            
+            # Apply phase flip noise (affects the encoded state)
+            encoded_state = sent_pulse['encoded_state']
+            if random.random() < phase_flip_prob:
+                # Phase flip changes the state: |0⟩ ↔ |1⟩, |+⟩ ↔ |-⟩
+                if encoded_state == '|0⟩':
+                    encoded_state = '|1⟩'
+                elif encoded_state == '|1⟩':
+                    encoded_state = '|0⟩'
+                elif encoded_state == '|+⟩':
+                    encoded_state = '|-⟩'
+                elif encoded_state == '|-⟩':
+                    encoded_state = '|+⟩'
+            
+            # Add additional channel noise (photon loss, etc.)
+            # This is already handled by the channel.transmit_pulse() function
+
+            bob_received_signals.append({
+                'time_slot': sent_pulse['time_slot'],
+                'received_photons': received_photons,
+                'encoded_state': encoded_state
+            })
+
+        # Step 3: Bob measures each photon in a randomly chosen basis
+        bob_measurements = []
+        for received_signal in bob_received_signals:
+            measured_bit, chosen_basis, click_occurred = target_node.bb84_receiver.receive_and_measure(
+                received_signal['time_slot'],
+                received_signal['received_photons'],
+                received_signal['encoded_state']
+            )
+            bob_measurements.append({
+                'time_slot': received_signal['time_slot'],
+                'measured_bit': measured_bit,
+                'chosen_basis': chosen_basis,
+                'click_occurred': click_occurred
+            })
+
+        # Step 4: Alice and Bob publicly disclose their bases (classical communication)
+        alice_bases = self.bb84_sender.get_chosen_bases()
+        bob_bases = target_node.bb84_receiver.get_chosen_bases()
+
+        # Step 5: Sifting process - keep bits where bases match
+        alice_sifted_key = []
+        bob_sifted_key = []
+        
+        for i in range(len(alice_sent_pulses_info)):
+            if i < len(bob_measurements) and i < len(alice_bases) and i < len(bob_bases):
+                alice_basis = alice_bases[i]
+                bob_basis = bob_bases[i]
+                alice_bit = alice_sent_pulses_info[i]['chosen_bit']
+                bob_measurement = bob_measurements[i]
+                
+                # Only keep bits where Alice and Bob used the same basis AND Bob got a click
+                if (alice_basis == bob_basis and 
+                    bob_measurement['measured_bit'] is not None and 
+                    bob_measurement['click_occurred']):
+                    alice_sifted_key.append(alice_bit)
+                    bob_sifted_key.append(bob_measurement['measured_bit'])
+
+        print(f"BB84 Sifting complete. Raw key length: {len(alice_sifted_key)}")
+        print(f"Alice bases: {alice_bases[:10]}...")  # Show first 10 bases
+        print(f"Bob bases: {bob_bases[:10]}...")      # Show first 10 bases
+        print(f"Sifted key: {bob_sifted_key}")
+        
+        # Debug information
+        basis_matches = sum(1 for a, b in zip(alice_bases, bob_bases) if a == b)
+        total_pulses = len(alice_bases)
+        print(f"BB84 Debug: {basis_matches}/{total_pulses} basis matches ({basis_matches/total_pulses*100:.1f}%)")
+        
+        # Check for clicks in matching basis cases
+        matching_basis_clicks = 0
+        for i in range(len(alice_sent_pulses_info)):
+            if i < len(bob_measurements) and i < len(alice_bases) and i < len(bob_bases):
+                if alice_bases[i] == bob_bases[i] and bob_measurements[i]['click_occurred']:
+                    matching_basis_clicks += 1
+        
+        print(f"BB84 Debug: {matching_basis_clicks} clicks in matching basis cases")
+        
+        # Check for errors in matching basis cases
+        if len(alice_sifted_key) > 0:
+            errors = sum(1 for a, b in zip(alice_sifted_key, bob_sifted_key) if a != b)
+            qber_debug = errors / len(alice_sifted_key)
+            print(f"BB84 Debug: QBER in sifted key: {qber_debug:.4f} ({errors}/{len(alice_sifted_key)} errors)")
+
+        self.shared_keys[target_node.node_id + "_bb84"] = alice_sifted_key
+        target_node.shared_keys[self.node_id + "_bb84"] = bob_sifted_key
+
+        self.traffic_log.append({
+            'type': 'key_generation_bb84',
+            'partner': target_node.node_id,
+            'initial_pulses': num_pulses,
+            'sifted_length': len(alice_sifted_key),
+        })
+        
+        print("[BB84 QKD] Sifting complete. Theory-compliant implementation.")
+        return alice_sifted_key, bob_sifted_key
 
     def get_raw_sifted_key_with_neighbor(self, neighbor_id):
         """Retrieves the raw sifted key shared with a direct neighbor."""
@@ -440,3 +576,36 @@ class Network:
 
         print(f"End-to-end COW RAW sifted key established between {sender_id} and {receiver_id}.")
         return current_end_to_end_key_segment_cow
+
+    def establish_end_to_end_raw_key_bb84(self, sender_id, receiver_id, path_nodes, num_pulses, pulse_repetition_rate_ns):
+        if path_nodes[0] != sender_id or path_nodes[-1] != receiver_id:
+            raise ValueError("Path must start with sender_id and end with receiver_id.")
+
+        print(f"\n--- Establishing end-to-end RAW key (BB84) from {sender_id} to {receiver_id} via path: {path_nodes} ---")
+        
+        current_end_to_end_key_segment_bb84 = []
+        
+        for i in range(len(path_nodes) - 1):
+            node1_id = path_nodes[i]
+            node2_id = path_nodes[i+1]
+            
+            node1 = self.nodes[node1_id]
+            node2 = self.nodes[node2_id]
+            
+            print(f"Attempting BB84-QKD link: {node1_id} <-> {node2_id}")
+            
+            alice_sifted_bb84, bob_sifted_bb84 = node1.generate_and_share_key_bb84(
+                node2, num_pulses, pulse_repetition_rate_ns
+            )
+            
+            # For trusted relay in BB84, the raw sifted key from Alice's side
+            # of the current link is concatenated to form the end-to-end raw key.
+            current_end_to_end_key_segment_bb84.extend(alice_sifted_bb84)
+
+            if not alice_sifted_bb84:
+                print(f"Failed to establish BB84 sifted key for link {node1_id}-{node2_id}. Aborting.")
+                return None
+            print(f"BB84 sifted key established for link {node1_id} and {node2_id} with length {len(alice_sifted_bb84)}")
+
+        print(f"End-to-end BB84 RAW sifted key established between {sender_id} and {receiver_id}.")
+        return current_end_to_end_key_segment_bb84

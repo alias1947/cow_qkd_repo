@@ -1,6 +1,6 @@
 # QKD Simulation Platform
 
-This project simulates Quantum Key Distribution (QKD) protocols (DPS and COW) with a FastAPI backend and a React frontend. It supports multi-node, multi-channel network configurations and provides detailed per-channel simulation results.
+This project simulates Quantum Key Distribution (QKD) protocols (DPS, COW, and BB84) with a FastAPI backend and a React frontend. It supports multi-node, multi-channel network configurations and provides detailed per-channel simulation results.
 
 ---
 
@@ -26,6 +26,34 @@ cow_qkd_repo/
 ├── requirements.txt      # Python dependencies
 └── README.md             # Project documentation
 ```
+
+---
+
+## Supported QKD Protocols
+
+### DPS-QKD (Differential Phase Shift)
+- **Encoding**: Phase difference between consecutive pulses (0, π)
+- **Detection**: Mach-Zehnder interferometer with two detectors
+- **Sifting**: Based on detector clicks and phase difference
+- **Key Rate**: ~25% of raw bits after sifting
+- **Hardware**: Fiber Mach-Zehnder interferometer with delay line
+
+### COW-QKD (Coherent One-Way)
+- **Encoding**: Intensity modulation (vacuum + coherent pulse)
+- **Detection**: Single photon detector with intensity monitoring
+- **Sifting**: Keep bits where Alice and Bob agree on data pulses
+- **Monitoring**: Pairs of monitoring pulses for eavesdropping detection
+- **Key Rate**: ~40% of raw bits after sifting
+- **Hardware**: Single photon detector with optical switching
+
+### BB84-QKD (Bennett-Brassard 1984)
+- **Encoding**: Four quantum states in two bases (rectilinear and diagonal)
+- **States**: |0⟩, |1⟩ (rectilinear) and |+⟩, |-⟩ (diagonal)
+- **Detection**: Single photon detector with basis switching
+- **Sifting**: Keep bits where Alice and Bob used the same basis
+- **Security**: Based on quantum uncertainty principle
+- **Key Rate**: ~50% of raw bits after sifting
+- **Hardware**: Polarizing beam splitter with basis switching
 
 ---
 
@@ -76,18 +104,52 @@ cow_qkd_repo/
 ---
 
 ## Usage
-- Open the frontend in your browser and use the form to configure and run QKD simulations.
-- The frontend communicates with the backend API and displays detailed results for each channel.
+
+### Protocol Selection
+- Choose from three QKD protocols: DPS, COW, or BB84
+- Each protocol has different encoding schemes and detection methods
+- Protocol switching automatically resets network topology and results
+
+### Network Configuration
+- Add/remove nodes and channels using the interactive network topology
+- Configure node parameters (detector efficiency, dark count rate, photon number)
+- Set channel parameters (fiber length, attenuation, phase flip probability)
+
+### Simulation Features
+- **Multi-node Support**: Simulate networks with multiple nodes and channels
+- **Per-channel Results**: Detailed results for each channel in the network
+- **QBER Calculation**: Quantum Bit Error Rate calculation for each protocol
+- **Key Rate Analysis**: Secure key rate and final key length estimation
+- **Protocol-specific Parameters**: Each protocol has its own parameter set
+
+### Results Display
+- QBER (Quantum Bit Error Rate) for each channel
+- Sifted key length and final secure key length
+- Secure key rate in bits per second
+- Theory compliance warnings
+- Detailed parameter breakdown
 
 ---
 
 ## Main Files and Folders
-- `simulation/Network.py`: Manages the QKD network, nodes, and connections.
-- `simulation/Source.py`: Implements light source and sender logic for QKD protocols.
-- `simulation/Hardware.py`: Models receiver and optical channel hardware.
-- `api.py`: FastAPI app exposing simulation endpoints.
+
+### Backend Implementation
+- `simulation/Network.py`: Manages the QKD network, nodes, and connections. Implements protocol-specific key generation methods.
+- `simulation/Source.py`: Implements light source and sender logic for QKD protocols (DPS, COW, BB84).
+- `simulation/Hardware.py`: Models receiver and optical channel hardware including interferometers and detectors.
+- `api.py`: FastAPI app exposing simulation endpoints with protocol-specific handling.
 - `main.py`: Script for running simulations directly or as part of the API.
-- `frontend/src/components/`: Contains main React components (`QKDForm.js`, `QKDNetwork.js`, `Results.js`).
+
+### Frontend Implementation
+- `frontend/src/components/QKDForm.js`: Protocol selection and parameter configuration
+- `frontend/src/components/QKDNetwork.js`: Interactive network topology builder
+- `frontend/src/components/Results.js`: Simulation results display
+- `frontend/src/App.js`: Main application with protocol switching and state management
+
+### Protocol Implementation Details
+- **DPS**: Phase difference encoding with Mach-Zehnder interferometer detection
+- **COW**: Intensity modulation with monitoring pulse pairs for eavesdropping detection
+- **BB84**: Four quantum states in two bases with basis switching and sifting
 
 ---
 

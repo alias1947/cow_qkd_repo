@@ -207,4 +207,74 @@ class SenderCOW:
 
     def get_intended_key_bits(self):
         return self.raw_key_bits
+
+class SenderBB84:
+    """
+    BB84 sender (Alice) implementation.
+    - Generates random bits and encodes them in randomly chosen bases
+    - Uses four quantum states: |0⟩, |1⟩ (rectilinear) and |+⟩, |-⟩ (diagonal)
+    - Sends encoded photons through quantum channel
+    """
+    def __init__(self, avg_photon_number=0.2):
+        """
+        Initialize BB84 sender.
+        avg_photon_number: average photon number per pulse (mu)
+        """
+        if not (0 < avg_photon_number < 1):
+            raise ValueError("Average photon number (mu) for BB84 should be between 0 and 1.")
+        self.light_source = LightSource(avg_photon_number)
+        self.raw_key_bits = []  # Alice's chosen bits
+        self.chosen_bases = []  # Alice's chosen bases ('R' for rectilinear, 'D' for diagonal)
+        self.sent_pulses_info = []  # Information about sent pulses
+        
+    def prepare_and_send_pulse(self, time_slot):
+        """
+        Prepare and send a single BB84 pulse.
+        Returns: (encoded_state, photon_count, chosen_bit, chosen_basis)
+        """
+        # Step 1: Alice generates a random bit
+        chosen_bit = random.randint(0, 1)
+        self.raw_key_bits.append(chosen_bit)
+        
+        # Step 2: Alice randomly chooses a basis (rectilinear or diagonal)
+        chosen_basis = random.choice(['R', 'D'])  # R for rectilinear, D for diagonal
+        self.chosen_bases.append(chosen_basis)
+        
+        # Step 3: Alice encodes the bit in the chosen basis
+        if chosen_basis == 'R':  # Rectilinear basis
+            # |0⟩ = (1, 0) for bit 0, |1⟩ = (0, 1) for bit 1
+            encoded_state = '|0⟩' if chosen_bit == 0 else '|1⟩'
+        else:  # Diagonal basis
+            # |+⟩ = 1/√2(1, 1) for bit 0, |-⟩ = 1/√2(1, -1) for bit 1
+            encoded_state = '|+⟩' if chosen_bit == 0 else '|-⟩'
+        
+        # Step 4: Generate photon count for the pulse
+        photon_count = self.light_source.generate_single_pulse_photon_count()
+        
+        # Store pulse information
+        pulse_info = {
+            'time_slot': time_slot,
+            'photon_count': photon_count,
+            'encoded_state': encoded_state,
+            'chosen_bit': chosen_bit,
+            'chosen_basis': chosen_basis
+        }
+        self.sent_pulses_info.append(pulse_info)
+        
+        return encoded_state, photon_count, chosen_bit, chosen_basis
+    
+    def get_pulse_info(self, time_slot):
+        """Retrieves information about a pulse Alice sent at a given time slot."""
+        for pulse_info in self.sent_pulses_info:
+            if pulse_info['time_slot'] == time_slot:
+                return pulse_info
+        return None
+    
+    def get_raw_key_bits(self):
+        """Returns Alice's raw key bits."""
+        return self.raw_key_bits.copy()
+    
+    def get_chosen_bases(self):
+        """Returns Alice's chosen bases."""
+        return self.chosen_bases.copy()
     
