@@ -13,6 +13,7 @@ export default function QKDForm({ params, onChange }) {
         <select name="protocol" value={params.protocol} onChange={handleChange}>
           <option value="dps">DPS-QKD</option>
           <option value="cow">COW-QKD</option>
+          <option value="bb84">BB84-QKD</option>
         </select>
       </label>
       <label>

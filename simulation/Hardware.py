@@ -239,3 +239,109 @@ class SMF:
             f"attenuation_db_per_km={self.attenuation_db_per_km}, "
             f"type='{self.fiber_type}')"
         )
+
+class ReceiverBB84:
+    """
+    Models Bob's receiver for BB84-QKD.
+    - Bob randomly chooses measurement bases
+    - Measures received photons in chosen bases
+    - Records measurement results and chosen bases for sifting
+    """
+    def __init__(self, detector_efficiency=0.9, dark_count_rate=1e-7):
+        """
+        Initialize BB84 receiver.
+        detector_efficiency: quantum efficiency of the detector
+        dark_count_rate: dark count rate per nanosecond
+        """
+        self.detector = SinglePhotonDetector(detector_efficiency, dark_count_rate)
+        self.raw_measurements = []  # Bob's measurement results
+        self.chosen_bases = []  # Bob's chosen measurement bases
+        self.received_pulses_info = []  # Information about received pulses
+        
+    def receive_and_measure(self, time_slot, incident_photons, encoded_state):
+        """
+        Bob receives a pulse and measures it in a randomly chosen basis.
+        Returns: (measured_bit, chosen_basis, click_occurred)
+        """
+        # Step 4: Bob randomly chooses a measurement basis
+        chosen_basis = random.choice(['R', 'D'])  # R for rectilinear, D for diagonal
+        self.chosen_bases.append(chosen_basis)
+        
+        # Step 5: Bob measures the photon in his chosen basis
+        click_occurred = self.detector.detect(incident_photons)
+        
+        measured_bit = None
+        if click_occurred:
+            # Bob measures the quantum state in his chosen basis
+            # This simulates the quantum measurement process with realistic noise
+            if chosen_basis == 'R':  # Rectilinear basis
+                # In rectilinear basis: |0⟩ → bit 0, |1⟩ → bit 1
+                if encoded_state == '|0⟩':
+                    # Add small probability of measurement error (realistic detector noise)
+                    if random.random() < 0.02:  # 2% measurement error
+                        measured_bit = 1
+                    else:
+                        measured_bit = 0
+                elif encoded_state == '|1⟩':
+                    # Add small probability of measurement error
+                    if random.random() < 0.02:  # 2% measurement error
+                        measured_bit = 0
+                    else:
+                        measured_bit = 1
+                else:
+                    # Wrong basis measurement - 50% chance for each bit
+                    measured_bit = random.randint(0, 1)
+            else:  # Diagonal basis
+                # In diagonal basis: |+⟩ → bit 0, |-⟩ → bit 1
+                if encoded_state == '|+⟩':
+                    # Add small probability of measurement error
+                    if random.random() < 0.02:  # 2% measurement error
+                        measured_bit = 1
+                    else:
+                        measured_bit = 0
+                elif encoded_state == '|-⟩':
+                    # Add small probability of measurement error
+                    if random.random() < 0.02:  # 2% measurement error
+                        measured_bit = 0
+                    else:
+                        measured_bit = 1
+                else:
+                    # Wrong basis measurement - 50% chance for each bit
+                    measured_bit = random.randint(0, 1)
+        else:
+            # No click - no bit recorded
+            measured_bit = None
+            
+        # Debug: Print first few measurements to understand what's happening
+        if len(self.raw_measurements) <= 3:
+            print(f"BB84 Debug: Time {time_slot}, State {encoded_state}, Basis {chosen_basis}, Click {click_occurred}, Bit {measured_bit}")
+            
+        self.raw_measurements.append(measured_bit)
+        
+        # Store measurement information
+        measurement_info = {
+            'time_slot': time_slot,
+            'incident_photons': incident_photons,
+            'encoded_state': encoded_state,
+            'chosen_basis': chosen_basis,
+            'click_occurred': click_occurred,
+            'measured_bit': measured_bit
+        }
+        self.received_pulses_info.append(measurement_info)
+        
+        return measured_bit, chosen_basis, click_occurred
+    
+    def get_measurement_info(self, time_slot):
+        """Retrieves information about a measurement at a given time slot."""
+        for measurement_info in self.received_pulses_info:
+            if measurement_info['time_slot'] == time_slot:
+                return measurement_info
+        return None
+    
+    def get_raw_measurements(self):
+        """Returns Bob's raw measurement results."""
+        return self.raw_measurements.copy()
+    
+    def get_chosen_bases(self):
+        """Returns Bob's chosen measurement bases."""
+        return self.chosen_bases.copy()

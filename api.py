@@ -177,6 +177,58 @@ def simulate(params: SimParams):
                 }
             })
 
+    elif params.protocol == "bb84":
+        # Run BB84 simulation for each channel
+        for ch in params.channels:
+            node_a = node_map.get(ch.from_)
+            node_b = node_map.get(ch.to)
+            if not node_a or not node_b:
+                continue
+
+            net.connect_nodes(
+                node_a.node_id, node_b.node_id,
+                distance_km=ch.fiber_length_km,
+                attenuation_db_per_km=ch.fiber_attenuation_db_per_km
+            )
+
+            alice_key, bob_key = node_a.generate_and_share_key_bb84(
+                node_b,
+                params.num_pulses,
+                params.pulse_repetition_rate,
+                phase_flip_prob=getattr(ch, 'phase_flip_prob', params.phase_flip_prob)
+            )
+            qber, num_errors = calculate_qber(alice_key, bob_key)
+            final_key_len, postproc = postprocessing(len(alice_key), qber)
+            total_time_s = (params.num_pulses * params.pulse_repetition_rate) / 1e9 if params.num_pulses > 0 else 0
+            secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
+            theory_compliance = (0.03 <= qber <= 0.11)
+            theory_message = "QBER is within the practical range (3-11%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
+
+            node_a_params = next((n for n in params.nodes if n.id == ch.from_), None)
+            node_b_params = next((n for n in params.nodes if n.id == ch.to), None)
+
+            results.append({
+                "channel_id": ch.id,
+                "from": ch.from_,
+                "to": ch.to,
+                "protocol": "bb84",
+                "qber": qber,
+                "final_key_length": final_key_len,
+                "secure_key_rate_bps": secure_key_rate_bps,
+                "sifted_key_length": len(alice_key),
+                "num_errors": num_errors,
+                "postprocessing": postproc,
+                "theory_compliance": theory_compliance,
+                "theory_message": theory_message,
+                "alice_key": alice_key,
+                "bob_key": bob_key,
+                "parameters": {
+                    "node_a": node_a_params.dict() if node_a_params else {},
+                    "node_b": node_b_params.dict() if node_b_params else {},
+                    "channel": ch.dict()
+                }
+            })
+
     return {"results": results}
 
 if __name__ == '__main__':
