@@ -1,11 +1,6 @@
-from simulation.Source import Sender
-from simulation.Hardware import Receiver, OpticalChannel
-# Import COW components
-from simulation.Source import SenderCOW
-from simulation.Hardware import ReceiverCOW
-# Import BB84 components
-from simulation.Source import SenderBB84
-from simulation.Hardware import ReceiverBB84
+from simulation.Sender import Sender, SenderCOW, SenderBB84
+from simulation.Receiver import Receiver, ReceiverCOW, ReceiverBB84
+from simulation.Hardware import OpticalChannel
 
 import math 
 import random
