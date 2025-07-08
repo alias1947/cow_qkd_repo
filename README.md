@@ -13,8 +13,10 @@ cow_qkd_repo/
 ├── simulation/           # Core simulation logic (Python package)
 │   ├── __init__.py
 │   ├── Network.py        # Network and node management
-│   ├── Source.py         # Light source and sender logic
-│   └── Hardware.py       # Receiver and channel hardware logic
+│   ├── Hardware.py       # All hardware components (light source, modulators, channel, etc.)
+│   ├── Sender.py         # Sender logic for all QKD protocols
+│   ├── Receiver.py       # Receiver logic for all QKD protocols
+│   └── ...               # Other simulation files
 ├── frontend/             # React frontend
 │   ├── src/
 │   │   ├── components/   # Main React components
@@ -135,8 +137,9 @@ cow_qkd_repo/
 
 ### Backend Implementation
 - `simulation/Network.py`: Manages the QKD network, nodes, and connections. Implements protocol-specific key generation methods.
-- `simulation/Source.py`: Implements light source and sender logic for QKD protocols (DPS, COW, BB84).
-- `simulation/Hardware.py`: Models receiver and optical channel hardware including interferometers and detectors.
+- `simulation/Hardware.py`: Contains all hardware components (light source, modulators, optical channels, detectors, etc.).
+- `simulation/Sender.py`: Implements sender logic for QKD protocols (DPS, COW, BB84).
+- `simulation/Receiver.py`: Implements receiver logic for QKD protocols (DPS, COW, BB84).
 - `api.py`: FastAPI app exposing simulation endpoints with protocol-specific handling.
 - `main.py`: Script for running simulations directly or as part of the API.
 
