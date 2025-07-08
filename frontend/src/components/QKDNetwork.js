@@ -13,6 +13,8 @@ const defaultNodeParams = () => ({
   detector_efficiency: 0.9,
   dark_count_rate: 1e-8,
   mu: 0.2,
+  num_pulses: 10000,
+  pulse_repetition_rate: 1,
 });
 const defaultEdgeParams = () => ({
   fiber_length_km: 10,
@@ -75,6 +77,14 @@ function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSe
         <label>Mu:<br/>
           <input type="number" step="0.01" value={selected.data.mu}
             onChange={e => onChange({ ...selected, data: { ...selected.data, mu: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Pulses:<br/>
+          <input type="number" step="1" min="1" value={selected.data.num_pulses}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, num_pulses: Number(e.target.value) } })} />
+        </label><br/>
+        <label>Pulse Repetition Rate (ns):<br/>
+          <input type="number" step="any" min="0.0001" value={selected.data.pulse_repetition_rate}
+            onChange={e => onChange({ ...selected, data: { ...selected.data, pulse_repetition_rate: Number(e.target.value) } })} />
         </label><br/>
         <button style={{ marginTop: 12, color: 'white', background: '#d32f2f', border: 'none', borderRadius: 4, padding: '6px 12px' }} onClick={() => onRemove(selected.id)}>Remove Node</button>
       </div>
@@ -214,6 +224,8 @@ export default function QKDNetwork({ onNetworkChange }) {
           detector_efficiency: n.data.detector_efficiency,
           dark_count_rate: n.data.dark_count_rate,
           mu: n.data.mu,
+          num_pulses: n.data.num_pulses,
+          pulse_repetition_rate: n.data.pulse_repetition_rate,
         })),
         channels: edges.map((e, idx) => ({
           id: idx + 1,

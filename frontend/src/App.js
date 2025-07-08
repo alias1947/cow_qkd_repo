@@ -5,7 +5,7 @@ import Results from "./components/Results";
 import axios from "axios";
 
 function App() {
-  const [params, setParams] = useState({ protocol: "dps", num_pulses: 10000, pulse_repetition_rate: 1, phase_flip_prob: 0.05, cow_monitor_pulse_ratio: 0.1, cow_detection_threshold_photons: 0, cow_extinction_ratio_db: 20 });
+  const [params, setParams] = useState({ protocol: "dps", cow_monitor_pulse_ratio: 0.1, cow_detection_threshold_photons: 0, cow_extinction_ratio_db: 20 });
   const [network, setNetwork] = useState({ nodes: [ { id: 1, detector_efficiency: 0.9, dark_count_rate: 1e-8, mu: 0.2 }, { id: 2, detector_efficiency: 0.9, dark_count_rate: 1e-8, mu: 0.2 } ], channels: [] });
   const [results, setResults] = useState(null);
   const [networkKey, setNetworkKey] = useState(0); // Key to force network reset
@@ -36,7 +36,7 @@ function App() {
       setProtocolChangeMessage(`Protocol changed to ${formParams.protocol.toUpperCase()}-QKD. Network topology and results have been reset.`);
       
       // Clear message after 3 seconds
-      setTimeout(() => setProtocolChangeMessage(""), 3000);
+      setTimeout(() => setProtocolChangeMessage(""), 500);
     }
     
     setParams(formParams);
@@ -68,9 +68,6 @@ function App() {
     // Reset everything to default state
     setParams({ 
       protocol: "dps", 
-      num_pulses: 10000, 
-      pulse_repetition_rate: 1, 
-      phase_flip_prob: 0.05, 
       cow_monitor_pulse_ratio: 0.1, 
       cow_detection_threshold_photons: 0, 
       cow_extinction_ratio_db: 20 
@@ -85,7 +82,7 @@ function App() {
     setResults(null);
     setNetworkKey(prev => prev + 1);
     setProtocolChangeMessage("Application reset to default state.");
-    setTimeout(() => setProtocolChangeMessage(""), 3000);
+    setTimeout(() => setProtocolChangeMessage(""), 500);
   };
 
   return (

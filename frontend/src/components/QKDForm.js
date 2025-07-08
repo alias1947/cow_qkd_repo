@@ -16,18 +16,6 @@ export default function QKDForm({ params, onChange }) {
           <option value="bb84">BB84-QKD</option>
         </select>
       </label>
-      <label>
-        Pulses:
-        <input name="num_pulses" type="number" value={params.num_pulses} onChange={handleChange} />
-      </label>
-      <label>
-        Pulse Repetition Rate (ns):
-        <input name="pulse_repetition_rate" type="number" value={params.pulse_repetition_rate} onChange={handleChange} />
-      </label>
-      <label>
-        Phase Flip Probability (0-1):
-        <input name="phase_flip_prob" type="number" step="0.001" min="0" max="1" value={params.phase_flip_prob} onChange={handleChange} />
-      </label>
       {params.protocol === "cow" && (
         <>
           <label>
