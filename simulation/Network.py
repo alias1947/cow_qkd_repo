@@ -1,6 +1,6 @@
-from simulation.Receiver import Receiver, ReceiverCOW, ReceiverBB84
+from simulation.Receiver import ReceiverDPS, ReceiverCOW, ReceiverBB84
 from simulation.Hardware import OpticalChannel
-from simulation.Sender import Sender, SenderCOW, SenderBB84
+from simulation.Sender import SenderDPS, SenderCOW, SenderBB84
 
 import math 
 import random
@@ -20,8 +20,8 @@ class Node:
         self.avg_photon_number = avg_photon_number
         self.detector_efficiency = detector_efficiency
         self.dark_count_rate = dark_count_rate
-        self.qkd_sender = Sender(self.avg_photon_number)
-        self.qkd_receiver = Receiver(self.detector_efficiency, self.dark_count_rate)
+        self.qkd_sender = SenderDPS(self.avg_photon_number)
+        self.qkd_receiver = ReceiverDPS(self.detector_efficiency, self.dark_count_rate)
         
         # Initialize COW components
         self.cow_monitor_pulse_ratio = cow_monitor_pulse_ratio
@@ -57,8 +57,8 @@ class Node:
         
         # Re-initialize sender and receiver for a new QKD session to ensure clean state (e.g., last_sent_phase)
         #for DPS
-        self.qkd_sender = Sender(self.avg_photon_number)
-        target_node.qkd_receiver = Receiver(target_node.detector_efficiency, target_node.dark_count_rate)
+        self.qkd_sender = SenderDPS(self.avg_photon_number)
+        target_node.qkd_receiver = ReceiverDPS(target_node.detector_efficiency, target_node.dark_count_rate)
 
         alice_pulses_sent_info = [] 
         

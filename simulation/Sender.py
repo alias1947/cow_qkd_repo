@@ -2,7 +2,7 @@ from .Hardware import LightSource, PhaseModulator, IntensityModulator
 import random
 import math
 
-class Sender:
+class SenderDPS:
     def __init__(self, avg_photon_number=0.2):
         self.light_source = LightSource(avg_photon_number)
         self.phase_modulator = PhaseModulator()

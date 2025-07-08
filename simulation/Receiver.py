@@ -2,7 +2,7 @@ import math
 import random
 from .Hardware import MachZehnderInterferometer, SinglePhotonDetector
 
-class Receiver:
+class ReceiverDPS:
     """
     Models Bob's receiver for DPS-QKD, including a Mach-Zehnder Interferometer
     and two single-photon detectors.
