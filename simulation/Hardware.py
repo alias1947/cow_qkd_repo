@@ -1,6 +1,48 @@
 import random
 import math
 
+class LightSource:
+    def __init__(self, average_photon_number=0.2):
+        if not (0 < average_photon_number < 1):
+            raise ValueError("Average photon number (mu) for WCP should be between 0 and 1.")
+        self.mu = average_photon_number 
+    def generate_single_pulse_photon_count(self, mu=None):
+        if mu is None:
+            mu = self.mu
+        num_photons = 0
+        L = math.exp(-mu)
+        p = 1.0
+        k = 0
+        while p > L:
+            k += 1
+            p *= random.random()
+        num_photons = k - 1
+        return num_photons
+    def get_initial_phase(self):
+        return 0.0
+
+class PhaseModulator:
+    def modulate_phase(self, current_phase, desired_phase_shift):
+        return (current_phase + desired_phase_shift) % (2 * math.pi)
+
+class IntensityModulator:
+    """
+    Models an intensity modulator with a finite extinction ratio.
+    The extinction ratio is the ratio of maximum power (on) to minimum power (off).
+    """
+    def __init__(self, extinction_ratio_db=20.0):
+        if extinction_ratio_db <= 0:
+            raise ValueError("Extinction ratio must be a positive value in dB.")
+        self.extinction_ratio_db = extinction_ratio_db
+        self.extinction_ratio_linear = 10**(self.extinction_ratio_db / 10)
+    def modulate(self, base_mu, state):
+        if state == 'on':
+            return base_mu
+        elif state == 'off':
+            return base_mu / self.extinction_ratio_linear
+        else:
+            raise ValueError("Modulator state must be 'on' or 'off'")
+
 class OpticalChannel:
     def __init__(self, distance_km, attenuation_db_per_km=0.2):
         self.distance_km = distance_km
@@ -73,134 +115,6 @@ class SinglePhotonDetector:
                  
         return click 
 
-class Receiver:
-    """
-    Models Bob's receiver for DPS-QKD, including a Mach-Zehnder Interferometer
-    and two single-photon detectors.
-    """
-    def __init__(self, detector_efficiency=0.9, dark_count_rate=1e-7):
-        self.mzi = MachZehnderInterferometer()
-        self.detector_dm1 = SinglePhotonDetector(detector_efficiency, dark_count_rate)
-        self.detector_dm2 = SinglePhotonDetector(detector_efficiency, dark_count_rate)
-        self.raw_clicks_info = [] # Stores (time_slot, click_dm1, click_dm2, measured_phase_diff)
-
-    def receive_and_measure(self, time_slot, current_pulse_photons, current_pulse_phase, 
-                            previous_pulse_photons, previous_pulse_phase):
-        """
-        Bob receives the current pulse and, using the previously received pulse,
-        measures the phase difference via his MZI and records the detection.
-        """
-        measured_phase_diff = None
-        bob_bit = None
-        click_dm1 = False
-        click_dm2 = False
-
-        # Bob only makes a measurement if he has received photons for *both* pulses
-        # that form the interference pair. If either is zero, no interference occurs.
-        if previous_pulse_photons > 0 and current_pulse_photons > 0:
-            # Calculate the ideal probabilities for photons exiting the MZI at DM1 and DM2
-            prob_dm1_output_ideal, prob_dm2_output_ideal = self.mzi.interfere_pulses(
-                previous_pulse_phase, current_pulse_phase
-            )
-            
-            # Simulate which path the "effective" photon takes (DM1 or DM2)
-            # Assuming one effective photon per pair for measurement.
-            # This is a simplification; a full simulation would involve tracking individual photons.
-            
-            # Use a single random draw to decide which detector *would* ideally get the photon
-            if random.random() < prob_dm1_output_ideal:
-                # If it ideally goes to DM1, simulate detection at DM1
-                click_dm1 = self.detector_dm1.detect(1) # Pass 1 for a potential photon
-            else:
-                # If it ideally goes to DM2, simulate detection at DM2
-                click_dm2 = self.detector_dm2.detect(1) # Pass 1 for a potential photon
-       
-        # Even if no real photons arrive or interfere, dark counts can still occur.
-        # Check for dark counts independently for each detector.
-        if not click_dm1:
-            click_dm1 = self.detector_dm1.detect(0) # Check for dark count (0 incident photons)
-        if not click_dm2:
-            click_dm2 = self.detector_dm2.detect(0) # Check for dark count (0 incident photons)
-
-        # Infer the bit based on detector clicks
-        if click_dm1 and not click_dm2:
-            measured_phase_diff = 0.0 # Corresponds to a '0' bit
-            bob_bit = 0
-        elif click_dm2 and not click_dm1:
-            measured_phase_diff = math.pi # Corresponds to a '1' bit
-            bob_bit = 1
-        else: 
-            # If both detectors clicked or neither clicked, the measurement is inconclusive.
-            # These events are typically discarded in QKD sifting to maintain security.
-            measured_phase_diff = None
-            bob_bit = None 
-            # print(f"Debug: Inconclusive detection at time {time_slot}. DM1: {click_dm1}, DM2: {click_dm2}")
-
-        self.raw_clicks_info.append({
-            'time_slot': time_slot,
-            'click_dm1': click_dm1,
-            'click_dm2': click_dm2,
-            'measured_phase_diff': measured_phase_diff,
-            'bob_inferred_bit': bob_bit
-        })
-        
-        return click_dm1, click_dm2, measured_phase_diff, bob_bit
-
-class ReceiverCOW:
-    """
-    Models Bob's receiver for COW-QKD.
-    """
-    def __init__(self, detector_efficiency=0.9, dark_count_rate=1e-7, detection_threshold_photons=0):
-        # For COW, Bob usually has one detector for data and monitoring pulses.
-        self.data_detector = SinglePhotonDetector(detector_efficiency, dark_count_rate)
-        # Minimum photons for a click to be considered a '1' (distinguishes signal from dark count for '1's)
-        self.detection_threshold_photons = detection_threshold_photons 
-        self.received_pulses_info = [] # Stores info about received pulses and Bob's interpretation
-
-    def measure_pulse(self, time_slot, incident_photons, pulse_type):
-        """
-        Measures a single pulse for COW QKD.
-        For data pulses, determines if it's a '0' or '1' based on detection.
-        For monitoring pulses, just records the click status.
-        """
-        click = self.data_detector.detect(incident_photons)
-        
-        bob_inferred_bit = None # Initialize to None for inconclusive cases
-        is_monitoring_click = False
-
-        if pulse_type.startswith('data'):
-            # Simple COW logic: if the detector clicks, Bob infers a '1'. No click means '0'.
-            # Errors (dark counts on a '0' slot, or photon loss on a '1' slot) are handled this way.
-            if click:
-                bob_inferred_bit = 1
-            else: # No click
-                bob_inferred_bit = 0
-
-        elif pulse_type == 'monitor_first' or pulse_type == 'monitor_second':
-            if click:
-                is_monitoring_click = True
-            # For monitoring pulses, Bob doesn't infer a bit. He just records if a click occurred.
-
-        self.received_pulses_info.append({
-            'time_slot': time_slot,
-            'incident_photons': incident_photons,
-            'click': click,
-            'bob_inferred_bit': bob_inferred_bit, # Only for data pulses
-            'is_monitoring_click': is_monitoring_click, # For monitoring pulses
-            'pulse_type': pulse_type
-        })
-        return click, bob_inferred_bit, is_monitoring_click
-
-    def get_received_pulse_info(self, time_slot):
-        for pulse_info in self.received_pulses_info:
-            if pulse_info['time_slot'] == time_slot:
-                return pulse_info
-        return None
-
-    def get_all_received_info(self):
-        return self.received_pulses_info
-
-
 #writing code for Fiber selction from ui , and provided definit params
 class SMF:
     def __init__(
@@ -239,109 +153,3 @@ class SMF:
             f"attenuation_db_per_km={self.attenuation_db_per_km}, "
             f"type='{self.fiber_type}')"
         )
-
-class ReceiverBB84:
-    """
-    Models Bob's receiver for BB84-QKD.
-    - Bob randomly chooses measurement bases
-    - Measures received photons in chosen bases
-    - Records measurement results and chosen bases for sifting
-    """
-    def __init__(self, detector_efficiency=0.9, dark_count_rate=1e-7):
-        """
-        Initialize BB84 receiver.
-        detector_efficiency: quantum efficiency of the detector
-        dark_count_rate: dark count rate per nanosecond
-        """
-        self.detector = SinglePhotonDetector(detector_efficiency, dark_count_rate)
-        self.raw_measurements = []  # Bob's measurement results
-        self.chosen_bases = []  # Bob's chosen measurement bases
-        self.received_pulses_info = []  # Information about received pulses
-        
-    def receive_and_measure(self, time_slot, incident_photons, encoded_state):
-        """
-        Bob receives a pulse and measures it in a randomly chosen basis.
-        Returns: (measured_bit, chosen_basis, click_occurred)
-        """
-        # Step 4: Bob randomly chooses a measurement basis
-        chosen_basis = random.choice(['R', 'D'])  # R for rectilinear, D for diagonal
-        self.chosen_bases.append(chosen_basis)
-        
-        # Step 5: Bob measures the photon in his chosen basis
-        click_occurred = self.detector.detect(incident_photons)
-        
-        measured_bit = None
-        if click_occurred:
-            # Bob measures the quantum state in his chosen basis
-            # This simulates the quantum measurement process with realistic noise
-            if chosen_basis == 'R':  # Rectilinear basis
-                # In rectilinear basis: |0⟩ → bit 0, |1⟩ → bit 1
-                if encoded_state == '|0⟩':
-                    # Add small probability of measurement error (realistic detector noise)
-                    if random.random() < 0.02:  # 2% measurement error
-                        measured_bit = 1
-                    else:
-                        measured_bit = 0
-                elif encoded_state == '|1⟩':
-                    # Add small probability of measurement error
-                    if random.random() < 0.02:  # 2% measurement error
-                        measured_bit = 0
-                    else:
-                        measured_bit = 1
-                else:
-                    # Wrong basis measurement - 50% chance for each bit
-                    measured_bit = random.randint(0, 1)
-            else:  # Diagonal basis
-                # In diagonal basis: |+⟩ → bit 0, |-⟩ → bit 1
-                if encoded_state == '|+⟩':
-                    # Add small probability of measurement error
-                    if random.random() < 0.02:  # 2% measurement error
-                        measured_bit = 1
-                    else:
-                        measured_bit = 0
-                elif encoded_state == '|-⟩':
-                    # Add small probability of measurement error
-                    if random.random() < 0.02:  # 2% measurement error
-                        measured_bit = 0
-                    else:
-                        measured_bit = 1
-                else:
-                    # Wrong basis measurement - 50% chance for each bit
-                    measured_bit = random.randint(0, 1)
-        else:
-            # No click - no bit recorded
-            measured_bit = None
-            
-        # Debug: Print first few measurements to understand what's happening
-        if len(self.raw_measurements) <= 3:
-            print(f"BB84 Debug: Time {time_slot}, State {encoded_state}, Basis {chosen_basis}, Click {click_occurred}, Bit {measured_bit}")
-            
-        self.raw_measurements.append(measured_bit)
-        
-        # Store measurement information
-        measurement_info = {
-            'time_slot': time_slot,
-            'incident_photons': incident_photons,
-            'encoded_state': encoded_state,
-            'chosen_basis': chosen_basis,
-            'click_occurred': click_occurred,
-            'measured_bit': measured_bit
-        }
-        self.received_pulses_info.append(measurement_info)
-        
-        return measured_bit, chosen_basis, click_occurred
-    
-    def get_measurement_info(self, time_slot):
-        """Retrieves information about a measurement at a given time slot."""
-        for measurement_info in self.received_pulses_info:
-            if measurement_info['time_slot'] == time_slot:
-                return measurement_info
-        return None
-    
-    def get_raw_measurements(self):
-        """Returns Bob's raw measurement results."""
-        return self.raw_measurements.copy()
-    
-    def get_chosen_bases(self):
-        """Returns Bob's chosen measurement bases."""
-        return self.chosen_bases.copy()

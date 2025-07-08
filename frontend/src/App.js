@@ -3,9 +3,15 @@ import QKDForm from "./components/QKDForm";
 import QKDNetwork from "./components/QKDNetwork";
 import Results from "./components/Results";
 import axios from "axios";
+import Button from '@mui/material/Button';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Box from '@mui/material/Box';
 
 function App() {
-  const [params, setParams] = useState({ protocol: "dps", num_pulses: 10000, pulse_repetition_rate: 1, phase_flip_prob: 0.05, cow_monitor_pulse_ratio: 0.1, cow_detection_threshold_photons: 0, cow_extinction_ratio_db: 20 });
+  const [params, setParams] = useState({ protocol: "dps", cow_monitor_pulse_ratio: 0.1, cow_detection_threshold_photons: 0, cow_extinction_ratio_db: 20 });
   const [network, setNetwork] = useState({ nodes: [ { id: 1, detector_efficiency: 0.9, dark_count_rate: 1e-8, mu: 0.2 }, { id: 2, detector_efficiency: 0.9, dark_count_rate: 1e-8, mu: 0.2 } ], channels: [] });
   const [results, setResults] = useState(null);
   const [networkKey, setNetworkKey] = useState(0); // Key to force network reset
@@ -36,7 +42,7 @@ function App() {
       setProtocolChangeMessage(`Protocol changed to ${formParams.protocol.toUpperCase()}-QKD. Network topology and results have been reset.`);
       
       // Clear message after 3 seconds
-      setTimeout(() => setProtocolChangeMessage(""), 3000);
+      setTimeout(() => setProtocolChangeMessage(""), 500);
     }
     
     setParams(formParams);
@@ -68,9 +74,6 @@ function App() {
     // Reset everything to default state
     setParams({ 
       protocol: "dps", 
-      num_pulses: 10000, 
-      pulse_repetition_rate: 1, 
-      phase_flip_prob: 0.05, 
       cow_monitor_pulse_ratio: 0.1, 
       cow_detection_threshold_photons: 0, 
       cow_extinction_ratio_db: 20 
@@ -85,40 +88,40 @@ function App() {
     setResults(null);
     setNetworkKey(prev => prev + 1);
     setProtocolChangeMessage("Application reset to default state.");
-    setTimeout(() => setProtocolChangeMessage(""), 3000);
+    setTimeout(() => setProtocolChangeMessage(""), 500);
   };
 
   return (
     <div style={{ padding: 32 }}>
-      <h1>QKD Simulator - IISERB</h1>
+      <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+        <img src="/iiserBLogo.jpg" alt="IISERB Logo" style={{ height: 64, width: 64, marginRight: 20, borderRadius: '50%', boxShadow: '0 2px 8px #0002' }} />
+        <Typography variant="h3" component="h1" fontWeight={700} color="text.primary" align="center">
+          QKD Simulator - IISERB
+        </Typography>
+      </Box>
+      <Divider sx={{ mb: 4 }} />
       <QKDForm params={params} onChange={handleFormChange} />
       
       {protocolChangeMessage && (
-        <div style={{ 
-          margin: '16px 0', 
-          padding: '12px 16px', 
-          backgroundColor: '#e3f2fd', 
-          border: '1px solid #1976d2', 
-          borderRadius: '4px', 
-          color: '#1976d2',
+        <Typography variant="subtitle1" sx={{
+          my: 2,
+          px: 2,
+          py: 1.5,
+          backgroundColor: '#e3f2fd',
+          border: '1px solid',
+          borderColor: 'primary.main',
+          borderRadius: 1,
+          color: 'primary.main',
           fontWeight: 500
         }}>
           {protocolChangeMessage}
-        </div>
+        </Typography>
       )}
       
       <QKDNetwork key={networkKey} onNetworkChange={handleNetworkChange} />
       <div style={{ display: 'flex', gap: '16px', margin: '16px 0' }}>
-        <button onClick={handleSimulate} className="qkd-btn" style={{ padding: '12px 32px', fontWeight: 600, fontSize: 18 }}>Run Simulation</button>
-        <button onClick={handleReset} style={{ 
-          padding: '12px 24px', 
-          fontWeight: 600, 
-          fontSize: 16,
-          backgroundColor: '#f5f5f5',
-          border: '1px solid #ccc',
-          borderRadius: '4px',
-          cursor: 'pointer'
-        }}>Reset All</button>
+        <Button onClick={handleSimulate} variant="contained" color="primary" sx={{ px: 4, py: 1.5, fontWeight: 600, fontSize: 18 }} startIcon={<PlayArrowIcon />}>Run Simulation</Button>
+        <Button onClick={handleReset} variant="outlined" color="secondary" sx={{ px: 3, py: 1.5, fontWeight: 600, fontSize: 16 }} startIcon={<RestartAltIcon />}>Reset All</Button>
       </div>
       {results && <Results results={results} />}
     </div>

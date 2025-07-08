@@ -1,4 +1,14 @@
 import React, { useState, useEffect } from "react";
+import Button from '@mui/material/Button';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import ScienceIcon from '@mui/icons-material/Science';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 // Helper to format key as string
 const formatKey = (key) => {
@@ -35,25 +45,33 @@ export default function Results({ results }) {
 
   return (
     <div style={{ border: "1px solid #ccc", padding: 16, borderRadius: 8, backgroundColor: "#fff" }}>
-      <h2>Simulation Results</h2>
+      <Typography variant="h4" component="h2" gutterBottom fontWeight={700} color="primary.main">
+        Simulation Results
+      </Typography>
       <div style={{ marginBottom: 16, borderBottom: "1px solid #eee", paddingBottom: 8 }}>
-        <button onClick={() => setTab("summary")} disabled={tab === "summary"} style={{ marginRight: 8 }}>Summary</button>
-        <button onClick={() => setTab("keys")} disabled={tab === "keys"} style={{ marginRight: 8 }}>Key Comparison</button>
-        <button onClick={() => setTab("theory")} disabled={tab === "theory"}>Theory Details</button>
+        <Button onClick={() => setTab("summary")} disabled={tab === "summary"} variant="contained" color="primary" sx={{ mr: 1 }} startIcon={<ListAltIcon />}>Summary</Button>
+        <Button onClick={() => setTab("keys")} disabled={tab === "keys"} variant="contained" color="primary" sx={{ mr: 1 }} startIcon={<VpnKeyIcon />}>Key Comparison</Button>
+        <Button onClick={() => setTab("theory")} disabled={tab === "theory"} variant="contained" color="primary" startIcon={<ScienceIcon />}>Theory Details</Button>
       </div>
 
       {(tab === "keys" || tab === "theory") && (
-        <div style={{ marginBottom: 16 }}>
-          <label>Select Channel: 
-            <select value={selectedChannelId} onChange={e => setSelectedChannelId(Number(e.target.value))}>
+        <Box mb={2}>
+          <FormControl size="small" sx={{ minWidth: 240 }}>
+            <InputLabel id="channel-select-label">Select Channel</InputLabel>
+            <Select
+              labelId="channel-select-label"
+              value={selectedChannelId}
+              label="Select Channel"
+              onChange={e => setSelectedChannelId(Number(e.target.value))}
+            >
               {results.map(r => (
-                <option key={r.channel_id} value={r.channel_id}>
+                <MenuItem key={r.channel_id} value={r.channel_id}>
                   Channel {r.channel_id} (Node {r.from} to Node {r.to})
-                </option>
+                </MenuItem>
               ))}
-            </select>
-          </label>
-        </div>
+            </Select>
+          </FormControl>
+        </Box>
       )}
 
       {tab === "summary" && (
@@ -87,7 +105,9 @@ export default function Results({ results }) {
 
       {tab === "keys" && selectedResult && (
         <div>
-          <h3>Key Comparison for Channel {selectedResult.channel_id} (First 100 bits)</h3>
+          <Typography variant="h6" component="h3" gutterBottom fontWeight={600} color="secondary.main">
+            Key Comparison for Channel {selectedResult.channel_id} (First 100 bits)
+          </Typography>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             <div><b>Alice's Key:</b><div style={{ wordBreak: "break-all", fontFamily: "monospace" }}>{formatKey(selectedResult.alice_key)}</div></div>
             <div><b>Bob's Key:</b><div style={{ wordBreak: "break-all", fontFamily: "monospace" }}>{formatKey(selectedResult.bob_key)}</div></div>
@@ -97,24 +117,26 @@ export default function Results({ results }) {
 
       {tab === "theory" && selectedResult && (
         <div>
-          <h3>Theory Details for Channel {selectedResult.channel_id}</h3>
+          <Typography variant="h6" component="h3" gutterBottom fontWeight={600} color="secondary.main">
+            Theory Details for Channel {selectedResult.channel_id}
+          </Typography>
            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
               <div>
-                <h4>Protocol Details</h4>
+                <Typography variant="subtitle1" fontWeight={600} color="primary.main">Protocol Details</Typography>
                 <div><b>Encoding:</b> Phase difference between consecutive pulses (0, π)</div>
                 <div><b>Detection:</b> Mach-Zehnder interferometer</div>
               </div>
               <div>
-                <h4>Channel Parameters</h4>
+                <Typography variant="subtitle1" fontWeight={600} color="primary.main">Channel Parameters</Typography>
                 <div><b>Fiber Length:</b> {selectedResult.parameters.channel.fiber_length_km} km</div>
                 <div><b>Attenuation:</b> {selectedResult.parameters.channel.fiber_attenuation_db_per_km} dB/km</div>
               </div>
                <div>
-                <h4>Node {selectedResult.from} (Alice) Parameters</h4>
+                <Typography variant="subtitle1" fontWeight={600} color="primary.main">Node {selectedResult.from} (Alice) Parameters</Typography>
                 <div><b>Avg. Photon Number (μ):</b> {selectedResult.parameters.node_a.mu}</div>
               </div>
               <div>
-                <h4>Node {selectedResult.to} (Bob) Parameters</h4>
+                <Typography variant="subtitle1" fontWeight={600} color="primary.main">Node {selectedResult.to} (Bob) Parameters</Typography>
                 <div><b>Detector Efficiency:</b> {formatPercent(selectedResult.parameters.node_b.detector_efficiency)}</div>
                 <div><b>Dark Count Rate:</b> {formatScientific(selectedResult.parameters.node_b.dark_count_rate)}</div>
               </div>
