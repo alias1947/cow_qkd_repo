@@ -8,6 +8,12 @@ import ReactFlow, {
   useEdgesState,
 } from "react-flow-renderer";
 import { v4 as uuidv4 } from 'uuid';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import UndoIcon from '@mui/icons-material/Undo';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Typography from '@mui/material/Typography';
 
 const defaultNodeParams = () => ({
   detector_efficiency: 0.9,
@@ -50,10 +56,7 @@ function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSe
               {edges.map(e => (
                 <li key={e.id} style={{ marginBottom: 4 }}>
                   Channel {e.id} (Node {e.source} → Node {e.target})
-                  <button style={{ marginLeft: 8, fontSize: 12, padding: '2px 8px', borderRadius: 4, border: '1px solid #1976d2', background: '#e3f2fd', color: '#1976d2', cursor: 'pointer' }}
-                    onClick={() => { setSelected(e); setSelectedType('edge'); }}>
-                    Edit
-                  </button>
+                  <Button variant="outlined" size="small" sx={{ ml: 1 }} onClick={() => { setSelected(e); setSelectedType('edge'); }} startIcon={<EditIcon />}>Edit</Button>
                 </li>
               ))}
             </ul>
@@ -65,7 +68,7 @@ function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSe
   if (type === 'node') {
     return (
       <div style={{ padding: 16 }}>
-        <h4>Node {selected.data.label}</h4>
+        <Typography variant="subtitle1" fontWeight={600} color="primary.main" gutterBottom>Node {selected.data.label}</Typography>
         <label>Detector Efficiency:<br/>
           <input type="number" step="0.01" value={selected.data.detector_efficiency}
             onChange={e => onChange({ ...selected, data: { ...selected.data, detector_efficiency: Number(e.target.value) } })} />
@@ -86,14 +89,14 @@ function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSe
           <input type="number" step="any" min="0.0001" value={selected.data.pulse_repetition_rate}
             onChange={e => onChange({ ...selected, data: { ...selected.data, pulse_repetition_rate: Number(e.target.value) } })} />
         </label><br/>
-        <button style={{ marginTop: 12, color: 'white', background: '#d32f2f', border: 'none', borderRadius: 4, padding: '6px 12px' }} onClick={() => onRemove(selected.id)}>Remove Node</button>
+        <Button variant="contained" color="error" sx={{ mt: 1 }} onClick={() => onRemove(selected.id)} startIcon={<DeleteIcon />}>Remove Node</Button>
       </div>
     );
   }
   if (type === 'edge') {
     return (
       <div style={{ padding: 16 }}>
-        <h4>Channel {selected.id}</h4>
+        <Typography variant="subtitle1" fontWeight={600} color="primary.main" gutterBottom>Channel {selected.id}</Typography>
         <label>Fiber Length (km):<br/>
           <input type="number" step="0.1" value={selected.data.fiber_length_km}
             onChange={e => onChange({ ...selected, data: { ...selected.data, fiber_length_km: Number(e.target.value) } })} />
@@ -118,7 +121,7 @@ function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSe
           <input type="number" step="0.001" min="0" max="1" value={selected.data.phase_flip_prob}
             onChange={e => onChange({ ...selected, data: { ...selected.data, phase_flip_prob: Number(e.target.value) } })} />
         </label><br/>
-        <button style={{ marginTop: 12, color: 'white', background: '#d32f2f', border: 'none', borderRadius: 4, padding: '6px 12px' }} onClick={() => onRemove(selected.id)}>Remove Channel</button>
+        <Button variant="contained" color="error" sx={{ mt: 1 }} onClick={() => onRemove(selected.id)} startIcon={<DeleteIcon />}>Remove Channel</Button>
       </div>
     );
   }
@@ -245,8 +248,8 @@ export default function QKDNetwork({ onNetworkChange }) {
     <div style={{ display: 'flex', height: 420, marginBottom: 32, border: '1px solid #ccc', borderRadius: 8, background: '#f7fafd' }}>
       <div style={{ flex: 1, position: 'relative' }}>
         <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10, display: 'flex', gap: 8 }}>
-          <button onClick={addNode} className="qkd-btn">+ Add Node</button>
-          <button onClick={handleUndo} className="qkd-btn" disabled={history.length === 0}>Undo</button>
+          <Button onClick={addNode} variant="contained" color="primary" startIcon={<AddIcon />}>Add Node</Button>
+          <Button onClick={handleUndo} variant="contained" color="secondary" disabled={history.length === 0} startIcon={<UndoIcon />}>Undo</Button>
         </div>
         <ReactFlow
           nodes={nodes}
