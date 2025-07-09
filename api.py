@@ -42,6 +42,7 @@ class SimParams(BaseModel):
     cow_monitor_pulse_ratio: float
     cow_detection_threshold_photons: float
     cow_extinction_ratio_db: float
+    bit_flip_error_prob: float = 0.05
 
 @app.get("/")
 def read_root():
@@ -138,7 +139,8 @@ def simulate(params: SimParams):
                 next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_),
                 monitor_pulse_ratio=params.cow_monitor_pulse_ratio,
                 detection_threshold_photons=int(params.cow_detection_threshold_photons),
-                phase_flip_prob=ch.phase_flip_prob
+                phase_flip_prob=ch.phase_flip_prob,
+                bit_flip_error_prob=params.bit_flip_error_prob
             )
 
             qber, num_errors = calculate_qber(alice_key, bob_key)
@@ -174,6 +176,7 @@ def simulate(params: SimParams):
                         "monitor_pulse_ratio": params.cow_monitor_pulse_ratio,
                         "detection_threshold_photons": params.cow_detection_threshold_photons,
                         "extinction_ratio_db": params.cow_extinction_ratio_db,
+                        "bit_flip_error_prob": params.bit_flip_error_prob
                     }
                 }
             })

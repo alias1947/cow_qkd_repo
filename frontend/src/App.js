@@ -55,7 +55,13 @@ function App() {
   const handleSimulate = async () => {
     setResults(null);
     try {
-      const payload = { ...params, ...network };
+      let payload = { ...params, ...network };
+      // For COW, ensure bit_flip_error_prob is set (default 0.05)
+      if (payload.protocol === 'cow') {
+        if (payload.bit_flip_error_prob === undefined || payload.bit_flip_error_prob === null) {
+          payload.bit_flip_error_prob = 0.05;
+        }
+      }
       console.log("Sending to backend:", payload);
       const res = await axios.post("http://localhost:8000/simulate", payload);
       if (res.data && Array.isArray(res.data.results)) {
