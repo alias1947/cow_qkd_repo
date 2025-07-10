@@ -89,7 +89,7 @@ export default function Results({ results }) {
             <tbody>
               {results.map((result) => (
                 <tr key={result.channel_id} style={{ borderBottom: "1px solid #ccc" }}>
-                  <td style={{ padding: 8 }}>{`Node ${result.from} -> Node ${result.to}`}</td>
+                  <td style={{ padding: 8 }}>{`Channel ${result.channel_id} (Node ${result.from} -> Node ${result.to})`}</td>
                   <td style={{ padding: 8 }}>{result.protocol.toUpperCase()}</td>
                   <td style={{ padding: 8 }}>{formatPercent(result.qber)}</td>
                   <td style={{ padding: 8 }}>{result.final_key_length}</td>
