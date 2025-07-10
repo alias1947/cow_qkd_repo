@@ -194,7 +194,8 @@ def run_multi_node_trusted_relay_simulation(num_pulses_per_link=10000, link_dist
 def run_point_to_point_cow_simulation(num_pulses_per_link=10000, distance_km=20, mu=0.1,
                                       detector_efficiency=0.9, dark_count_rate_per_ns=1e-7,
                                       pulse_repetition_rate_ns=1, cow_monitor_pulse_ratio=0.1,
-                                      cow_detection_threshold_photons=0, cow_extinction_ratio_db=20.0):
+                                      cow_detection_threshold_photons=0, cow_extinction_ratio_db=20.0,
+                                      bit_flip_error_prob=0.05):
     """
     Runs a single point-to-point COW-QKD simulation and prints key metrics, including theory-relevant postprocessing.
     QBER should be in the range 3-10% for practical QKD. Prints a warning if outside this range.
@@ -218,7 +219,8 @@ def run_point_to_point_cow_simulation(num_pulses_per_link=10000, distance_km=20,
     alice_sifted_key_cow, bob_sifted_key_cow = node_alice.generate_and_share_key_cow(
         node_bob, num_pulses_per_link, pulse_repetition_rate_ns,
         monitor_pulse_ratio=cow_monitor_pulse_ratio,
-        detection_threshold_photons=cow_detection_threshold_photons
+        detection_threshold_photons=cow_detection_threshold_photons,
+        bit_flip_error_prob=bit_flip_error_prob
     )
     
     qber_cow, num_errors_cow = calculate_qber(alice_sifted_key_cow, bob_sifted_key_cow)
@@ -320,7 +322,8 @@ if __name__ == "__main__":
         'pulse_repetition_rate_ns': 1,
         'cow_monitor_pulse_ratio': 0.2, # 20% of pulses for monitoring
         'cow_detection_threshold_photons': 0, # Simplistic: any click is a potential '1' if detector is good
-        'cow_extinction_ratio_db': 20.0 # Typical value for an intensity modulator
+        'cow_extinction_ratio_db': 20.0, # Typical value for an intensity modulator
+        # bit_flip_error_prob is omitted so it uses the default of 0.05
     }
     final_key_len_cow_ptp, qber_cow_ptp = run_point_to_point_cow_simulation(
         distance_km=20,

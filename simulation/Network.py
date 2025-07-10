@@ -1,11 +1,6 @@
-from simulation.Source import Sender
-from simulation.Hardware import Receiver, OpticalChannel
-# Import COW components
-from simulation.Source import SenderCOW
-from simulation.Hardware import ReceiverCOW
-# Import BB84 components
-from simulation.Source import SenderBB84
-from simulation.Hardware import ReceiverBB84
+from simulation.Receiver import ReceiverDPS, ReceiverCOW, ReceiverBB84
+from simulation.Hardware import OpticalChannel
+from simulation.Sender import SenderDPS, SenderCOW, SenderBB84
 
 import math 
 import random
@@ -25,8 +20,8 @@ class Node:
         self.avg_photon_number = avg_photon_number
         self.detector_efficiency = detector_efficiency
         self.dark_count_rate = dark_count_rate
-        self.qkd_sender = Sender(self.avg_photon_number)
-        self.qkd_receiver = Receiver(self.detector_efficiency, self.dark_count_rate)
+        self.qkd_sender = SenderDPS(self.avg_photon_number)
+        self.qkd_receiver = ReceiverDPS(self.detector_efficiency, self.dark_count_rate)
         
         # Initialize COW components
         self.cow_monitor_pulse_ratio = cow_monitor_pulse_ratio
@@ -62,8 +57,8 @@ class Node:
         
         # Re-initialize sender and receiver for a new QKD session to ensure clean state (e.g., last_sent_phase)
         #for DPS
-        self.qkd_sender = Sender(self.avg_photon_number)
-        target_node.qkd_receiver = Receiver(target_node.detector_efficiency, target_node.dark_count_rate)
+        self.qkd_sender = SenderDPS(self.avg_photon_number)
+        target_node.qkd_receiver = ReceiverDPS(target_node.detector_efficiency, target_node.dark_count_rate)
 
         alice_pulses_sent_info = [] 
         
@@ -165,7 +160,7 @@ class Node:
         return alice_sifted_key, bob_sifted_key
 
     def generate_and_share_key_cow(self, target_node, num_pulses, pulse_repetition_rate_ns,
-                                   monitor_pulse_ratio=0.1, detection_threshold_photons=0, phase_flip_prob=0.0):
+                                   monitor_pulse_ratio=0.1, detection_threshold_photons=0, phase_flip_prob=0.0, bit_flip_error_prob=0.0):
         """
         Implements COW QKD as per theory:
         - Encoding: vacuum + coherent pulse, intensity modulated
@@ -222,7 +217,6 @@ class Node:
                 'is_monitoring_click': is_monitoring_click,
                 'final_phase': final_phase
             })
-
 
         # 3. Sifting Process (Classical communication between Alice and Bob)
         print(f"bob received key pulse types: {[signal['alice_pulse_type'] for signal in bob_received_signals]}")
@@ -318,6 +312,11 @@ class Node:
         })
         print(f"sifted key : {bob_sifted_key_cow}")
         print("[COW QKD] Sifting, decoy, and monitoring complete. Theory-compliant implementation.")
+        
+        # After sifting, apply bit flip error to Bob's sifted key
+        for idx in range(len(bob_sifted_key_cow)):
+            if random.random() < bit_flip_error_prob:
+                bob_sifted_key_cow[idx] = 1 - bob_sifted_key_cow[idx]
         
         return alice_sifted_key_cow, bob_sifted_key_cow
 

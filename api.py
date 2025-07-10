@@ -21,6 +21,8 @@ class NodeModel(BaseModel):
     detector_efficiency: float
     dark_count_rate: float
     mu: float
+    num_pulses: int
+    pulse_repetition_rate: float
 
 class ChannelModel(BaseModel):
     id: int
@@ -30,18 +32,17 @@ class ChannelModel(BaseModel):
     fiber_attenuation_db_per_km: float
     wavelength_nm: int
     fiber_type: str
+    phase_flip_prob: float = 0.05
 
 class SimParams(BaseModel):
     protocol: str
-    num_pulses: int
-    pulse_repetition_rate: float
-    phase_flip_prob: float
     nodes: List[NodeModel]
     channels: List[ChannelModel]
     # COW-specific, now global for any COW simulation
     cow_monitor_pulse_ratio: float
     cow_detection_threshold_photons: float
     cow_extinction_ratio_db: float
+    bit_flip_error_prob: float = 0.05
 
 @app.get("/")
 def read_root():
@@ -80,13 +81,13 @@ def simulate(params: SimParams):
             # Use node-specific and channel-specific params
             alice_key, bob_key = node_a.generate_and_share_key(
                 node_b,
-                params.num_pulses,
-                params.pulse_repetition_rate,
-                phase_flip_prob=getattr(ch, 'phase_flip_prob', params.phase_flip_prob)
+                next(n.num_pulses for n in params.nodes if n.id == ch.from_),
+                next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_),
+                phase_flip_prob=ch.phase_flip_prob
             )
             qber, num_errors = calculate_qber(alice_key, bob_key)
             final_key_len, postproc = postprocessing(len(alice_key), qber)
-            total_time_s = (params.num_pulses * params.pulse_repetition_rate) / 1e9 if params.num_pulses > 0 else 0
+            total_time_s = (next(n.num_pulses for n in params.nodes if n.id == ch.from_) * next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_)) / 1e9 if next(n.num_pulses for n in params.nodes if n.id == ch.from_) > 0 else 0
             secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
             theory_compliance = (0.03 <= qber <= 0.11)
             theory_message = "QBER is within the practical range (3-11%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
@@ -134,15 +135,17 @@ def simulate(params: SimParams):
             # Note: Using global COW params for now, but per-channel phase flip
             alice_key, bob_key = node_a.generate_and_share_key_cow(
                 node_b,
-                params.num_pulses,
-                params.pulse_repetition_rate,
+                next(n.num_pulses for n in params.nodes if n.id == ch.from_),
+                next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_),
                 monitor_pulse_ratio=params.cow_monitor_pulse_ratio,
                 detection_threshold_photons=int(params.cow_detection_threshold_photons),
-                phase_flip_prob=getattr(ch, 'phase_flip_prob', params.phase_flip_prob)
+                phase_flip_prob=ch.phase_flip_prob,
+                bit_flip_error_prob=params.bit_flip_error_prob
             )
+
             qber, num_errors = calculate_qber(alice_key, bob_key)
             final_key_len, postproc = postprocessing(len(alice_key), qber)
-            total_time_s = (params.num_pulses * params.pulse_repetition_rate) / 1e9 if params.num_pulses > 0 else 0
+            total_time_s = (next(n.num_pulses for n in params.nodes if n.id == ch.from_) * next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_)) / 1e9 if next(n.num_pulses for n in params.nodes if n.id == ch.from_) > 0 else 0
             secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
             theory_compliance = (0.03 <= qber <= 0.10)
             theory_message = "QBER is within the practical range (3-10%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
@@ -173,6 +176,7 @@ def simulate(params: SimParams):
                         "monitor_pulse_ratio": params.cow_monitor_pulse_ratio,
                         "detection_threshold_photons": params.cow_detection_threshold_photons,
                         "extinction_ratio_db": params.cow_extinction_ratio_db,
+                        "bit_flip_error_prob": params.bit_flip_error_prob
                     }
                 }
             })
@@ -193,13 +197,14 @@ def simulate(params: SimParams):
 
             alice_key, bob_key = node_a.generate_and_share_key_bb84(
                 node_b,
-                params.num_pulses,
-                params.pulse_repetition_rate,
-                phase_flip_prob=getattr(ch, 'phase_flip_prob', params.phase_flip_prob)
+                next(n.num_pulses for n in params.nodes if n.id == ch.from_),
+                next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_),
+                phase_flip_prob=ch.phase_flip_prob
             )
             qber, num_errors = calculate_qber(alice_key, bob_key)
             final_key_len, postproc = postprocessing(len(alice_key), qber)
-            total_time_s = (params.num_pulses * params.pulse_repetition_rate) / 1e9 if params.num_pulses > 0 else 0
+            total_time_s = (next(n.num_pulses for n in params.nodes if n.id == ch.from_) * next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_)) / 1e9 if next(n.num_pulses for n in params.nodes if n.id == ch.from_) > 0 else 0
+            print("total time taken : ", total_time_s)
             secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
             theory_compliance = (0.03 <= qber <= 0.11)
             theory_message = "QBER is within the practical range (3-11%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
