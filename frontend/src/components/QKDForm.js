@@ -58,6 +58,16 @@ export default function QKDForm({ params, onChange }) {
             onChange={handleChange}
             sx={{ minWidth: 200 }}
           />
+          <TextField
+            name="bit_flip_error_prob"
+            label="Bit Flip Error Probability (0-1)"
+            type="number"
+            size="small"
+            inputProps={{ step: 0.01, min: 0, max: 1 }}
+            value={params.bit_flip_error_prob ?? 0.05}
+            onChange={handleChange}
+            sx={{ minWidth: 200 }}
+          />
         </>
       )}
     </Box>

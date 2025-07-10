@@ -160,7 +160,7 @@ class Node:
         return alice_sifted_key, bob_sifted_key
 
     def generate_and_share_key_cow(self, target_node, num_pulses, pulse_repetition_rate_ns,
-                                   monitor_pulse_ratio=0.1, detection_threshold_photons=0, phase_flip_prob=0.0):
+                                   monitor_pulse_ratio=0.1, detection_threshold_photons=0, phase_flip_prob=0.0, bit_flip_error_prob=0.0):
         """
         Implements COW QKD as per theory:
         - Encoding: vacuum + coherent pulse, intensity modulated
@@ -217,7 +217,6 @@ class Node:
                 'is_monitoring_click': is_monitoring_click,
                 'final_phase': final_phase
             })
-
 
         # 3. Sifting Process (Classical communication between Alice and Bob)
         print(f"bob received key pulse types: {[signal['alice_pulse_type'] for signal in bob_received_signals]}")
@@ -313,6 +312,11 @@ class Node:
         })
         print(f"sifted key : {bob_sifted_key_cow}")
         print("[COW QKD] Sifting, decoy, and monitoring complete. Theory-compliant implementation.")
+        
+        # After sifting, apply bit flip error to Bob's sifted key
+        for idx in range(len(bob_sifted_key_cow)):
+            if random.random() < bit_flip_error_prob:
+                bob_sifted_key_cow[idx] = 1 - bob_sifted_key_cow[idx]
         
         return alice_sifted_key_cow, bob_sifted_key_cow
 
