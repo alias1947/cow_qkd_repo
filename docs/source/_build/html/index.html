@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QKD Simulation Platform Documentation &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">QKD Simulation Platform Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="qkd-simulation-platform-documentation">
+<h1>QKD Simulation Platform Documentation<a class="headerlink" href="#qkd-simulation-platform-documentation" title="Link to this heading"></a></h1>
+<p>Welcome to the Quantum Key Distribution (QKD) Simulation Platform documentation. This platform provides a comprehensive simulation environment for studying and analyzing various QKD protocols including DPS-QKD, COW-QKD, and BB84-QKD.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#what-is-qkd-simulation-platform">What is QKD Simulation Platform?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#project-goals">Project Goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#core-components">Core Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#supported-qkd-protocols">Supported QKD Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#hardware-models">Hardware Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#network-architecture">Network Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#use-cases">Use Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#system-requirements">System Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installation-methods">Installation Methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#platform-specific-instructions">Platform-Specific Instructions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#virtual-environment-setup-recommended">Virtual Environment Setup (Recommended)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#docker-installation-alternative">Docker Installation (Alternative)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#your-first-simulation">Your First Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#understanding-the-results">Understanding the Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#exploring-different-protocols">Exploring Different Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#experimenting-with-parameters">Experimenting with Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#multi-node-networks">Multi-Node Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quick-start.html#advanced-topics">Advanced Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#platform-overview">Platform Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#interface-layout">Interface Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#protocol-selection">Protocol Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#network-builder">Network Builder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#simulation-execution">Simulation Execution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#results-analysis">Results Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#advanced-features">Advanced Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#advanced-topics">Advanced Topics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#future-enhancements">Future Enhancements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide.html#getting-help">Getting Help</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#rest-api">REST API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#data-models">Data Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#cors-support">CORS Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#frontend-components">Frontend Components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference.html#security-considerations">Security Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#quantum-models">Quantum Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#optical-component-models">Optical Component Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#protocol-specific-models">Protocol-Specific Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#noise-models">Noise Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#performance-analysis-models">Performance Analysis Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#network-models">Network Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#simulation-algorithm">Simulation Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#validation-and-verification">Validation and Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#performance-optimization">Performance Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#accuracy-considerations">Accuracy Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-models.html#future-enhancements">Future Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="protocols.html#dps-qkd-differential-phase-shift">DPS-QKD (Differential Phase Shift)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols.html#cow-qkd-coherent-one-way">COW-QKD (Coherent One-Way)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols.html#bb84-qkd-bennett-brassard-1984">BB84-QKD (Bennett-Brassard 1984)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols.html#protocol-comparison">Protocol Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="protocols.html#future-protocol-extensions">Future Protocol Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-setup">Development Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-workflow">Development Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-style">Code Style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#pull-request-process">Pull Request Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#areas-for-contribution">Areas for Contribution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#community-guidelines">Community Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#recognition">Recognition</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The QKD Simulation Platform is an open-source project that enables researchers, engineers, and students to simulate and analyze quantum key distribution protocols in realistic network environments. The platform consists of:</p>
+<ul class="simple">
+<li><p><strong>Backend Simulation Engine</strong>: Python-based simulation core with modular architecture</p></li>
+<li><p><strong>Web-based Frontend</strong>: React-based user interface for network configuration and visualization</p></li>
+<li><p><strong>REST API</strong>: FastAPI-based interface for programmatic access</p></li>
+<li><p><strong>Multi-Protocol Support</strong>: DPS-QKD, COW-QKD, and BB84-QKD implementations</p></li>
+<li><p><strong>Network Simulation</strong>: Multi-node, multi-channel network configurations</p></li>
+<li><p><strong>Hardware Modeling</strong>: Realistic optical components and channel models</p></li>
+</ul>
+</section>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Protocol Diversity</strong>: Support for three major QKD protocols with theory-compliant implementations</p></li>
+<li><p><strong>Network Scalability</strong>: From point-to-point to multi-node trusted relay networks</p></li>
+<li><p><strong>Realistic Modeling</strong>: Hardware components with realistic parameters and noise models</p></li>
+<li><p><strong>Interactive Interface</strong>: Visual network topology builder and parameter configuration</p></li>
+<li><p><strong>Comprehensive Analysis</strong>: QBER calculation, key rate analysis, and post-processing simulation</p></li>
+<li><p><strong>Extensible Architecture</strong>: Modular design for easy protocol and hardware additions</p></li>
+</ul>
+</section>
+<section id="supported-qkd-protocols">
+<h2>Supported QKD Protocols<a class="headerlink" href="#supported-qkd-protocols" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>DPS-QKD (Differential Phase Shift)</strong>: Phase difference encoding with Mach-Zehnder interferometer detection</p></li>
+<li><p><strong>COW-QKD (Coherent One-Way)</strong>: Intensity modulation with monitoring pulse pairs for eavesdropping detection</p></li>
+<li><p><strong>BB84-QKD (Bennett-Brassard 1984)</strong>: Four quantum states in two bases with basis switching and sifting</p></li>
+</ul>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="installation.html"><span class="doc">Installation Guide</span></a> - How to install and set up the platform</p></li>
+<li><p><a class="reference internal" href="quick-start.html"><span class="doc">Quick Start Guide</span></a> - Quick tutorial to run your first simulation</p></li>
+<li><p><a class="reference internal" href="user-guide.html"><span class="doc">User Guide</span></a> - Comprehensive user guide for all features</p></li>
+</ul>
+</section>
+<section id="for-developers">
+<h2>For Developers<a class="headerlink" href="#for-developers" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="api-reference.html"><span class="doc">API Reference</span></a> - Complete API documentation</p></li>
+<li><p><a class="reference internal" href="simulation-models.html"><span class="doc">Simulation Models</span></a> - Detailed simulation model descriptions</p></li>
+<li><p><a class="reference internal" href="contributing.html"><span class="doc">Contributing to QKD Simulation Platform</span></a> - How to contribute to the project</p></li>
+</ul>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

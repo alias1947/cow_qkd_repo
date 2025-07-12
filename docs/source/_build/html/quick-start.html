@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start Guide &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="User Guide" href="user-guide.html" />
+    <link rel="prev" title="Installation Guide" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-clone-and-setup">Step 1: Clone and Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-start-the-backend">Step 2: Start the Backend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-start-the-frontend">Step 3: Start the Frontend</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#your-first-simulation">Your First Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-configure-the-protocol">Step 1: Configure the Protocol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-build-the-network">Step 2: Build the Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-run-the-simulation">Step 3: Run the Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-results">Example Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-the-results">Understanding the Results</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#qber-quantum-bit-error-rate">QBER (Quantum Bit Error Rate)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sifted-key-length">Sifted Key Length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#final-key-length">Final Key Length</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-key-rate">Secure Key Rate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#theory-compliance">Theory Compliance</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#exploring-different-protocols">Exploring Different Protocols</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cow-qkd-simulation">COW-QKD Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bb84-qkd-simulation">BB84-QKD Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comparing-results">Comparing Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#experimenting-with-parameters">Experimenting with Parameters</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#distance-effects">Distance Effects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#photon-number-effects">Photon Number Effects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detector-efficiency-effects">Detector Efficiency Effects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#multi-node-networks">Multi-Node Networks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-add-more-nodes">Step 1: Add More Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-configure-the-network">Step 2: Configure the Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-analyze-results">Step 3: Analyze Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues-and-solutions">Common Issues and Solutions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced Topics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quick-start.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start-guide">
+<h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Link to this heading"></a></h1>
+<p>This guide will walk you through setting up and running your first QKD simulation in just a few minutes.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<p>Before starting, ensure you have:</p>
+<ol class="arabic simple">
+<li><p><strong>Python 3.8+</strong> installed and accessible from command line</p></li>
+<li><p><strong>Node.js 14+</strong> installed for the frontend</p></li>
+<li><p><strong>Git</strong> installed for cloning the repository</p></li>
+</ol>
+<p>If you haven’t installed these yet, please follow the <a class="reference internal" href="installation.html"><span class="doc">Installation Guide</span></a> guide first.</p>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<section id="step-1-clone-and-setup">
+<h3>Step 1: Clone and Setup<a class="headerlink" href="#step-1-clone-and-setup" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Clone the repository</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-username/qkd-simulation-platform.git
+<span class="nb">cd</span><span class="w"> </span>qkd-simulation-platform
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Python dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install frontend dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>frontend
+npm<span class="w"> </span>install
+<span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="step-2-start-the-backend">
+<h3>Step 2: Start the Backend<a class="headerlink" href="#step-2-start-the-backend" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Start the FastAPI backend server</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uvicorn<span class="w"> </span>api:app<span class="w"> </span>--reload
+</pre></div>
+</div>
+<p>You should see output similar to:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [12345] using StatReload
+INFO:     Started server process [12346]
+INFO:     Listening on http://127.0.0.1:8000
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+</pre></div>
+</div>
+</li>
+<li><p><strong>Verify the backend is running</strong>:
+- Open a web browser and navigate to <cite>http://127.0.0.1:8000</cite>
+- You should see: <cite>{“message”: “QKD Simulation API”}</cite></p></li>
+</ol>
+</section>
+<section id="step-3-start-the-frontend">
+<h3>Step 3: Start the Frontend<a class="headerlink" href="#step-3-start-the-frontend" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Open a new terminal window</strong> (keep the backend running)</p></li>
+<li><p><strong>Navigate to the frontend directory</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>frontend
+</pre></div>
+</div>
+</li>
+<li><p><strong>Start the React development server</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>npm<span class="w"> </span>start
+</pre></div>
+</div>
+<p>You should see output similar to:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Compiled successfully!
+
+You can now view qkd-simulation-platform in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://192.168.1.100:3000
+
+Note that the development build is not optimized.
+To create a production build, use npm run build.
+</pre></div>
+</div>
+</li>
+<li><p><strong>Open the application</strong>:
+- Your browser should automatically open to <cite>http://localhost:3000</cite>
+- If not, manually navigate to that URL</p></li>
+</ol>
+</section>
+</section>
+<section id="your-first-simulation">
+<h2>Your First Simulation<a class="headerlink" href="#your-first-simulation" title="Link to this heading"></a></h2>
+<p>Now let’s run a simple QKD simulation to see how the platform works.</p>
+<section id="step-1-configure-the-protocol">
+<h3>Step 1: Configure the Protocol<a class="headerlink" href="#step-1-configure-the-protocol" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Select a Protocol</strong>:
+- In the frontend, you’ll see a “Protocol” dropdown
+- Select “DPS-QKD” for your first simulation
+- This is the simplest protocol to start with</p></li>
+<li><p><strong>Verify Protocol Parameters</strong>:
+- The default parameters should be suitable for a first run
+- You can leave them as-is for now</p></li>
+</ol>
+</section>
+<section id="step-2-build-the-network">
+<h3>Step 2: Build the Network<a class="headerlink" href="#step-2-build-the-network" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Add Nodes</strong>:
+- In the network builder area, you should see two nodes (Node 1 and Node 2)
+- These represent Alice and Bob in the QKD protocol
+- The nodes are already positioned and ready to use</p></li>
+<li><p><strong>Connect the Nodes</strong>:
+- Click and drag from Node 1 to Node 2 to create a connection
+- This represents the optical fiber channel between Alice and Bob
+- A blue animated line should appear between the nodes</p></li>
+<li><p><strong>Configure Channel Parameters</strong>:
+- Click on the channel line to select it
+- In the sidebar, you’ll see channel parameters
+- Set the fiber length to 20 km (a typical QKD distance)
+- Leave other parameters at their default values</p></li>
+</ol>
+</section>
+<section id="step-3-run-the-simulation">
+<h3>Step 3: Run the Simulation<a class="headerlink" href="#step-3-run-the-simulation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Start Simulation</strong>:
+- Click the “Run Simulation” button
+- You should see a loading indicator while the simulation runs</p></li>
+<li><p><strong>View Results</strong>:
+- Once complete, results will appear in the results section
+- You should see metrics like:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>QBER (Quantum Bit Error Rate)</p></li>
+<li><p>Sifted key length</p></li>
+<li><p>Final key length</p></li>
+<li><p>Secure key rate</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+</section>
+<section id="example-results">
+<h3>Example Results<a class="headerlink" href="#example-results" title="Link to this heading"></a></h3>
+<p>For a typical DPS-QKD simulation with default parameters, you might see:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Channel 1 Results:
+- Protocol: DPS-QKD
+- QBER: 0.045 (4.5%)
+- Sifted Key Length: 2,500 bits
+- Final Key Length: 2,345 bits
+- Secure Key Rate: 2,345 bps
+- Theory Compliance: ✅ QBER is within practical range
+</pre></div>
+</div>
+</section>
+</section>
+<section id="understanding-the-results">
+<h2>Understanding the Results<a class="headerlink" href="#understanding-the-results" title="Link to this heading"></a></h2>
+<section id="qber-quantum-bit-error-rate">
+<h3>QBER (Quantum Bit Error Rate)<a class="headerlink" href="#qber-quantum-bit-error-rate" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>What it is</strong>: The fraction of bits that differ between Alice and Bob</p></li>
+<li><p><strong>Good range</strong>: 3-11% for practical QKD systems</p></li>
+<li><p><strong>Your result</strong>: 4.5% is excellent - indicates good channel quality</p></li>
+</ul>
+</section>
+<section id="sifted-key-length">
+<h3>Sifted Key Length<a class="headerlink" href="#sifted-key-length" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>What it is</strong>: Number of bits after the sifting process</p></li>
+<li><p><strong>Process</strong>: Alice and Bob publicly compare to establish shared bits</p></li>
+<li><p><strong>Your result</strong>: 2,500 bits from 10,000 pulses = 25% efficiency (typical for DPS)</p></li>
+</ul>
+</section>
+<section id="final-key-length">
+<h3>Final Key Length<a class="headerlink" href="#final-key-length" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>What it is</strong>: Number of secure bits after post-processing</p></li>
+<li><p><strong>Process</strong>: Error correction and privacy amplification</p></li>
+<li><p><strong>Your result</strong>: 2,345 bits (about 94% of sifted key)</p></li>
+</ul>
+</section>
+<section id="secure-key-rate">
+<h3>Secure Key Rate<a class="headerlink" href="#secure-key-rate" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>What it is</strong>: Rate of secure key generation in bits per second</p></li>
+<li><p><strong>Calculation</strong>: Final key length / total simulation time</p></li>
+<li><p><strong>Your result</strong>: 2,345 bps (good for a 20 km link)</p></li>
+</ul>
+</section>
+<section id="theory-compliance">
+<h3>Theory Compliance<a class="headerlink" href="#theory-compliance" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>What it is</strong>: Verification that results are within theoretical bounds</p></li>
+<li><p><strong>Your result</strong>: ✅ indicates the simulation is working correctly</p></li>
+</ul>
+</section>
+</section>
+<section id="exploring-different-protocols">
+<h2>Exploring Different Protocols<a class="headerlink" href="#exploring-different-protocols" title="Link to this heading"></a></h2>
+<p>Now let’s try the other protocols to see how they compare.</p>
+<section id="cow-qkd-simulation">
+<h3>COW-QKD Simulation<a class="headerlink" href="#cow-qkd-simulation" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Switch Protocol</strong>:
+- Change the protocol dropdown to “COW-QKD”
+- Notice the additional COW-specific parameters appear</p></li>
+<li><p><strong>Configure COW Parameters</strong>:
+- Monitor Pulse Ratio: 0.1 (10% monitoring pulses)
+- Detection Threshold: 0 photons
+- Extinction Ratio: 20 dB
+- Bit Flip Error Probability: 0.05</p></li>
+<li><p><strong>Run Simulation</strong>:
+- Click “Run Simulation”
+- Compare results with DPS-QKD</p></li>
+</ol>
+<p>Expected COW-QKD Results:
+- QBER: 3-10%
+- Sifting efficiency: ~40% (higher than DPS)
+- Key rate: Similar or higher than DPS</p>
+</section>
+<section id="bb84-qkd-simulation">
+<h3>BB84-QKD Simulation<a class="headerlink" href="#bb84-qkd-simulation" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Switch Protocol</strong>:
+- Change the protocol dropdown to “BB84-QKD”
+- Notice the simpler parameter set</p></li>
+<li><p><strong>Run Simulation</strong>:
+- Click “Run Simulation”
+- Compare results with other protocols</p></li>
+</ol>
+<p>Expected BB84-QKD Results:
+- QBER: 3-11%
+- Sifting efficiency: ~50% (highest of the three)
+- Key rate: May be lower due to basis reconciliation</p>
+</section>
+<section id="comparing-results">
+<h3>Comparing Results<a class="headerlink" href="#comparing-results" title="Link to this heading"></a></h3>
+<p>Create a table to compare your results:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Protocol</p></th>
+<th class="head"><p>QBER</p></th>
+<th class="head"><p>Sifted Length</p></th>
+<th class="head"><p>Final Length</p></th>
+<th class="head"><p>Key Rate (bps)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DPS-QKD</p></td>
+<td><p>4.5%</p></td>
+<td><p>2,500</p></td>
+<td><p>2,345</p></td>
+<td><p>2,345</p></td>
+</tr>
+<tr class="row-odd"><td><p>COW-QKD</p></td>
+<td><p>4.2%</p></td>
+<td><p>4,000</p></td>
+<td><p>3,800</p></td>
+<td><p>3,800</p></td>
+</tr>
+<tr class="row-even"><td><p>BB84-QKD</p></td>
+<td><p>4.8%</p></td>
+<td><p>5,000</p></td>
+<td><p>4,700</p></td>
+<td><p>4,700</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="experimenting-with-parameters">
+<h2>Experimenting with Parameters<a class="headerlink" href="#experimenting-with-parameters" title="Link to this heading"></a></h2>
+<p>Now let’s experiment with different parameters to see their effects.</p>
+<section id="distance-effects">
+<h3>Distance Effects<a class="headerlink" href="#distance-effects" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Increase Distance</strong>:
+- Select the channel and change fiber length to 50 km
+- Run simulation again
+- Notice how QBER increases and key rate decreases</p></li>
+<li><p><strong>Compare Results</strong>:
+- 20 km: QBER ~4.5%, Key Rate ~2,345 bps
+- 50 km: QBER ~8.2%, Key Rate ~1,200 bps</p></li>
+</ol>
+</section>
+<section id="photon-number-effects">
+<h3>Photon Number Effects<a class="headerlink" href="#photon-number-effects" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Modify Photon Number</strong>:
+- Select Node 1 and change “Mu” to 0.5
+- Run simulation
+- Notice changes in key rate and QBER</p></li>
+<li><p><strong>Compare Results</strong>:
+- μ = 0.2: QBER ~4.5%, Key Rate ~2,345 bps
+- μ = 0.5: QBER ~6.8%, Key Rate ~3,100 bps</p></li>
+</ol>
+</section>
+<section id="detector-efficiency-effects">
+<h3>Detector Efficiency Effects<a class="headerlink" href="#detector-efficiency-effects" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Modify Detector Efficiency</strong>:
+- Select Node 2 and change “Detector Efficiency” to 0.7
+- Run simulation
+- Notice decrease in key rate</p></li>
+<li><p><strong>Compare Results</strong>:
+- η = 0.9: Key Rate ~2,345 bps
+- η = 0.7: Key Rate ~1,800 bps</p></li>
+</ol>
+</section>
+</section>
+<section id="multi-node-networks">
+<h2>Multi-Node Networks<a class="headerlink" href="#multi-node-networks" title="Link to this heading"></a></h2>
+<p>Let’s create a more complex network with multiple nodes.</p>
+<section id="step-1-add-more-nodes">
+<h3>Step 1: Add More Nodes<a class="headerlink" href="#step-1-add-more-nodes" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Add a Third Node</strong>:
+- Click the “Add Node” button
+- Position the new node between the existing nodes
+- This will be a trusted relay node</p></li>
+<li><p><strong>Connect the Nodes</strong>:
+- Connect Node 1 to the new node
+- Connect the new node to Node 2
+- You now have a three-node chain</p></li>
+</ol>
+</section>
+<section id="step-2-configure-the-network">
+<h3>Step 2: Configure the Network<a class="headerlink" href="#step-2-configure-the-network" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Set Channel Parameters</strong>:
+- Set both channels to 10 km length
+- This creates a 20 km total distance with a relay</p></li>
+<li><p><strong>Run Simulation</strong>:
+- Click “Run Simulation”
+- The system will simulate key generation on each link</p></li>
+</ol>
+</section>
+<section id="step-3-analyze-results">
+<h3>Step 3: Analyze Results<a class="headerlink" href="#step-3-analyze-results" title="Link to this heading"></a></h3>
+<p>You should see results for both channels:
+- Channel 1: Node 1 → Relay
+- Channel 2: Relay → Node 2</p>
+<p>The system will also calculate the end-to-end key through the trusted relay.</p>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="common-issues-and-solutions">
+<h3>Common Issues and Solutions<a class="headerlink" href="#common-issues-and-solutions" title="Link to this heading"></a></h3>
+<p><strong>Backend Won’t Start</strong>:
+- Check if port 8000 is already in use
+- Try: <cite>uvicorn api:app –reload –port 8001</cite>
+- Verify Python dependencies are installed</p>
+<p><strong>Frontend Won’t Start</strong>:
+- Check if port 3000 is already in use
+- Try: <cite>PORT=3001 npm start</cite>
+- Verify Node.js dependencies are installed</p>
+<p><strong>Simulation Fails</strong>:
+- Check browser console for errors
+- Verify backend is running
+- Check network configuration</p>
+<p><strong>No Results Displayed</strong>:
+- Check if nodes are properly connected
+- Verify all parameters are valid
+- Check browser console for errors</p>
+<p><strong>High QBER (&gt;11%)</strong>:
+- Reduce fiber length
+- Check detector parameters
+- Verify photon number is reasonable</p>
+<p><strong>Low Key Rate</strong>:
+- Increase photon number (but not too much)
+- Check detector efficiency
+- Verify pulse repetition rate</p>
+</section>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
+<p>If you encounter issues:</p>
+<ol class="arabic simple">
+<li><p><strong>Check the FAQ</strong>: Common questions and solutions</p></li>
+<li><p><strong>Search Issues</strong>: Look for similar problems on GitHub</p></li>
+<li><p><strong>Create an Issue</strong>: Report bugs or request help</p></li>
+<li><p><strong>Community Support</strong>: Join the discussion forum</p></li>
+</ol>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>Now that you’ve completed your first simulation:</p>
+<ol class="arabic simple">
+<li><p><strong>Read the User Guide</strong>: Learn about all features in <a class="reference internal" href="user-guide.html"><span class="doc">User Guide</span></a></p></li>
+<li><p><strong>Explore Examples</strong>: Check out practical examples in <span class="xref std std-doc">examples</span></p></li>
+<li><p><strong>Study the API</strong>: Learn programmatic access in <a class="reference internal" href="api-reference.html"><span class="doc">API Reference</span></a></p></li>
+<li><p><strong>Contribute</strong>: Help improve the platform (see <a class="reference internal" href="contributing.html"><span class="doc">Contributing to QKD Simulation Platform</span></a>)</p></li>
+</ol>
+</section>
+<section id="advanced-topics">
+<h2>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Link to this heading"></a></h2>
+<p>Once you’re comfortable with the basics:</p>
+<ol class="arabic simple">
+<li><p><strong>Custom Protocols</strong>: Learn how to implement new QKD protocols</p></li>
+<li><p><strong>Hardware Models</strong>: Understand the optical component models</p></li>
+<li><p><strong>Network Analysis</strong>: Study multi-node network behavior</p></li>
+<li><p><strong>Security Analysis</strong>: Explore QKD security aspects</p></li>
+<li><p><strong>Performance Optimization</strong>: Learn to optimize simulation parameters</p></li>
+</ol>
+<p>Congratulations! You’ve successfully run your first QKD simulation. The platform is now ready for your research, education, or development needs.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="user-guide.html" class="btn btn-neutral float-right" title="User Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

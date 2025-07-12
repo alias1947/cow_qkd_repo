@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Guide &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="api-reference.html" />
+    <link rel="prev" title="Quick Start Guide" href="quick-start.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#platform-overview">Platform Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interface-layout">Interface Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#protocol-selection">Protocol Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#protocol-configuration">Protocol Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#protocol-specific-parameters">Protocol-Specific Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#network-builder">Network Builder</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#node-management">Node Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#node-parameters">Node Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#channel-management">Channel Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#channel-parameters">Channel Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-topologies">Network Topologies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-operations">Network Operations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#simulation-execution">Simulation Execution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#running-simulations">Running Simulations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-parameters">Simulation Parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#results-analysis">Results Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#understanding-results">Understanding Results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#per-channel-results">Per-Channel Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-features">Advanced Features</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#multi-protocol-networks">Multi-Protocol Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trusted-relay-networks">Trusted Relay Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parameter-optimization">Parameter Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-export-and-analysis">Data Export and Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-optimization">Performance Optimization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-design">Simulation Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-management">Data Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#research-workflows">Research Workflows</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-topics">Advanced Topics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#custom-protocols">Custom Protocols</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-integration">Hardware Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-analysis">Security Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#future-enhancements">Future Enhancements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#planned-features">Planned Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#community-support">Community Support</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">User Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/user-guide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Link to this heading"></a></h1>
+<p>This comprehensive user guide covers all features and functionality of the QKD Simulation Platform.</p>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<p>After completing the <a class="reference internal" href="quick-start.html"><span class="doc">Quick Start Guide</span></a> tutorial, you should be familiar with the basic workflow. This guide will explore all features in detail.</p>
+</section>
+<section id="platform-overview">
+<h2>Platform Overview<a class="headerlink" href="#platform-overview" title="Link to this heading"></a></h2>
+<p>The QKD Simulation Platform consists of three main components:</p>
+<ol class="arabic simple">
+<li><p><strong>Web Frontend</strong>: Interactive user interface for network configuration and simulation</p></li>
+<li><p><strong>Backend API</strong>: FastAPI server that handles simulation requests</p></li>
+<li><p><strong>Simulation Engine</strong>: Python-based simulation core with protocol implementations</p></li>
+</ol>
+</section>
+<section id="interface-layout">
+<h2>Interface Layout<a class="headerlink" href="#interface-layout" title="Link to this heading"></a></h2>
+<p>The main interface is divided into several sections:</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_static/interface-layout.png"><img alt="QKD Simulation Platform Interface Layout" src="_static/interface-layout.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Main interface layout showing protocol selection, network builder, and results</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="protocol-selection">
+<h2>Protocol Selection<a class="headerlink" href="#protocol-selection" title="Link to this heading"></a></h2>
+<section id="protocol-configuration">
+<h3>Protocol Configuration<a class="headerlink" href="#protocol-configuration" title="Link to this heading"></a></h3>
+<p>The protocol selection area allows you to choose between three QKD protocols:</p>
+<p><strong>DPS-QKD (Differential Phase Shift)</strong>:
+- <strong>Best for</strong>: High-speed applications, simple hardware
+- <strong>Key features</strong>: Phase difference encoding, Mach-Zehnder interferometer
+- <strong>Parameters</strong>: Standard QKD parameters only</p>
+<p><strong>COW-QKD (Coherent One-Way)</strong>:
+- <strong>Best for</strong>: Security-critical applications, eavesdropping detection
+- <strong>Key features</strong>: Intensity modulation, monitoring pulses
+- <strong>Parameters</strong>: Additional COW-specific parameters</p>
+<p><strong>BB84-QKD (Bennett-Brassard 1984)</strong>:
+- <strong>Best for</strong>: Research, education, maximum security
+- <strong>Key features</strong>: Four quantum states, two bases, information-theoretic security
+- <strong>Parameters</strong>: Standard QKD parameters only</p>
+</section>
+<section id="protocol-specific-parameters">
+<h3>Protocol-Specific Parameters<a class="headerlink" href="#protocol-specific-parameters" title="Link to this heading"></a></h3>
+<p>COW-QKD includes additional parameters not available in other protocols:</p>
+<p><strong>Monitor Pulse Ratio</strong> (0.0 - 1.0):
+- <strong>What it is</strong>: Fraction of pulses used for eavesdropping detection
+- <strong>Default</strong>: 0.1 (10%)
+- <strong>Effect</strong>: Higher values improve security but reduce key rate
+- <strong>Recommendation</strong>: 0.1 for most applications</p>
+<p><strong>Detection Threshold (Photons)</strong>:
+- <strong>What it is</strong>: Minimum photon count for detection
+- <strong>Default</strong>: 0 (single photon detection)
+- <strong>Effect</strong>: Higher values reduce sensitivity but improve noise immunity
+- <strong>Recommendation</strong>: 0 for most applications</p>
+<p><strong>Extinction Ratio (dB)</strong>:
+- <strong>What it is</strong>: Ratio between “on” and “off” states of intensity modulator
+- <strong>Default</strong>: 20 dB
+- <strong>Effect</strong>: Higher values improve contrast between states
+- <strong>Recommendation</strong>: 20-30 dB for practical systems</p>
+<p><strong>Bit Flip Error Probability</strong> (0.0 - 1.0):
+- <strong>What it is</strong>: Probability of bit errors in classical post-processing
+- <strong>Default</strong>: 0.05 (5%)
+- <strong>Effect</strong>: Higher values increase QBER
+- <strong>Recommendation</strong>: 0.01-0.05 for realistic systems</p>
+</section>
+</section>
+<section id="network-builder">
+<h2>Network Builder<a class="headerlink" href="#network-builder" title="Link to this heading"></a></h2>
+<p>The network builder provides a visual interface for creating and configuring QKD networks.</p>
+<section id="node-management">
+<h3>Node Management<a class="headerlink" href="#node-management" title="Link to this heading"></a></h3>
+<p><strong>Adding Nodes</strong>:
+- Click the “Add Node” button to create a new node
+- Nodes are automatically numbered and positioned
+- You can add up to 50 nodes (practical limit)</p>
+<p><strong>Node Positioning</strong>:
+- Drag nodes to reposition them
+- Nodes snap to a grid for neat layouts
+- Position nodes logically (e.g., in a chain or star topology)</p>
+<p><strong>Node Selection</strong>:
+- Click on a node to select it
+- Selected node appears highlighted
+- Node parameters appear in the sidebar</p>
+<p><strong>Node Deletion</strong>:
+- Select a node and click “Remove Node”
+- All connected channels are also removed
+- Operation cannot be undone (use Undo button)</p>
+</section>
+<section id="node-parameters">
+<h3>Node Parameters<a class="headerlink" href="#node-parameters" title="Link to this heading"></a></h3>
+<p>Each node has configurable parameters:</p>
+<p><strong>Detector Efficiency</strong> (0.0 - 1.0):
+- <strong>What it is</strong>: Quantum efficiency of the photon detector
+- <strong>Default</strong>: 0.9 (90%)
+- <strong>Effect</strong>: Higher values increase key rate
+- <strong>Typical range</strong>: 0.7-0.95 for practical detectors</p>
+<p><strong>Dark Count Rate</strong> (scientific notation):
+- <strong>What it is</strong>: Rate of spurious detector clicks per nanosecond
+- <strong>Default</strong>: 1e-8 (10^-8 per ns)
+- <strong>Effect</strong>: Higher values increase QBER
+- <strong>Typical range</strong>: 1e-9 to 1e-7 per ns</p>
+<p><strong>Mu (Average Photon Number)</strong> (0.0 - 1.0):
+- <strong>What it is</strong>: Average number of photons per pulse
+- <strong>Default</strong>: 0.2
+- <strong>Effect</strong>: Higher values increase key rate but also QBER
+- <strong>Optimal range</strong>: 0.1-0.5 for most protocols</p>
+<p><strong>Number of Pulses</strong> (integer):
+- <strong>What it is</strong>: Total number of pulses to generate
+- <strong>Default</strong>: 10,000
+- <strong>Effect</strong>: Higher values improve statistics but increase simulation time
+- <strong>Recommendation</strong>: 1,000-100,000 for most simulations</p>
+<p><strong>Pulse Repetition Rate (ns)</strong> (float):
+- <strong>What it is</strong>: Time between pulses in nanoseconds
+- <strong>Default</strong>: 1.0 ns
+- <strong>Effect</strong>: Affects key rate calculation
+- <strong>Typical range</strong>: 0.1-10 ns</p>
+</section>
+<section id="channel-management">
+<h3>Channel Management<a class="headerlink" href="#channel-management" title="Link to this heading"></a></h3>
+<p><strong>Creating Channels</strong>:
+- Click and drag from one node to another
+- A blue animated line appears between nodes
+- Channels are automatically numbered</p>
+<p><strong>Channel Selection</strong>:
+- Click on a channel line to select it
+- Selected channel appears highlighted
+- Channel parameters appear in the sidebar</p>
+<p><strong>Channel Deletion</strong>:
+- Select a channel and click “Remove Channel”
+- Operation cannot be undone (use Undo button)</p>
+</section>
+<section id="channel-parameters">
+<h3>Channel Parameters<a class="headerlink" href="#channel-parameters" title="Link to this heading"></a></h3>
+<p>Each channel has configurable parameters:</p>
+<p><strong>Fiber Length (km)</strong> (float):
+- <strong>What it is</strong>: Physical length of the optical fiber
+- <strong>Default</strong>: 10.0 km
+- <strong>Effect</strong>: Longer distances increase attenuation and QBER
+- <strong>Typical range</strong>: 1-100 km for QKD</p>
+<p><strong>Attenuation (dB/km)</strong> (float):
+- <strong>What it is</strong>: Fiber loss per kilometer
+- <strong>Default</strong>: 0.2 dB/km
+- <strong>Effect</strong>: Higher values increase photon loss
+- <strong>Typical range</strong>: 0.15-0.25 dB/km for standard fiber</p>
+<p><strong>Wavelength (nm)</strong> (integer):
+- <strong>What it is</strong>: Operating wavelength of the system
+- <strong>Default</strong>: 1550 nm
+- <strong>Effect</strong>: Affects fiber attenuation and detector efficiency
+- <strong>Common values</strong>: 850 nm, 1310 nm, 1550 nm</p>
+<p><strong>Fiber Type</strong> (dropdown):
+- <strong>Standard Single Mode</strong>: SMF-28, most common
+- <strong>Dispersion Shifted</strong>: Optimized for specific wavelengths
+- <strong>Non-Zero Dispersion Shifted</strong>: Enhanced for DWDM
+- <strong>Photonic Crystal</strong>: Advanced fiber with unique properties</p>
+<p><strong>Phase Flip Probability</strong> (0.0 - 1.0):
+- <strong>What it is</strong>: Probability of phase errors in the channel
+- <strong>Default</strong>: 0.05 (5%)
+- <strong>Effect</strong>: Higher values increase QBER
+- <strong>Typical range</strong>: 0.01-0.1 for realistic channels</p>
+</section>
+<section id="network-topologies">
+<h3>Network Topologies<a class="headerlink" href="#network-topologies" title="Link to this heading"></a></h3>
+<p>The platform supports various network topologies:</p>
+<p><strong>Point-to-Point</strong>:
+- Two nodes connected by a single channel
+- Simplest configuration for basic QKD analysis
+- Good for protocol comparison and parameter optimization</p>
+<p><strong>Linear Chain</strong>:
+- Multiple nodes connected in sequence
+- Useful for trusted relay networks
+- Each node acts as both sender and receiver</p>
+<p><strong>Star Topology</strong>:
+- Central node connected to multiple peripheral nodes
+- Useful for hub-and-spoke networks
+- Central node can act as trusted relay</p>
+<p><strong>Mesh Topology</strong>:
+- Multiple connections between nodes
+- Provides redundancy and multiple paths
+- Complex but robust network design</p>
+<p><strong>Custom Topologies</strong>:
+- Create any arbitrary network structure
+- Limited only by practical constraints
+- Useful for research and analysis</p>
+</section>
+<section id="network-operations">
+<h3>Network Operations<a class="headerlink" href="#network-operations" title="Link to this heading"></a></h3>
+<p><strong>Undo/Redo</strong>:
+- Click the Undo button to revert the last operation
+- History is maintained for the current session
+- Useful for experimenting with different configurations</p>
+<p><strong>Network Validation</strong>:
+- The system automatically validates network configurations
+- Errors are displayed in the interface
+- Common issues include disconnected nodes or invalid parameters</p>
+<p><strong>Network Export/Import</strong>:
+- Save network configurations for later use
+- Share configurations with other users
+- Useful for reproducible research</p>
+</section>
+</section>
+<section id="simulation-execution">
+<h2>Simulation Execution<a class="headerlink" href="#simulation-execution" title="Link to this heading"></a></h2>
+<section id="running-simulations">
+<h3>Running Simulations<a class="headerlink" href="#running-simulations" title="Link to this heading"></a></h3>
+<p><strong>Starting a Simulation</strong>:
+1. Configure protocol and parameters
+2. Build and configure the network
+3. Click “Run Simulation” button
+4. Wait for results to appear</p>
+<p><strong>Simulation Progress</strong>:
+- Progress indicator shows simulation status
+- Time estimates for completion
+- Cancel option for long simulations</p>
+<p><strong>Simulation Results</strong>:
+- Results appear in the results section
+- Per-channel breakdown of performance
+- Summary statistics and analysis</p>
+</section>
+<section id="simulation-parameters">
+<h3>Simulation Parameters<a class="headerlink" href="#simulation-parameters" title="Link to this heading"></a></h3>
+<p><strong>Global Parameters</strong>:
+- Applied to all nodes and channels
+- Can be overridden by individual settings
+- Useful for consistent parameter sets</p>
+<p><strong>Node-Specific Parameters</strong>:
+- Override global settings for specific nodes
+- Useful for heterogeneous networks
+- Allows realistic modeling of different hardware</p>
+<p><strong>Channel-Specific Parameters</strong>:
+- Override global settings for specific channels
+- Useful for different fiber types or distances
+- Allows detailed network modeling</p>
+</section>
+</section>
+<section id="results-analysis">
+<h2>Results Analysis<a class="headerlink" href="#results-analysis" title="Link to this heading"></a></h2>
+<section id="understanding-results">
+<h3>Understanding Results<a class="headerlink" href="#understanding-results" title="Link to this heading"></a></h3>
+<p><strong>QBER (Quantum Bit Error Rate)</strong>:
+- <strong>Definition</strong>: Fraction of bits that differ between Alice and Bob
+- <strong>Calculation</strong>: Number of errors / Number of compared bits
+- <strong>Good range</strong>: 3-11% for practical QKD systems
+- <strong>Interpretation</strong>: Lower is better, indicates channel quality</p>
+<p><strong>Sifted Key Length</strong>:
+- <strong>Definition</strong>: Number of bits after sifting process
+- <strong>Process</strong>: Alice and Bob publicly compare to establish shared bits
+- <strong>Efficiency</strong>: Protocol-dependent (25-50% of raw bits)
+- <strong>Interpretation</strong>: Higher is better, indicates protocol efficiency</p>
+<p><strong>Final Key Length</strong>:
+- <strong>Definition</strong>: Number of secure bits after post-processing
+- <strong>Process</strong>: Error correction and privacy amplification
+- <strong>Reduction</strong>: Typically 80-95% of sifted key
+- <strong>Interpretation</strong>: Final secure key available for use</p>
+<p><strong>Secure Key Rate (bps)</strong>:
+- <strong>Definition</strong>: Rate of secure key generation in bits per second
+- <strong>Calculation</strong>: Final key length / Total simulation time
+- <strong>Units</strong>: Bits per second (bps)
+- <strong>Interpretation</strong>: Higher is better, indicates system performance</p>
+<p><strong>Theory Compliance</strong>:
+- <strong>Definition</strong>: Verification that results are within theoretical bounds
+- <strong>Check</strong>: QBER within acceptable range for the protocol
+- <strong>Status</strong>: ✅ (compliant) or ❌ (non-compliant)
+- <strong>Interpretation</strong>: Indicates simulation validity</p>
+</section>
+<section id="per-channel-results">
+<h3>Per-Channel Results<a class="headerlink" href="#per-channel-results" title="Link to this heading"></a></h3>
+<p><strong>Channel Identification</strong>:
+- Each channel is numbered and labeled
+- Shows source and destination nodes
+- Protocol used for the channel</p>
+<p><strong>Performance Metrics</strong>:
+- QBER for each channel
+- Key generation statistics
+- Error analysis and breakdown</p>
+<p><strong>Parameter Summary</strong>:
+- Node parameters for source and destination
+- Channel parameters and configuration
+- Protocol-specific parameters</p>
+<p><strong>Theory Analysis</strong>:
+- Compliance with theoretical predictions
+- Warnings for non-compliant results
+- Recommendations for improvement</p>
+</section>
+</section>
+<section id="advanced-features">
+<h2>Advanced Features<a class="headerlink" href="#advanced-features" title="Link to this heading"></a></h2>
+<section id="multi-protocol-networks">
+<h3>Multi-Protocol Networks<a class="headerlink" href="#multi-protocol-networks" title="Link to this heading"></a></h3>
+<p><strong>Protocol Selection</strong>:
+- Different protocols can be used on different channels
+- Useful for protocol comparison studies
+- Allows heterogeneous network analysis</p>
+<p><strong>Protocol Parameters</strong>:
+- Each protocol maintains its own parameter set
+- Parameters are preserved when switching protocols
+- Useful for comparative analysis</p>
+<p><strong>Results Comparison</strong>:
+- Compare performance across protocols
+- Identify optimal protocols for different scenarios
+- Analyze protocol trade-offs</p>
+</section>
+<section id="trusted-relay-networks">
+<h3>Trusted Relay Networks<a class="headerlink" href="#trusted-relay-networks" title="Link to this heading"></a></h3>
+<p><strong>Relay Configuration</strong>:
+- Add intermediate nodes as trusted relays
+- Configure relay parameters and behavior
+- Model realistic network topologies</p>
+<p><strong>End-to-End Key Generation</strong>:
+- Calculate secure key through multiple hops
+- Account for relay overhead and delays
+- Analyze network scalability</p>
+<p><strong>Security Considerations</strong>:
+- Trusted relay security model
+- Key management and distribution
+- Network security analysis</p>
+</section>
+<section id="parameter-optimization">
+<h3>Parameter Optimization<a class="headerlink" href="#parameter-optimization" title="Link to this heading"></a></h3>
+<p><strong>Systematic Parameter Sweeps</strong>:
+- Vary parameters systematically
+- Identify optimal parameter combinations
+- Analyze parameter sensitivity</p>
+<p><strong>Performance Optimization</strong>:
+- Find maximum key rate configurations
+- Optimize for specific constraints
+- Balance performance and security</p>
+<p><strong>Sensitivity Analysis</strong>:
+- Analyze parameter impact on performance
+- Identify critical parameters
+- Understand system robustness</p>
+</section>
+<section id="data-export-and-analysis">
+<h3>Data Export and Analysis<a class="headerlink" href="#data-export-and-analysis" title="Link to this heading"></a></h3>
+<p><strong>Results Export</strong>:
+- Export simulation results in various formats
+- Save data for external analysis
+- Share results with collaborators</p>
+<p><strong>Performance Plots</strong>:
+- Generate performance vs. parameter plots
+- Analyze trends and relationships
+- Visualize optimization results</p>
+<p><strong>Statistical Analysis</strong>:
+- Calculate confidence intervals
+- Analyze result variability
+- Perform statistical tests</p>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading"></a></h3>
+<p><strong>Simulation Won’t Start</strong>:
+- Check network connectivity
+- Verify all parameters are valid
+- Ensure backend is running</p>
+<p><strong>High QBER (&gt;11%)</strong>:
+- Reduce fiber length
+- Check detector parameters
+- Verify photon number is reasonable
+- Check for parameter conflicts</p>
+<p><strong>Low Key Rate</strong>:
+- Increase photon number (but not too much)
+- Check detector efficiency
+- Verify pulse repetition rate
+- Check channel attenuation</p>
+<p><strong>No Results Displayed</strong>:
+- Check if nodes are properly connected
+- Verify all parameters are valid
+- Check browser console for errors
+- Ensure simulation completed successfully</p>
+<p><strong>Network Validation Errors</strong>:
+- Check for disconnected nodes
+- Verify parameter ranges
+- Ensure logical network structure
+- Check for parameter conflicts</p>
+</section>
+<section id="performance-optimization">
+<h3>Performance Optimization<a class="headerlink" href="#performance-optimization" title="Link to this heading"></a></h3>
+<p><strong>Simulation Speed</strong>:
+- Reduce number of pulses for quick tests
+- Use fewer nodes for initial testing
+- Optimize parameter ranges
+- Use appropriate simulation parameters</p>
+<p><strong>Memory Usage</strong>:
+- Limit network size for large simulations
+- Use appropriate pulse counts
+- Monitor system resources
+- Optimize parameter storage</p>
+<p><strong>Accuracy vs. Speed</strong>:
+- Balance simulation accuracy with speed
+- Use appropriate parameter ranges
+- Consider statistical significance
+- Validate results with multiple runs</p>
+</section>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<section id="simulation-design">
+<h3>Simulation Design<a class="headerlink" href="#simulation-design" title="Link to this heading"></a></h3>
+<p><strong>Parameter Selection</strong>:
+- Use realistic parameter values
+- Consider hardware limitations
+- Account for practical constraints
+- Validate against theoretical bounds</p>
+<p><strong>Network Design</strong>:
+- Design logical network topologies
+- Consider practical constraints
+- Plan for scalability
+- Account for security requirements</p>
+<p><strong>Protocol Selection</strong>:
+- Choose appropriate protocols for your use case
+- Consider performance requirements
+- Account for security needs
+- Evaluate hardware requirements</p>
+</section>
+<section id="data-management">
+<h3>Data Management<a class="headerlink" href="#data-management" title="Link to this heading"></a></h3>
+<p><strong>Result Organization</strong>:
+- Organize results systematically
+- Use consistent naming conventions
+- Document parameter sets
+- Maintain result history</p>
+<p><strong>Data Validation</strong>:
+- Verify result consistency
+- Check for outliers
+- Validate against theory
+- Cross-check with literature</p>
+<p><strong>Data Sharing</strong>:
+- Export results in standard formats
+- Document experimental conditions
+- Share parameter configurations
+- Maintain reproducibility</p>
+</section>
+<section id="research-workflows">
+<h3>Research Workflows<a class="headerlink" href="#research-workflows" title="Link to this heading"></a></h3>
+<p><strong>Exploratory Analysis</strong>:
+- Start with simple configurations
+- Gradually increase complexity
+- Document parameter effects
+- Identify interesting regions</p>
+<p><strong>Systematic Studies</strong>:
+- Plan parameter sweeps carefully
+- Use appropriate statistical methods
+- Account for multiple comparisons
+- Validate results thoroughly</p>
+<p><strong>Comparative Analysis</strong>:
+- Use consistent parameter sets
+- Account for protocol differences
+- Consider practical constraints
+- Document comparison methodology</p>
+</section>
+</section>
+<section id="advanced-topics">
+<h2>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Link to this heading"></a></h2>
+<section id="custom-protocols">
+<h3>Custom Protocols<a class="headerlink" href="#custom-protocols" title="Link to this heading"></a></h3>
+<p><strong>Protocol Implementation</strong>:
+- Extend the platform with new protocols
+- Implement custom sender/receiver classes
+- Add protocol-specific parameters
+- Integrate with analysis tools</p>
+<p><strong>Protocol Validation</strong>:
+- Validate against theoretical predictions
+- Compare with literature results
+- Test with known parameter sets
+- Verify security properties</p>
+<p><strong>Protocol Optimization</strong>:
+- Optimize protocol parameters
+- Analyze performance trade-offs
+- Identify optimal configurations
+- Consider practical constraints</p>
+</section>
+<section id="hardware-integration">
+<h3>Hardware Integration<a class="headerlink" href="#hardware-integration" title="Link to this heading"></a></h3>
+<p><strong>Real Hardware</strong>:
+- Interface with real QKD hardware
+- Validate simulation models
+- Calibrate simulation parameters
+- Test with real-world conditions</p>
+<p><strong>Hardware Modeling</strong>:
+- Improve component models
+- Add realistic noise sources
+- Model hardware imperfections
+- Account for environmental effects</p>
+<p><strong>Performance Validation</strong>:
+- Compare simulation with hardware
+- Validate model accuracy
+- Identify model limitations
+- Improve simulation fidelity</p>
+</section>
+<section id="security-analysis">
+<h3>Security Analysis<a class="headerlink" href="#security-analysis" title="Link to this heading"></a></h3>
+<p><strong>Attack Modeling</strong>:
+- Model various attack scenarios
+- Analyze security vulnerabilities
+- Evaluate countermeasures
+- Assess security margins</p>
+<p><strong>Security Metrics</strong>:
+- Calculate security parameters
+- Analyze key security
+- Evaluate privacy amplification
+- Assess information leakage</p>
+<p><strong>Security Optimization</strong>:
+- Optimize for security
+- Balance security and performance
+- Consider practical constraints
+- Evaluate security trade-offs</p>
+</section>
+</section>
+<section id="future-enhancements">
+<h2>Future Enhancements<a class="headerlink" href="#future-enhancements" title="Link to this heading"></a></h2>
+<section id="planned-features">
+<h3>Planned Features<a class="headerlink" href="#planned-features" title="Link to this heading"></a></h3>
+<p><strong>Additional Protocols</strong>:
+- More QKD protocol implementations
+- Hybrid protocol support
+- Protocol switching capabilities
+- Custom protocol framework</p>
+<p><strong>Advanced Analysis</strong>:
+- More sophisticated analysis tools
+- Statistical analysis packages
+- Machine learning integration
+- Automated optimization</p>
+<p><strong>User Interface</strong>:
+- Enhanced visualization tools
+- Real-time monitoring
+- Advanced network builder
+- Improved result display</p>
+<p><strong>Performance Improvements</strong>:
+- Faster simulation engine
+- Parallel processing support
+- GPU acceleration
+- Distributed computing</p>
+</section>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
+<section id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h3>
+<p><strong>User Documentation</strong>:
+- This user guide
+- API reference documentation
+- Example tutorials
+- Best practices guide</p>
+<p><strong>Developer Documentation</strong>:
+- Code documentation
+- Architecture guide
+- Contributing guidelines
+- Development setup</p>
+<p><strong>Research Documentation</strong>:
+- Protocol descriptions
+- Mathematical models
+- Validation studies
+- Performance analysis</p>
+</section>
+<section id="community-support">
+<h3>Community Support<a class="headerlink" href="#community-support" title="Link to this heading"></a></h3>
+<p><strong>GitHub Issues</strong>:
+- Report bugs and problems
+- Request new features
+- Ask questions
+- Share experiences</p>
+<p><strong>Discussion Forum</strong>:
+- Community discussions
+- User support
+- Feature requests
+- Best practices sharing</p>
+<p><strong>Mailing List</strong>:
+- Announcements
+- Technical discussions
+- Community updates
+- Research collaboration</p>
+<p><strong>Contributing</strong>:
+- Code contributions
+- Documentation improvements
+- Bug reports
+- Feature suggestions</p>
+<p>The QKD Simulation Platform is designed to be a comprehensive tool for QKD research, education, and development. This user guide covers the main features, but the platform is constantly evolving. Stay updated with the latest releases and contribute to the community to help improve the platform for everyone.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quick-start.html" class="btn btn-neutral float-left" title="Quick Start Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api-reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

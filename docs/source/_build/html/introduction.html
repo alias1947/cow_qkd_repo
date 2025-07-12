@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation Guide" href="installation.html" />
+    <link rel="prev" title="QKD Simulation Platform Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-qkd-simulation-platform">What is QKD Simulation Platform?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#project-goals">Project Goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture-overview">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#core-components">Core Components</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#backend-simulation-engine">Backend Simulation Engine</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#web-frontend">Web Frontend</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rest-api">REST API</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-qkd-protocols">Supported QKD Protocols</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dps-qkd-differential-phase-shift">DPS-QKD (Differential Phase Shift)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cow-qkd-coherent-one-way">COW-QKD (Coherent One-Way)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bb84-qkd-bennett-brassard-1984">BB84-QKD (Bennett-Brassard 1984)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-models">Hardware Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#optical-components">Optical Components</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fiber-types">Fiber Types</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#network-architecture">Network Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#point-to-point">Point-to-Point</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-node-networks">Multi-Node Networks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#trusted-relay-networks">Trusted Relay Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-metrics">Performance Metrics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#key-metrics">Key Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-processing">Post-Processing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#use-cases">Use Cases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#research-applications">Research Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#educational-applications">Educational Applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#industrial-applications">Industrial Applications</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<section id="what-is-qkd-simulation-platform">
+<h2>What is QKD Simulation Platform?<a class="headerlink" href="#what-is-qkd-simulation-platform" title="Link to this heading"></a></h2>
+<p>The QKD Simulation Platform is an open-source software framework designed for simulating and analyzing Quantum Key Distribution (QKD) protocols in realistic network environments. It provides researchers, engineers, and students with a comprehensive tool for studying quantum communication systems, protocol performance, and network security.</p>
+<p>Quantum Key Distribution (QKD) is a revolutionary technology that enables two parties to generate a shared secret key using the principles of quantum mechanics. Unlike classical cryptographic methods, QKD provides information-theoretic security based on the fundamental laws of physics rather than computational complexity.</p>
+</section>
+<section id="project-goals">
+<h2>Project Goals<a class="headerlink" href="#project-goals" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Research and Education</strong>: Provide a platform for studying QKD protocols and their performance characteristics</p></li>
+<li><p><strong>Protocol Comparison</strong>: Enable fair comparison between different QKD protocols under identical conditions</p></li>
+<li><p><strong>Network Analysis</strong>: Study QKD performance in multi-node network topologies</p></li>
+<li><p><strong>Parameter Optimization</strong>: Help optimize system parameters for maximum key generation rates</p></li>
+<li><p><strong>Security Analysis</strong>: Analyze the impact of various noise sources and attacks on QKD performance</p></li>
+<li><p><strong>Open Source</strong>: Foster collaboration and innovation in the quantum communication community</p></li>
+</ul>
+</section>
+<section id="architecture-overview">
+<h2>Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading"></a></h2>
+<p>The platform follows a modular, layered architecture designed for extensibility and maintainability:</p>
+<figure class="align-center" id="id9">
+<a class="reference internal image-reference" href="_static/architecture.png"><img alt="QKD Simulation Platform Architecture" src="_static/architecture.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">High-level architecture of the QKD Simulation Platform</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="core-components">
+<h2>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h2>
+<section id="backend-simulation-engine">
+<h3>Backend Simulation Engine<a class="headerlink" href="#backend-simulation-engine" title="Link to this heading"></a></h3>
+<p>The backend is built in Python and provides the core simulation functionality:</p>
+<ul class="simple">
+<li><p><strong>Protocol Implementations</strong>: Theory-compliant implementations of DPS-QKD, COW-QKD, and BB84-QKD</p></li>
+<li><p><strong>Hardware Models</strong>: Realistic models of optical components (detectors, modulators, channels)</p></li>
+<li><p><strong>Network Management</strong>: Multi-node network simulation with trusted relay support</p></li>
+<li><p><strong>Analysis Tools</strong>: QBER calculation, key rate analysis, and post-processing simulation</p></li>
+</ul>
+<p>Key Classes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="api-reference.html#simulation.Network.Network" title="simulation.Network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Network.Network</span></code></a> - Main network management class</p></li>
+<li><p><a class="reference internal" href="api-reference.html#simulation.Network.Node" title="simulation.Network.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Network.Node</span></code></a> - Individual network node with protocol support</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Hardware.*</span></code> - Hardware component models</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Sender.*</span></code> - Protocol-specific sender implementations</p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Receiver.*</span></code> - Protocol-specific receiver implementations</p></li>
+</ul>
+</section>
+<section id="web-frontend">
+<h3>Web Frontend<a class="headerlink" href="#web-frontend" title="Link to this heading"></a></h3>
+<p>The frontend is built with React and provides an intuitive user interface:</p>
+<ul class="simple">
+<li><p><strong>Network Topology Builder</strong>: Visual drag-and-drop interface for creating network configurations</p></li>
+<li><p><strong>Parameter Configuration</strong>: Interactive forms for setting protocol and hardware parameters</p></li>
+<li><p><strong>Results Visualization</strong>: Real-time display of simulation results and performance metrics</p></li>
+<li><p><strong>Protocol Selection</strong>: Easy switching between different QKD protocols</p></li>
+</ul>
+<p>Key Components:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="api-reference.html#QKDForm" title="QKDForm"><code class="xref py py-class docutils literal notranslate"><span class="pre">QKDForm</span></code></a> - Protocol selection and parameter configuration</p></li>
+<li><p><a class="reference internal" href="api-reference.html#QKDNetwork" title="QKDNetwork"><code class="xref py py-class docutils literal notranslate"><span class="pre">QKDNetwork</span></code></a> - Interactive network topology builder</p></li>
+<li><p><a class="reference internal" href="api-reference.html#Results" title="Results"><code class="xref py py-class docutils literal notranslate"><span class="pre">Results</span></code></a> - Simulation results display and analysis</p></li>
+</ul>
+</section>
+<section id="rest-api">
+<h3>REST API<a class="headerlink" href="#rest-api" title="Link to this heading"></a></h3>
+<p>The FastAPI-based REST API provides programmatic access to the simulation engine:</p>
+<ul class="simple">
+<li><p><strong>Simulation Endpoints</strong>: Run simulations with custom parameters</p></li>
+<li><p><strong>Protocol Support</strong>: Dedicated endpoints for each QKD protocol</p></li>
+<li><p><strong>Multi-node Support</strong>: Handle complex network topologies</p></li>
+<li><p><strong>Results Format</strong>: Structured JSON responses with comprehensive metrics</p></li>
+</ul>
+<p>Key Endpoints:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">POST</span> <span class="pre">/simulate</span></code> - Main simulation endpoint</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/</span></code> - API information and status</p></li>
+</ul>
+</section>
+</section>
+<section id="supported-qkd-protocols">
+<h2>Supported QKD Protocols<a class="headerlink" href="#supported-qkd-protocols" title="Link to this heading"></a></h2>
+<section id="dps-qkd-differential-phase-shift">
+<h3>DPS-QKD (Differential Phase Shift)<a class="headerlink" href="#dps-qkd-differential-phase-shift" title="Link to this heading"></a></h3>
+<p>DPS-QKD encodes information in the phase difference between consecutive optical pulses. The protocol uses:</p>
+<ul class="simple">
+<li><p><strong>Encoding</strong>: Phase difference between consecutive pulses (0, π)</p></li>
+<li><p><strong>Detection</strong>: Mach-Zehnder interferometer with two detectors</p></li>
+<li><p><strong>Sifting</strong>: Based on detector clicks and phase difference</p></li>
+<li><p><strong>Key Rate</strong>: ~25% of raw bits after sifting</p></li>
+<li><p><strong>Hardware</strong>: Fiber Mach-Zehnder interferometer with delay line</p></li>
+</ul>
+</section>
+<section id="cow-qkd-coherent-one-way">
+<h3>COW-QKD (Coherent One-Way)<a class="headerlink" href="#cow-qkd-coherent-one-way" title="Link to this heading"></a></h3>
+<p>COW-QKD uses intensity modulation to encode information and includes monitoring pulses for eavesdropping detection:</p>
+<ul class="simple">
+<li><p><strong>Encoding</strong>: Intensity modulation (vacuum + coherent pulse)</p></li>
+<li><p><strong>Detection</strong>: Single photon detector with intensity monitoring</p></li>
+<li><p><strong>Sifting</strong>: Keep bits where Alice and Bob agree on data pulses</p></li>
+<li><p><strong>Monitoring</strong>: Pairs of monitoring pulses for eavesdropping detection</p></li>
+<li><p><strong>Key Rate</strong>: ~40% of raw bits after sifting</p></li>
+<li><p><strong>Hardware</strong>: Single photon detector with optical switching</p></li>
+</ul>
+</section>
+<section id="bb84-qkd-bennett-brassard-1984">
+<h3>BB84-QKD (Bennett-Brassard 1984)<a class="headerlink" href="#bb84-qkd-bennett-brassard-1984" title="Link to this heading"></a></h3>
+<p>BB84 is the original QKD protocol that uses four quantum states in two conjugate bases:</p>
+<ul class="simple">
+<li><p><strong>Encoding</strong>: Four quantum states in two bases (rectilinear and diagonal)</p></li>
+<li><p><strong>States</strong>: <a href="#id1"><span class="problematic" id="id2">|</span></a>0⟩, <a href="#id3"><span class="problematic" id="id4">|</span></a>1⟩ (rectilinear) and <a href="#id5"><span class="problematic" id="id6">|</span></a>+⟩, <a href="#id7"><span class="problematic" id="id8">|</span></a>-⟩ (diagonal)</p></li>
+<li><p><strong>Detection</strong>: Single photon detector with basis switching</p></li>
+<li><p><strong>Sifting</strong>: Keep bits where Alice and Bob used the same basis</p></li>
+<li><p><strong>Security</strong>: Based on quantum uncertainty principle</p></li>
+<li><p><strong>Key Rate</strong>: ~50% of raw bits after sifting</p></li>
+<li><p><strong>Hardware</strong>: Polarizing beam splitter with basis switching</p></li>
+</ul>
+</section>
+</section>
+<section id="hardware-models">
+<h2>Hardware Models<a class="headerlink" href="#hardware-models" title="Link to this heading"></a></h2>
+<p>The platform includes realistic models of optical components commonly used in QKD systems:</p>
+<section id="optical-components">
+<h3>Optical Components<a class="headerlink" href="#optical-components" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Light Source</strong>: Weak coherent pulse (WCP) source with Poissonian photon statistics</p></li>
+<li><p><strong>Phase Modulator</strong>: Phase modulation with configurable phase shifts</p></li>
+<li><p><strong>Intensity Modulator</strong>: Amplitude modulation with finite extinction ratio</p></li>
+<li><p><strong>Optical Channel</strong>: Fiber channel with distance-dependent attenuation</p></li>
+<li><p><strong>Mach-Zehnder Interferometer</strong>: Interference-based phase difference measurement</p></li>
+<li><p><strong>Single Photon Detector</strong>: Detector with quantum efficiency and dark count modeling</p></li>
+</ul>
+</section>
+<section id="fiber-types">
+<h3>Fiber Types<a class="headerlink" href="#fiber-types" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Standard Single Mode Fiber (SMF-28)</strong>: Standard telecom fiber</p></li>
+<li><p><strong>Dispersion Shifted Fiber</strong>: Optimized for specific wavelength ranges</p></li>
+<li><p><strong>Non-Zero Dispersion Shifted Fiber</strong>: Enhanced performance for DWDM systems</p></li>
+<li><p><strong>Photonic Crystal Fiber</strong>: Advanced fiber with unique optical properties</p></li>
+</ul>
+</section>
+</section>
+<section id="network-architecture">
+<h2>Network Architecture<a class="headerlink" href="#network-architecture" title="Link to this heading"></a></h2>
+<p>The platform supports various network topologies:</p>
+<section id="point-to-point">
+<h3>Point-to-Point<a class="headerlink" href="#point-to-point" title="Link to this heading"></a></h3>
+<p>Simple two-node configuration for basic QKD analysis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a simple point-to-point network</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="n">alice</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">)</span>
+<span class="n">bob</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">connect_nodes</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">distance_km</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="multi-node-networks">
+<h3>Multi-Node Networks<a class="headerlink" href="#multi-node-networks" title="Link to this heading"></a></h3>
+<p>Complex networks with multiple nodes and channels:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a multi-node network</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Relay1&#39;</span><span class="p">,</span> <span class="s1">&#39;Relay2&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">node_id</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">node_id</span><span class="p">)</span>
+
+<span class="c1"># Connect nodes in a chain</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">network</span><span class="o">.</span><span class="n">connect_nodes</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">distance_km</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="trusted-relay-networks">
+<h3>Trusted Relay Networks<a class="headerlink" href="#trusted-relay-networks" title="Link to this heading"></a></h3>
+<p>Networks using trusted relay nodes for extended reach:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Establish end-to-end key through trusted relays</span>
+<span class="n">final_key</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">establish_end_to_end_raw_key</span><span class="p">(</span>
+    <span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Relay1&#39;</span><span class="p">,</span> <span class="s1">&#39;Relay2&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">],</span>
+    <span class="n">num_pulses</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">pulse_repetition_rate_ns</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="performance-metrics">
+<h2>Performance Metrics<a class="headerlink" href="#performance-metrics" title="Link to this heading"></a></h2>
+<p>The platform provides comprehensive performance analysis:</p>
+<section id="key-metrics">
+<h3>Key Metrics<a class="headerlink" href="#key-metrics" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>QBER (Quantum Bit Error Rate)</strong>: Measure of quantum channel quality</p></li>
+<li><p><strong>Sifted Key Length</strong>: Number of bits after sifting process</p></li>
+<li><p><strong>Final Key Length</strong>: Number of bits after post-processing</p></li>
+<li><p><strong>Secure Key Rate</strong>: Final key generation rate in bits per second</p></li>
+<li><p><strong>Theory Compliance</strong>: Verification against theoretical performance bounds</p></li>
+</ul>
+</section>
+<section id="post-processing">
+<h3>Post-Processing<a class="headerlink" href="#post-processing" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Parameter Estimation</strong>: QBER estimation using disclosed key fraction</p></li>
+<li><p><strong>Error Correction</strong>: Forward error correction to remove bit errors</p></li>
+<li><p><strong>Privacy Amplification</strong>: Key compression to ensure security</p></li>
+</ul>
+</section>
+</section>
+<section id="use-cases">
+<h2>Use Cases<a class="headerlink" href="#use-cases" title="Link to this heading"></a></h2>
+<section id="research-applications">
+<h3>Research Applications<a class="headerlink" href="#research-applications" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Protocol Comparison</strong>: Compare performance of different QKD protocols</p></li>
+<li><p><strong>Parameter Optimization</strong>: Find optimal system parameters for maximum key rates</p></li>
+<li><p><strong>Noise Analysis</strong>: Study the impact of various noise sources on performance</p></li>
+<li><p><strong>Security Analysis</strong>: Analyze vulnerability to different attack strategies</p></li>
+</ul>
+</section>
+<section id="educational-applications">
+<h3>Educational Applications<a class="headerlink" href="#educational-applications" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>QKD Learning</strong>: Understand QKD principles through hands-on simulation</p></li>
+<li><p><strong>Protocol Implementation</strong>: Study how QKD protocols are implemented in practice</p></li>
+<li><p><strong>Network Design</strong>: Learn about QKD network design and optimization</p></li>
+</ul>
+</section>
+<section id="industrial-applications">
+<h3>Industrial Applications<a class="headerlink" href="#industrial-applications" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>System Design</strong>: Design and optimize QKD systems for deployment</p></li>
+<li><p><strong>Performance Prediction</strong>: Predict system performance under various conditions</p></li>
+<li><p><strong>Troubleshooting</strong>: Diagnose performance issues in QKD systems</p></li>
+</ul>
+</section>
+</section>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<p>To get started with the QKD Simulation Platform:</p>
+<ol class="arabic simple">
+<li><p><strong>Installation</strong>: Follow the <a class="reference internal" href="installation.html"><span class="doc">Installation Guide</span></a> guide to set up the platform</p></li>
+<li><p><strong>Quick Start</strong>: Run your first simulation with the <a class="reference internal" href="quick-start.html"><span class="doc">Quick Start Guide</span></a> tutorial</p></li>
+<li><p><strong>User Guide</strong>: Learn about all features in the <a class="reference internal" href="user-guide.html"><span class="doc">User Guide</span></a></p></li>
+<li><p><strong>Examples</strong>: Explore the <span class="xref std std-doc">examples</span> for practical use cases</p></li>
+</ol>
+<p>For developers interested in extending the platform:</p>
+<ul class="simple">
+<li><p><strong>API Reference</strong>: Complete API documentation in <a class="reference internal" href="api-reference.html"><span class="doc">API Reference</span></a></p></li>
+<li><p><strong>Simulation Models</strong>: Detailed model descriptions in <a class="reference internal" href="simulation-models.html"><span class="doc">Simulation Models</span></a></p></li>
+<li><p><strong>Contributing</strong>: Guidelines for contributing to the project in <a class="reference internal" href="contributing.html"><span class="doc">Contributing to QKD Simulation Platform</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="QKD Simulation Platform Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

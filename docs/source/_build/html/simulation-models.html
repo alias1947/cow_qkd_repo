@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulation Models &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="QKD Protocols" href="protocols.html" />
+    <link rel="prev" title="API Reference" href="api-reference.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulation Models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quantum-models">Quantum Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#photon-statistics">Photon Statistics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quantum-state-representation">Quantum State Representation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bb84-protocol-states">BB84 Protocol States</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dps-protocol-states">DPS Protocol States</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cow-protocol-states">COW Protocol States</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#optical-component-models">Optical Component Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#optical-channel-model">Optical Channel Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#single-photon-detector-model">Single Photon Detector Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mach-zehnder-interferometer-model">Mach-Zehnder Interferometer Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#intensity-modulator-model">Intensity Modulator Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#protocol-specific-models">Protocol-Specific Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dps-qkd-model">DPS-QKD Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dps-qkd-protocol-flow">DPS-QKD Protocol Flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mathematical-model">Mathematical Model</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cow-qkd-model">COW-QKD Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cow-qkd-protocol-flow">COW-QKD Protocol Flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Mathematical Model</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bb84-qkd-model">BB84-QKD Model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#bb84-qkd-protocol-flow">BB84-QKD Protocol Flow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Mathematical Model</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#noise-models">Noise Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#phase-flip-noise">Phase Flip Noise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bit-flip-noise">Bit Flip Noise</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#channel-attenuation">Channel Attenuation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dark-counts">Dark Counts</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-analysis-models">Performance Analysis Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#qber-calculation">QBER Calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-processing-model">Post-Processing Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-rate-analysis">Key Rate Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#network-models">Network Models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#trusted-relay-model">Trusted Relay Model</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#simulation-algorithm">Simulation Algorithm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#discrete-event-simulation">Discrete Event Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#simulation-pipeline">Simulation Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#random-number-generation">Random Number Generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#validation-and-verification">Validation and Verification</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#theory-compliance">Theory Compliance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-verification">Implementation Verification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#error-handling">Error Handling</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-optimization">Performance Optimization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#computational-efficiency">Computational Efficiency</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#scalability">Scalability</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#accuracy-considerations">Accuracy Considerations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#numerical-precision">Numerical Precision</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#approximations">Approximations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#future-enhancements">Future Enhancements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Simulation Models</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/simulation-models.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="simulation-models">
+<h1>Simulation Models<a class="headerlink" href="#simulation-models" title="Link to this heading"></a></h1>
+<p>This section provides detailed documentation of the mathematical models, algorithms, and simulation methodologies used in the QKD Simulation Platform.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The QKD Simulation Platform implements theory-compliant models of quantum key distribution protocols, optical components, and network behavior. The simulation follows a discrete-event approach with realistic modeling of quantum phenomena, optical hardware, and classical post-processing.</p>
+</section>
+<section id="quantum-models">
+<h2>Quantum Models<a class="headerlink" href="#quantum-models" title="Link to this heading"></a></h2>
+<section id="photon-statistics">
+<h3>Photon Statistics<a class="headerlink" href="#photon-statistics" title="Link to this heading"></a></h3>
+<p>The platform models weak coherent pulse (WCP) sources using Poissonian photon statistics:</p>
+<div class="math notranslate nohighlight">
+\[P(n|\mu) = \frac{\mu^n e^{-\mu}}{n!}\]</div>
+<p>where:
+- <span class="math notranslate nohighlight">\(P(n|\mu)\)</span> is the probability of <span class="math notranslate nohighlight">\(n\)</span> photons given mean photon number <span class="math notranslate nohighlight">\(\mu\)</span>
+- <span class="math notranslate nohighlight">\(\mu\)</span> is the average photon number per pulse (typically 0.1-0.5 for QKD)</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#simulation.Hardware.LightSource" title="simulation.Hardware.LightSource"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Hardware.LightSource</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_single_pulse_photon_count</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">mu</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span>
+    <span class="n">num_photons</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">mu</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="n">L</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">p</span> <span class="o">*=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+    <span class="n">num_photons</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">num_photons</span>
+</pre></div>
+</div>
+</section>
+<section id="quantum-state-representation">
+<h3>Quantum State Representation<a class="headerlink" href="#quantum-state-representation" title="Link to this heading"></a></h3>
+<section id="bb84-protocol-states">
+<h4>BB84 Protocol States<a class="headerlink" href="#bb84-protocol-states" title="Link to this heading"></a></h4>
+<p>The BB84 protocol uses four quantum states in two conjugate bases:</p>
+<p><strong>Rectilinear Basis (R)</strong>:
+- <span class="math notranslate nohighlight">\(|0\rangle\)</span> = horizontal polarization
+- <span class="math notranslate nohighlight">\(|1\rangle\)</span> = vertical polarization</p>
+<p><strong>Diagonal Basis (D)</strong>:
+- <span class="math notranslate nohighlight">\(|+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\)</span>
+- <span class="math notranslate nohighlight">\(|-\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\)</span></p>
+</section>
+<section id="dps-protocol-states">
+<h4>DPS Protocol States<a class="headerlink" href="#dps-protocol-states" title="Link to this heading"></a></h4>
+<p>DPS-QKD encodes information in the phase difference between consecutive pulses:</p>
+<ul class="simple">
+<li><p><strong>Bit 0</strong>: Phase difference <span class="math notranslate nohighlight">\(\Delta\phi = 0\)</span></p></li>
+<li><p><strong>Bit 1</strong>: Phase difference <span class="math notranslate nohighlight">\(\Delta\phi = \pi\)</span></p></li>
+</ul>
+</section>
+<section id="cow-protocol-states">
+<h4>COW Protocol States<a class="headerlink" href="#cow-protocol-states" title="Link to this heading"></a></h4>
+<p>COW-QKD uses intensity modulation with three pulse types:</p>
+<ul class="simple">
+<li><p><strong>Data Pulse 0</strong>: Vacuum pulse (intensity <span class="math notranslate nohighlight">\(I_0\)</span>)</p></li>
+<li><p><strong>Data Pulse 1</strong>: Coherent pulse (intensity <span class="math notranslate nohighlight">\(I_1\)</span>)</p></li>
+<li><p><strong>Monitoring Pulse</strong>: Coherent pulse for eavesdropping detection</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="optical-component-models">
+<h2>Optical Component Models<a class="headerlink" href="#optical-component-models" title="Link to this heading"></a></h2>
+<section id="optical-channel-model">
+<h3>Optical Channel Model<a class="headerlink" href="#optical-channel-model" title="Link to this heading"></a></h3>
+<p>The optical fiber channel is modeled with distance-dependent attenuation:</p>
+<div class="math notranslate nohighlight">
+\[T = 10^{-\alpha L/10}\]</div>
+<p>where:
+- <span class="math notranslate nohighlight">\(T\)</span> is the transmission probability
+- <span class="math notranslate nohighlight">\(\alpha\)</span> is the attenuation coefficient (dB/km)
+- <span class="math notranslate nohighlight">\(L\)</span> is the fiber length (km)</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#simulation.Hardware.OpticalChannel" title="simulation.Hardware.OpticalChannel"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Hardware.OpticalChannel</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distance_km</span><span class="p">,</span> <span class="n">attenuation_db_per_km</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">distance_km</span> <span class="o">=</span> <span class="n">distance_km</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">attenuation_db_per_km</span> <span class="o">=</span> <span class="n">attenuation_db_per_km</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">survival_probability</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">distance_km</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">attenuation_db_per_km</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">transmit_pulse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">photon_count</span><span class="p">):</span>
+    <span class="n">received_photons</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">photon_count</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">survival_probability</span><span class="p">:</span>
+            <span class="n">received_photons</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">received_photons</span>
+</pre></div>
+</div>
+</section>
+<section id="single-photon-detector-model">
+<h3>Single Photon Detector Model<a class="headerlink" href="#single-photon-detector-model" title="Link to this heading"></a></h3>
+<p>The single photon detector model includes quantum efficiency and dark counts:</p>
+<p><strong>Quantum Efficiency</strong>: Probability of detecting a photon given one incident
+<strong>Dark Counts</strong>: Spurious detections in the absence of photons</p>
+<p>Detection probability for <span class="math notranslate nohighlight">\(n\)</span> incident photons:</p>
+<div class="math notranslate nohighlight">
+\[P_{detect} = 1 - (1 - \eta)^n\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta\)</span> is the quantum efficiency.</p>
+<p>Dark count probability in time window <span class="math notranslate nohighlight">\(\Delta t\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[P_{dark} = 1 - e^{-r_{dark} \Delta t}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r_{dark}\)</span> is the dark count rate.</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#simulation.Hardware.SinglePhotonDetector" title="simulation.Hardware.SinglePhotonDetector"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Hardware.SinglePhotonDetector</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incident_photons</span><span class="p">):</span>
+    <span class="n">click</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Real photon detection</span>
+    <span class="k">if</span> <span class="n">incident_photons</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">prob_actual_detection</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantum_efficiency</span><span class="p">)</span><span class="o">**</span><span class="n">incident_photons</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">prob_actual_detection</span><span class="p">:</span>
+            <span class="n">click</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Dark count</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">click</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">prob_dark_count_per_window</span><span class="p">:</span>
+            <span class="n">click</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">click</span>
+</pre></div>
+</div>
+</section>
+<section id="mach-zehnder-interferometer-model">
+<h3>Mach-Zehnder Interferometer Model<a class="headerlink" href="#mach-zehnder-interferometer-model" title="Link to this heading"></a></h3>
+<p>The MZI model calculates interference probabilities for phase difference measurement:</p>
+<div class="math notranslate nohighlight">
+\[P_{DM1} = \cos^2(\Delta\phi/2)
+P_{DM2} = \sin^2(\Delta\phi/2)\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta\phi\)</span> is the phase difference between consecutive pulses.</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#simulation.Hardware.MachZehnderInterferometer" title="simulation.Hardware.MachZehnderInterferometer"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Hardware.MachZehnderInterferometer</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">interfere_pulses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_n_minus_1</span><span class="p">,</span> <span class="n">phase_n</span><span class="p">):</span>
+    <span class="n">delta_phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">phase_n</span> <span class="o">-</span> <span class="n">phase_n_minus_1</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+    <span class="c1"># Normalize to [-pi, pi]</span>
+    <span class="k">if</span> <span class="n">delta_phi</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+        <span class="n">delta_phi</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+    <span class="k">elif</span> <span class="n">delta_phi</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+        <span class="n">delta_phi</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+
+    <span class="n">prob_dm1</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">delta_phi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">prob_dm2</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">delta_phi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">prob_dm1</span><span class="p">,</span> <span class="n">prob_dm2</span>
+</pre></div>
+</div>
+</section>
+<section id="intensity-modulator-model">
+<h3>Intensity Modulator Model<a class="headerlink" href="#intensity-modulator-model" title="Link to this heading"></a></h3>
+<p>The intensity modulator model includes finite extinction ratio:</p>
+<div class="math notranslate nohighlight">
+\[I_{off} = \frac{I_{on}}{ER}\]</div>
+<p>where:
+- <span class="math notranslate nohighlight">\(I_{on}\)</span> is the intensity in the “on” state
+- <span class="math notranslate nohighlight">\(I_{off}\)</span> is the intensity in the “off” state
+- <span class="math notranslate nohighlight">\(ER\)</span> is the extinction ratio (linear scale)</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#simulation.Hardware.IntensityModulator" title="simulation.Hardware.IntensityModulator"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Hardware.IntensityModulator</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">modulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_mu</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;on&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">base_mu</span>
+    <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="s1">&#39;off&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">base_mu</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">extinction_ratio_linear</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Modulator state must be &#39;on&#39; or &#39;off&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="protocol-specific-models">
+<h2>Protocol-Specific Models<a class="headerlink" href="#protocol-specific-models" title="Link to this heading"></a></h2>
+<section id="dps-qkd-model">
+<h3>DPS-QKD Model<a class="headerlink" href="#dps-qkd-model" title="Link to this heading"></a></h3>
+<section id="dps-qkd-protocol-flow">
+<h4>DPS-QKD Protocol Flow<a class="headerlink" href="#dps-qkd-protocol-flow" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>Phase Encoding</strong>: Alice encodes bits in phase differences between consecutive pulses</p></li>
+<li><p><strong>Transmission</strong>: Pulses are transmitted through the optical channel</p></li>
+<li><p><strong>Interference</strong>: Bob uses MZI to measure phase differences</p></li>
+<li><p><strong>Detection</strong>: Two detectors record interference patterns</p></li>
+<li><p><strong>Sifting</strong>: Alice and Bob publicly compare to establish shared key</p></li>
+</ol>
+</section>
+<section id="mathematical-model">
+<h4>Mathematical Model<a class="headerlink" href="#mathematical-model" title="Link to this heading"></a></h4>
+<p><strong>Phase Encoding</strong>:
+- Random bit <span class="math notranslate nohighlight">\(b \in \{0,1\}\)</span>
+- Phase difference <span class="math notranslate nohighlight">\(\Delta\phi = b \cdot \pi\)</span></p>
+<p><strong>Interference Measurement</strong>:
+- Detector 1 click probability: <span class="math notranslate nohighlight">\(P_1 = \cos^2(\Delta\phi/2)\)</span>
+- Detector 2 click probability: <span class="math notranslate nohighlight">\(P_2 = \sin^2(\Delta\phi/2)\)</span></p>
+<p><strong>Bit Inference</strong>:
+- DM1 click only: <span class="math notranslate nohighlight">\(b_{inferred} = 0\)</span>
+- DM2 click only: <span class="math notranslate nohighlight">\(b_{inferred} = 1\)</span>
+- Both or neither click: inconclusive measurement</p>
+</section>
+</section>
+<section id="cow-qkd-model">
+<h3>COW-QKD Model<a class="headerlink" href="#cow-qkd-model" title="Link to this heading"></a></h3>
+<section id="cow-qkd-protocol-flow">
+<h4>COW-QKD Protocol Flow<a class="headerlink" href="#cow-qkd-protocol-flow" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>Pulse Train Generation</strong>: Alice generates data and monitoring pulses</p></li>
+<li><p><strong>Intensity Modulation</strong>: Data bits encoded in pulse intensity</p></li>
+<li><p><strong>Transmission</strong>: Pulse train transmitted through channel</p></li>
+<li><p><strong>Detection</strong>: Bob measures pulse intensities</p></li>
+<li><p><strong>Sifting</strong>: Keep bits where Alice and Bob agree on data pulses</p></li>
+<li><p><strong>Monitoring</strong>: Check monitoring pulses for eavesdropping</p></li>
+</ol>
+</section>
+<section id="id1">
+<h4>Mathematical Model<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p><strong>Pulse Types</strong>:
+- Data pulse 0: <span class="math notranslate nohighlight">\(I_0 = \mu_{off}\)</span>
+- Data pulse 1: <span class="math notranslate nohighlight">\(I_1 = \mu_{on}\)</span>
+- Monitoring pulse: <span class="math notranslate nohighlight">\(I_m = \mu_{on}\)</span></p>
+<p><strong>Detection Model</strong>:
+- Click probability: <span class="math notranslate nohighlight">\(P_{click} = 1 - e^{-\eta I}\)</span>
+- Where <span class="math notranslate nohighlight">\(\eta\)</span> is detector efficiency and <span class="math notranslate nohighlight">\(I\)</span> is intensity</p>
+<p><strong>Sifting Process</strong>:
+- Keep bit if both Alice and Bob identify pulse as data
+- Discard if either identifies as monitoring</p>
+</section>
+</section>
+<section id="bb84-qkd-model">
+<h3>BB84-QKD Model<a class="headerlink" href="#bb84-qkd-model" title="Link to this heading"></a></h3>
+<section id="bb84-qkd-protocol-flow">
+<h4>BB84-QKD Protocol Flow<a class="headerlink" href="#bb84-qkd-protocol-flow" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>State Preparation</strong>: Alice prepares one of four quantum states</p></li>
+<li><p><strong>Basis Selection</strong>: Alice randomly chooses encoding basis</p></li>
+<li><p><strong>Transmission</strong>: Quantum state transmitted through channel</p></li>
+<li><p><strong>Measurement</strong>: Bob randomly chooses measurement basis</p></li>
+<li><p><strong>Sifting</strong>: Keep bits where Alice and Bob used same basis</p></li>
+<li><p><strong>Error Estimation</strong>: Estimate QBER from disclosed bits</p></li>
+</ol>
+</section>
+<section id="id2">
+<h4>Mathematical Model<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p><strong>State Preparation</strong>:
+- Random bit <span class="math notranslate nohighlight">\(b \in \{0,1\}\)</span>
+- Random basis <span class="math notranslate nohighlight">\(B \in \{R,D\}\)</span>
+- State: <span class="math notranslate nohighlight">\(|\psi\rangle = |b\rangle_B\)</span></p>
+<p><strong>Measurement</strong>:
+- Random basis choice <span class="math notranslate nohighlight">\(B' \in \{R,D\}\)</span>
+- Measurement outcome: <span class="math notranslate nohighlight">\(b' \in \{0,1\}\)</span> or no detection</p>
+<p><strong>Sifting</strong>:
+- Keep bit if <span class="math notranslate nohighlight">\(B = B'\)</span> and detection occurred
+- Discard if <span class="math notranslate nohighlight">\(B \neq B'\)</span> or no detection</p>
+</section>
+</section>
+</section>
+<section id="noise-models">
+<h2>Noise Models<a class="headerlink" href="#noise-models" title="Link to this heading"></a></h2>
+<section id="phase-flip-noise">
+<h3>Phase Flip Noise<a class="headerlink" href="#phase-flip-noise" title="Link to this heading"></a></h3>
+<p>Models phase errors in the optical channel:</p>
+<div class="math notranslate nohighlight">
+\[P_{phase\_flip} = p_{flip}\]</div>
+<p>Implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">phase_flip_prob</span><span class="p">:</span>
+    <span class="n">modulated_phase</span> <span class="o">=</span> <span class="p">(</span><span class="n">modulated_phase</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+</section>
+<section id="bit-flip-noise">
+<h3>Bit Flip Noise<a class="headerlink" href="#bit-flip-noise" title="Link to this heading"></a></h3>
+<p>Models bit errors in classical post-processing:</p>
+<div class="math notranslate nohighlight">
+\[P_{bit\_flip} = p_{error}\]</div>
+<p>Implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">bit_flip_error_prob</span><span class="p">:</span>
+    <span class="n">bit</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">bit</span>  <span class="c1"># Flip the bit</span>
+</pre></div>
+</div>
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
+</section>
+<section id="channel-attenuation">
+<h3>Channel Attenuation<a class="headerlink" href="#channel-attenuation" title="Link to this heading"></a></h3>
+<p>Models photon loss in optical fiber:</p>
+<div class="math notranslate nohighlight">
+\[P_{survival} = 10^{-\alpha L/10}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha\)</span> is attenuation coefficient and <span class="math notranslate nohighlight">\(L\)</span> is distance.</p>
+</section>
+<section id="dark-counts">
+<h3>Dark Counts<a class="headerlink" href="#dark-counts" title="Link to this heading"></a></h3>
+<p>Models spurious detector clicks:</p>
+<div class="math notranslate nohighlight">
+\[P_{dark} = 1 - e^{-r_{dark} \Delta t}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r_{dark}\)</span> is dark count rate and <span class="math notranslate nohighlight">\(\Delta t\)</span> is time window.</p>
+</section>
+</section>
+<section id="performance-analysis-models">
+<h2>Performance Analysis Models<a class="headerlink" href="#performance-analysis-models" title="Link to this heading"></a></h2>
+<section id="qber-calculation">
+<h3>QBER Calculation<a class="headerlink" href="#qber-calculation" title="Link to this heading"></a></h3>
+<p>Quantum Bit Error Rate is calculated using a random sample:</p>
+<div class="math notranslate nohighlight">
+\[QBER = \frac{N_{errors}}{N_{sample}}\]</div>
+<p>where:
+- <span class="math notranslate nohighlight">\(N_{errors}\)</span> is the number of bit errors
+- <span class="math notranslate nohighlight">\(N_{sample}\)</span> is the sample size (typically 10% of key)</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#main.calculate_qber" title="main.calculate_qber"><code class="xref py py-func docutils literal notranslate"><span class="pre">main.calculate_qber()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">calculate_qber</span><span class="p">(</span><span class="n">alice_sifted_key</span><span class="p">,</span> <span class="n">bob_sifted_key</span><span class="p">,</span> <span class="n">dr</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">key_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_sifted_key</span><span class="p">)</span>
+    <span class="n">sample_size</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">dr</span> <span class="o">*</span> <span class="n">key_length</span><span class="p">))</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">key_length</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">sample_indices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">sample_size</span><span class="p">)</span>
+
+    <span class="n">num_errors</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">sample_indices</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">alice_sifted_key</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">!=</span> <span class="n">bob_sifted_key</span><span class="p">[</span><span class="n">idx</span><span class="p">]:</span>
+            <span class="n">num_errors</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">qber</span> <span class="o">=</span> <span class="n">num_errors</span> <span class="o">/</span> <span class="n">sample_size</span>
+    <span class="k">return</span> <span class="n">qber</span><span class="p">,</span> <span class="n">num_errors</span>
+</pre></div>
+</div>
+<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+</section>
+<section id="post-processing-model">
+<h3>Post-Processing Model<a class="headerlink" href="#post-processing-model" title="Link to this heading"></a></h3>
+<p>The post-processing model includes three steps:</p>
+<ol class="arabic">
+<li><p><strong>Parameter Estimation</strong>:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N_</span><span class="p">{</span><span class="n">est</span><span class="p">}</span> <span class="o">=</span> <span class="n">N_</span><span class="p">{</span><span class="n">raw</span><span class="p">}</span> \<span class="n">cdot</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">DR</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Error Correction</strong>:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N_</span><span class="p">{</span><span class="n">ec</span><span class="p">}</span> <span class="o">=</span> <span class="n">N_</span><span class="p">{</span><span class="n">est</span><span class="p">}</span> \<span class="n">cdot</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">f_</span><span class="p">{</span><span class="n">ec</span><span class="p">}</span> \<span class="n">cdot</span> <span class="n">h</span><span class="p">(</span><span class="n">QBER</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Privacy Amplification</strong>:
+.. math:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">N_</span><span class="p">{</span><span class="n">final</span><span class="p">}</span> <span class="o">=</span> <span class="n">N_</span><span class="p">{</span><span class="n">ec</span><span class="p">}</span> \<span class="n">cdot</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">PA_</span><span class="p">{</span><span class="n">ratio</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>where:
+- <span class="math notranslate nohighlight">\(DR\)</span> is the disclose rate
+- <span class="math notranslate nohighlight">\(f_{ec}\)</span> is the error correction efficiency
+- <span class="math notranslate nohighlight">\(h(x)\)</span> is the binary entropy function
+- <span class="math notranslate nohighlight">\(PA_{ratio}\)</span> is the privacy amplification ratio</p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#main.postprocessing" title="main.postprocessing"><code class="xref py py-func docutils literal notranslate"><span class="pre">main.postprocessing()</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">postprocessing</span><span class="p">(</span><span class="n">raw_key_length</span><span class="p">,</span> <span class="n">qber</span><span class="p">,</span> <span class="n">dr</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">error_correction_efficiency</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">privacy_amplification_ratio</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="c1"># Parameter estimation</span>
+    <span class="n">key_after_dr</span> <span class="o">=</span> <span class="n">raw_key_length</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dr</span><span class="p">)</span>
+
+    <span class="c1"># Error correction</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">binary_entropy</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">x</span> <span class="o">*</span> <span class="n">log2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">log2</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+
+    <span class="n">ec_fraction</span> <span class="o">=</span> <span class="n">error_correction_efficiency</span> <span class="o">*</span> <span class="n">binary_entropy</span><span class="p">(</span><span class="n">qber</span><span class="p">)</span>
+    <span class="n">key_after_ec</span> <span class="o">=</span> <span class="n">key_after_dr</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ec_fraction</span><span class="p">)</span>
+
+    <span class="c1"># Privacy amplification</span>
+    <span class="n">key_after_pa</span> <span class="o">=</span> <span class="n">key_after_ec</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">privacy_amplification_ratio</span><span class="p">)</span>
+
+    <span class="n">final_key_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">key_after_pa</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">final_key_length</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;after_parameter_estimation&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">key_after_dr</span><span class="p">),</span>
+        <span class="s1">&#39;after_error_correction&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">key_after_ec</span><span class="p">),</span>
+        <span class="s1">&#39;after_privacy_amplification&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">key_after_pa</span><span class="p">),</span>
+        <span class="s1">&#39;dr&#39;</span><span class="p">:</span> <span class="n">dr</span><span class="p">,</span>
+        <span class="s1">&#39;ec_fraction&#39;</span><span class="p">:</span> <span class="n">ec_fraction</span><span class="p">,</span>
+        <span class="s1">&#39;privacy_amplification_ratio&#39;</span><span class="p">:</span> <span class="n">privacy_amplification_ratio</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
+</section>
+<section id="key-rate-analysis">
+<h3>Key Rate Analysis<a class="headerlink" href="#key-rate-analysis" title="Link to this heading"></a></h3>
+<p>Secure key rate calculation:</p>
+<div class="math notranslate nohighlight">
+\[R_{secure} = \frac{N_{final}}{T_{total}}\]</div>
+<p>where:
+- <span class="math notranslate nohighlight">\(N_{final}\)</span> is the final key length
+- <span class="math notranslate nohighlight">\(T_{total}\)</span> is the total simulation time</p>
+<p>Raw key rate:</p>
+<div class="math notranslate nohighlight">
+\[R_{raw} = \frac{N_{sifted}}{T_{total}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(N_{sifted}\)</span> is the sifted key length.</p>
+</section>
+</section>
+<section id="network-models">
+<h2>Network Models<a class="headerlink" href="#network-models" title="Link to this heading"></a></h2>
+<section id="trusted-relay-model">
+<h3>Trusted Relay Model<a class="headerlink" href="#trusted-relay-model" title="Link to this heading"></a></h3>
+<p>For multi-node networks, the platform implements a trusted relay model:</p>
+<ol class="arabic simple">
+<li><p><strong>Key Generation</strong>: Generate keys on each link independently</p></li>
+<li><p><strong>Key Relay</strong>: Trusted nodes relay keys using classical communication</p></li>
+<li><p><strong>Key Combination</strong>: Final key is the XOR of all link keys</p></li>
+</ol>
+<p>Mathematical Model:
+- Link <span class="math notranslate nohighlight">\(i\)</span> generates key <span class="math notranslate nohighlight">\(K_i\)</span>
+- Final key: <span class="math notranslate nohighlight">\(K_{final} = K_1 \oplus K_2 \oplus ... \oplus K_n\)</span></p>
+<p>Implementation in <a class="reference internal" href="api-reference.html#simulation.Network.Network" title="simulation.Network.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Network.Network</span></code></a>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">establish_end_to_end_raw_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sender_id</span><span class="p">,</span> <span class="n">receiver_id</span><span class="p">,</span> <span class="n">path_nodes</span><span class="p">,</span> <span class="n">num_pulses</span><span class="p">,</span> <span class="n">pulse_repetition_rate_ns</span><span class="p">):</span>
+    <span class="c1"># Generate keys on each link</span>
+    <span class="n">link_keys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">path_nodes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">node1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">path_nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">node2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">path_nodes</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+        <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span> <span class="o">=</span> <span class="n">node1</span><span class="o">.</span><span class="n">generate_and_share_key</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">num_pulses</span><span class="p">,</span> <span class="n">pulse_repetition_rate_ns</span><span class="p">)</span>
+        <span class="n">link_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key1</span><span class="p">)</span>
+
+    <span class="c1"># XOR all link keys</span>
+    <span class="n">final_key</span> <span class="o">=</span> <span class="n">link_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">link_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="n">final_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">^</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">final_key</span><span class="p">,</span> <span class="n">key</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">final_key</span>
+</pre></div>
+</div>
+<p><a href="#id19"><span class="problematic" id="id20">``</span></a><a href="#id21"><span class="problematic" id="id22">`</span></a></p>
+</section>
+</section>
+<section id="simulation-algorithm">
+<h2>Simulation Algorithm<a class="headerlink" href="#simulation-algorithm" title="Link to this heading"></a></h2>
+<section id="discrete-event-simulation">
+<h3>Discrete Event Simulation<a class="headerlink" href="#discrete-event-simulation" title="Link to this heading"></a></h3>
+<p>The platform uses a discrete event simulation approach:</p>
+<ol class="arabic simple">
+<li><p><strong>Event Generation</strong>: Generate pulse events at regular intervals</p></li>
+<li><p><strong>Event Processing</strong>: Process each event through the simulation pipeline</p></li>
+<li><p><strong>State Updates</strong>: Update system state based on event outcomes</p></li>
+<li><p><strong>Data Collection</strong>: Collect statistics and results</p></li>
+</ol>
+</section>
+<section id="simulation-pipeline">
+<h3>Simulation Pipeline<a class="headerlink" href="#simulation-pipeline" title="Link to this heading"></a></h3>
+<p>For each protocol, the simulation follows this pipeline:</p>
+<p><strong>DPS-QKD Pipeline</strong>:
+1. Generate pulse train with random phases
+2. Apply phase encoding based on random bits
+3. Transmit through optical channel
+4. Apply phase flip noise
+5. Measure with MZI
+6. Record detector clicks
+7. Perform sifting process</p>
+<p><strong>COW-QKD Pipeline</strong>:
+1. Generate pulse train with data and monitoring pulses
+2. Apply intensity modulation
+3. Transmit through optical channel
+4. Detect pulses with single photon detector
+5. Perform sifting based on pulse types
+6. Check monitoring pulses for eavesdropping</p>
+<p><strong>BB84-QKD Pipeline</strong>:
+1. Generate random bits and bases
+2. Prepare quantum states
+3. Transmit through optical channel
+4. Randomly choose measurement bases
+5. Perform measurements
+6. Sift based on basis agreement</p>
+</section>
+<section id="random-number-generation">
+<h3>Random Number Generation<a class="headerlink" href="#random-number-generation" title="Link to this heading"></a></h3>
+<p>The simulation uses Python’s <cite>random</cite> module for random number generation:</p>
+<ul class="simple">
+<li><p><strong>Reproducibility</strong>: Seeds can be set for reproducible results</p></li>
+<li><p><strong>Quality</strong>: Uses Mersenne Twister algorithm</p></li>
+<li><p><strong>Independence</strong>: Different random streams for different components</p></li>
+</ul>
+<p>Implementation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="c1"># Set seed for reproducibility</span>
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Generate random bits</span>
+<span class="n">bit</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Generate random phases</span>
+<span class="n">phase</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+<span class="c1"># Generate random bases</span>
+<span class="n">basis</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p><a href="#id23"><span class="problematic" id="id24">``</span></a><a href="#id25"><span class="problematic" id="id26">`</span></a></p>
+</section>
+</section>
+<section id="validation-and-verification">
+<h2>Validation and Verification<a class="headerlink" href="#validation-and-verification" title="Link to this heading"></a></h2>
+<section id="theory-compliance">
+<h3>Theory Compliance<a class="headerlink" href="#theory-compliance" title="Link to this heading"></a></h3>
+<p>The simulation models are validated against theoretical predictions:</p>
+<p><strong>DPS-QKD</strong>:
+- Expected sifting efficiency: ~25%
+- QBER range: 3-11% for practical systems</p>
+<p><strong>COW-QKD</strong>:
+- Expected sifting efficiency: ~40%
+- QBER range: 3-10% for practical systems</p>
+<p><strong>BB84-QKD</strong>:
+- Expected sifting efficiency: ~50%
+- QBER range: 3-11% for practical systems</p>
+</section>
+<section id="implementation-verification">
+<h3>Implementation Verification<a class="headerlink" href="#implementation-verification" title="Link to this heading"></a></h3>
+<p>Key verification checks:</p>
+<ol class="arabic simple">
+<li><p><strong>Photon Conservation</strong>: Total photons in = total photons out + losses</p></li>
+<li><p><strong>Probability Normalization</strong>: All probabilities sum to 1</p></li>
+<li><p><strong>Phase Continuity</strong>: Phase values are properly wrapped to [0, 2π]</p></li>
+<li><p><strong>Bit Consistency</strong>: Alice and Bob keys have same length after sifting</p></li>
+</ol>
+</section>
+<section id="error-handling">
+<h3>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading"></a></h3>
+<p>The simulation includes comprehensive error handling:</p>
+<ul class="simple">
+<li><p><strong>Parameter Validation</strong>: All parameters checked for valid ranges</p></li>
+<li><p><strong>State Consistency</strong>: System state verified at each step</p></li>
+<li><p><strong>Exception Handling</strong>: Graceful handling of simulation errors</p></li>
+<li><p><strong>Logging</strong>: Detailed logging for debugging and analysis</p></li>
+</ul>
+</section>
+</section>
+<section id="performance-optimization">
+<h2>Performance Optimization<a class="headerlink" href="#performance-optimization" title="Link to this heading"></a></h2>
+<section id="computational-efficiency">
+<h3>Computational Efficiency<a class="headerlink" href="#computational-efficiency" title="Link to this heading"></a></h3>
+<p>The simulation is optimized for performance:</p>
+<ol class="arabic simple">
+<li><p><strong>Vectorized Operations</strong>: Use NumPy for large arrays when possible</p></li>
+<li><p><strong>Memory Management</strong>: Efficient memory usage for large simulations</p></li>
+<li><p><strong>Parallel Processing</strong>: Support for parallel simulation runs</p></li>
+<li><p><strong>Caching</strong>: Cache frequently used calculations</p></li>
+</ol>
+</section>
+<section id="scalability">
+<h3>Scalability<a class="headerlink" href="#scalability" title="Link to this heading"></a></h3>
+<p>The platform scales to large networks:</p>
+<ul class="simple">
+<li><p><strong>Node Count</strong>: Support for hundreds of nodes</p></li>
+<li><p><strong>Channel Count</strong>: Support for thousands of channels</p></li>
+<li><p><strong>Pulse Count</strong>: Support for millions of pulses</p></li>
+<li><p><strong>Memory Usage</strong>: Efficient memory usage for large simulations</p></li>
+</ul>
+</section>
+</section>
+<section id="accuracy-considerations">
+<h2>Accuracy Considerations<a class="headerlink" href="#accuracy-considerations" title="Link to this heading"></a></h2>
+<section id="numerical-precision">
+<h3>Numerical Precision<a class="headerlink" href="#numerical-precision" title="Link to this heading"></a></h3>
+<p>The simulation uses double-precision floating-point arithmetic:</p>
+<ul class="simple">
+<li><p><strong>Phase Calculations</strong>: 64-bit precision for phase values</p></li>
+<li><p><strong>Probability Calculations</strong>: 64-bit precision for probabilities</p></li>
+<li><p><strong>Statistical Accuracy</strong>: Sufficient precision for QKD analysis</p></li>
+</ul>
+</section>
+<section id="approximations">
+<h3>Approximations<a class="headerlink" href="#approximations" title="Link to this heading"></a></h3>
+<p>The simulation makes several approximations for computational efficiency:</p>
+<ol class="arabic simple">
+<li><p><strong>Poissonian Photons</strong>: Approximates true quantum statistics</p></li>
+<li><p><strong>Classical Interference</strong>: Approximates quantum interference</p></li>
+<li><p><strong>Independent Events</strong>: Assumes independence between pulses</p></li>
+<li><p><strong>Markovian Process</strong>: Assumes memoryless channel behavior</p></li>
+</ol>
+<p>These approximations are valid for typical QKD parameters and provide accurate results for practical analysis.</p>
+</section>
+</section>
+<section id="future-enhancements">
+<h2>Future Enhancements<a class="headerlink" href="#future-enhancements" title="Link to this heading"></a></h2>
+<p>Planned improvements to the simulation models:</p>
+<ol class="arabic simple">
+<li><p><strong>Full Quantum Simulation</strong>: Implementation of true quantum state evolution</p></li>
+<li><p><strong>Advanced Noise Models</strong>: More sophisticated noise and decoherence models</p></li>
+<li><p><strong>Security Analysis</strong>: Integration of security analysis tools</p></li>
+<li><p><strong>Real-time Simulation</strong>: Real-time simulation capabilities</p></li>
+<li><p><strong>Hardware Integration</strong>: Integration with real QKD hardware</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="api-reference.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="protocols.html" class="btn btn-neutral float-right" title="QKD Protocols" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

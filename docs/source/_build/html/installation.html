@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Guide &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start Guide" href="quick-start.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#system-requirements">System Requirements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#minimum-requirements">Minimum Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recommended-requirements">Recommended Requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-installation">Python Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#node-js-installation">Node.js Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#git-installation">Git Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-methods">Installation Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#method-1-clone-from-repository-recommended">Method 1: Clone from Repository (Recommended)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#method-2-download-zip-archive">Method 2: Download ZIP Archive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#method-3-using-pip-backend-only">Method 3: Using pip (Backend Only)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#platform-specific-instructions">Platform-Specific Instructions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#windows-installation">Windows Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#macos-installation">macOS Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#linux-installation-ubuntu-debian">Linux Installation (Ubuntu/Debian)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#virtual-environment-setup-recommended">Virtual Environment Setup (Recommended)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#docker-installation-alternative">Docker Installation (Alternative)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verification">Verification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#common-issues">Common Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">Next Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="installation-guide">
+<h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading"></a></h1>
+<p>This guide provides step-by-step instructions for installing and setting up the QKD Simulation Platform on your system.</p>
+<section id="system-requirements">
+<h2>System Requirements<a class="headerlink" href="#system-requirements" title="Link to this heading"></a></h2>
+<section id="minimum-requirements">
+<h3>Minimum Requirements<a class="headerlink" href="#minimum-requirements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Operating System</strong>: Windows 10+, macOS 10.14+, or Linux (Ubuntu 18.04+)</p></li>
+<li><p><strong>Python</strong>: 3.8 or higher</p></li>
+<li><p><strong>Node.js</strong>: 14.0 or higher (for frontend)</p></li>
+<li><p><strong>Memory</strong>: 4 GB RAM</p></li>
+<li><p><strong>Storage</strong>: 2 GB free disk space</p></li>
+</ul>
+</section>
+<section id="recommended-requirements">
+<h3>Recommended Requirements<a class="headerlink" href="#recommended-requirements" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Operating System</strong>: Windows 11, macOS 12+, or Ubuntu 20.04+</p></li>
+<li><p><strong>Python</strong>: 3.9 or higher</p></li>
+<li><p><strong>Node.js</strong>: 16.0 or higher</p></li>
+<li><p><strong>Memory</strong>: 8 GB RAM</p></li>
+<li><p><strong>Storage</strong>: 5 GB free disk space</p></li>
+<li><p><strong>Processor</strong>: Multi-core CPU for faster simulations</p></li>
+</ul>
+</section>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<section id="python-installation">
+<h3>Python Installation<a class="headerlink" href="#python-installation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Download Python</strong>: Visit <a class="reference external" href="https://www.python.org/downloads/">python.org</a> and download the latest Python version</p></li>
+<li><p><strong>Install Python</strong>: Run the installer and ensure “Add Python to PATH” is checked</p></li>
+<li><p><strong>Verify Installation</strong>: Open a terminal/command prompt and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
+pip<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="node-js-installation">
+<h3>Node.js Installation<a class="headerlink" href="#node-js-installation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Download Node.js</strong>: Visit <a class="reference external" href="https://nodejs.org/">nodejs.org</a> and download the LTS version</p></li>
+<li><p><strong>Install Node.js</strong>: Run the installer and follow the setup wizard</p></li>
+<li><p><strong>Verify Installation</strong>: Open a terminal/command prompt and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>node<span class="w"> </span>--version
+npm<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="git-installation">
+<h3>Git Installation<a class="headerlink" href="#git-installation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Download Git</strong>: Visit <a class="reference external" href="https://git-scm.com/">git-scm.com</a> and download Git</p></li>
+<li><p><strong>Install Git</strong>: Run the installer with default settings</p></li>
+<li><p><strong>Verify Installation</strong>: Open a terminal/command prompt and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="installation-methods">
+<h2>Installation Methods<a class="headerlink" href="#installation-methods" title="Link to this heading"></a></h2>
+<section id="method-1-clone-from-repository-recommended">
+<h3>Method 1: Clone from Repository (Recommended)<a class="headerlink" href="#method-1-clone-from-repository-recommended" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Clone the Repository</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-username/qkd-simulation-platform.git
+<span class="nb">cd</span><span class="w"> </span>qkd-simulation-platform
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Python Dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Frontend Dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>frontend
+npm<span class="w"> </span>install
+<span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="method-2-download-zip-archive">
+<h3>Method 2: Download ZIP Archive<a class="headerlink" href="#method-2-download-zip-archive" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p><strong>Download</strong>: Download the ZIP archive from the GitHub releases page</p></li>
+<li><p><strong>Extract</strong>: Extract the archive to your desired location</p></li>
+<li><p><strong>Install Dependencies</strong>: Follow steps 2-3 from Method 1</p></li>
+</ol>
+</section>
+<section id="method-3-using-pip-backend-only">
+<h3>Method 3: Using pip (Backend Only)<a class="headerlink" href="#method-3-using-pip-backend-only" title="Link to this heading"></a></h3>
+<p>For users who only need the backend simulation engine:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>qkd-simulation-platform
+</pre></div>
+</div>
+</section>
+</section>
+<section id="platform-specific-instructions">
+<h2>Platform-Specific Instructions<a class="headerlink" href="#platform-specific-instructions" title="Link to this heading"></a></h2>
+<section id="windows-installation">
+<h3>Windows Installation<a class="headerlink" href="#windows-installation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Install Python</strong>:
+- Download Python from <a class="reference external" href="https://www.python.org/downloads/">python.org</a>
+- Run installer as Administrator
+- Check “Add Python to PATH” and “Install for all users”</p></li>
+<li><p><strong>Install Node.js</strong>:
+- Download Node.js LTS from <a class="reference external" href="https://nodejs.org/">nodejs.org</a>
+- Run installer with default settings</p></li>
+<li><p><strong>Install Git</strong>:
+- Download Git from <a class="reference external" href="https://git-scm.com/">git-scm.com</a>
+- Use default settings during installation</p></li>
+<li><p><strong>Clone and Install</strong>:
+- Open Command Prompt or PowerShell as Administrator
+- Follow Method 1 installation steps</p></li>
+<li><p><strong>Verify Installation</strong>:
+- Open Command Prompt and run:</p>
+<div class="highlight-cmd notranslate"><div class="highlight"><pre><span></span>python --version
+node --version
+git --version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="macos-installation">
+<h3>macOS Installation<a class="headerlink" href="#macos-installation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Install Homebrew</strong> (if not already installed):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Python</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>python
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Node.js</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>node
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Git</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>git
+</pre></div>
+</div>
+</li>
+<li><p><strong>Clone and Install</strong>:
+- Open Terminal
+- Follow Method 1 installation steps</p></li>
+<li><p><strong>Verify Installation</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>--version
+node<span class="w"> </span>--version
+git<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="linux-installation-ubuntu-debian">
+<h3>Linux Installation (Ubuntu/Debian)<a class="headerlink" href="#linux-installation-ubuntu-debian" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Update System</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Python</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3<span class="w"> </span>python3-pip<span class="w"> </span>python3-venv
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Node.js</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://deb.nodesource.com/setup_lts.x<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>-E<span class="w"> </span>bash<span class="w"> </span>-
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nodejs
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install Git</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>git
+</pre></div>
+</div>
+</li>
+<li><p><strong>Clone and Install</strong>:
+- Open Terminal
+- Follow Method 1 installation steps</p></li>
+<li><p><strong>Verify Installation</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>--version
+node<span class="w"> </span>--version
+git<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="virtual-environment-setup-recommended">
+<h2>Virtual Environment Setup (Recommended)<a class="headerlink" href="#virtual-environment-setup-recommended" title="Link to this heading"></a></h2>
+<p>Using a virtual environment is recommended to avoid conflicts with system Python packages:</p>
+<ol class="arabic">
+<li><p><strong>Create Virtual Environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>qkd_env
+</pre></div>
+</div>
+</li>
+<li><p><strong>Activate Virtual Environment</strong>:</p>
+<p><strong>Windows</strong>:
+.. code-block:: cmd</p>
+<blockquote>
+<div><p>qkd_envScriptsactivate</p>
+</div></blockquote>
+<p><strong>macOS/Linux</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>source qkd_env/bin/activate</p>
+</div></blockquote>
+</li>
+<li><p><strong>Install Dependencies</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p><strong>Deactivate</strong> (when done):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deactivate
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="docker-installation-alternative">
+<h2>Docker Installation (Alternative)<a class="headerlink" href="#docker-installation-alternative" title="Link to this heading"></a></h2>
+<p>For users who prefer containerized deployment:</p>
+<ol class="arabic">
+<li><p><strong>Install Docker</strong>: Follow instructions at <a class="reference external" href="https://docs.docker.com/get-docker/">docker.com</a></p></li>
+<li><p><strong>Build and Run</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build the Docker image</span>
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>qkd-simulation-platform<span class="w"> </span>.
+
+<span class="c1"># Run the container</span>
+docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span>-p<span class="w"> </span><span class="m">3000</span>:3000<span class="w"> </span>qkd-simulation-platform
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="verification">
+<h2>Verification<a class="headerlink" href="#verification" title="Link to this heading"></a></h2>
+<p>After installation, verify that everything is working correctly:</p>
+<ol class="arabic">
+<li><p><strong>Test Backend</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start the backend server</span>
+uvicorn<span class="w"> </span>api:app<span class="w"> </span>--reload
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Open a web browser and navigate to <cite>http://127.0.0.1:8000</cite></p></li>
+<li><p>You should see the API welcome message</p></li>
+</ul>
+</li>
+<li><p><strong>Test Frontend</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># In a new terminal, start the frontend</span>
+<span class="nb">cd</span><span class="w"> </span>frontend
+npm<span class="w"> </span>start
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Open a web browser and navigate to <cite>http://localhost:3000</cite></p></li>
+<li><p>You should see the QKD Simulation Platform interface</p></li>
+</ul>
+</li>
+<li><p><strong>Run a Test Simulation</strong>:</p>
+<ul class="simple">
+<li><p>In the frontend, select a protocol (e.g., DPS-QKD)</p></li>
+<li><p>Configure a simple two-node network</p></li>
+<li><p>Run a simulation and verify results are displayed</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="common-issues">
+<h3>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading"></a></h3>
+<dl class="simple">
+<dt><strong>Python not found</strong>:</dt><dd><ul class="simple">
+<li><p>Ensure Python is added to PATH</p></li>
+<li><p>Try using <cite>python3</cite> instead of <cite>python</cite></p></li>
+</ul>
+</dd>
+<dt><strong>pip not found</strong>:</dt><dd><ul class="simple">
+<li><p>Install pip: <cite>python -m ensurepip –upgrade</cite></p></li>
+<li><p>Or use: <cite>python -m pip install -r requirements.txt</cite></p></li>
+</ul>
+</dd>
+<dt><strong>Node.js/npm not found</strong>:</dt><dd><ul class="simple">
+<li><p>Reinstall Node.js and ensure it’s added to PATH</p></li>
+<li><p>Try using <cite>nodejs</cite> instead of <cite>node</cite> on some Linux systems</p></li>
+</ul>
+</dd>
+<dt><strong>Permission Errors</strong>:</dt><dd><ul class="simple">
+<li><p>Use <cite>sudo</cite> on Linux/macOS for system-wide installation</p></li>
+<li><p>Run Command Prompt as Administrator on Windows</p></li>
+<li><p>Use virtual environments to avoid permission issues</p></li>
+</ul>
+</dd>
+<dt><strong>Port Already in Use</strong>:</dt><dd><ul class="simple">
+<li><p>Kill processes using ports 8000 or 3000</p></li>
+<li><p>Use different ports: <cite>uvicorn api:app –reload –port 8001</cite></p></li>
+</ul>
+</dd>
+<dt><strong>Frontend Build Errors</strong>:</dt><dd><ul class="simple">
+<li><p>Clear npm cache: <cite>npm cache clean –force</cite></p></li>
+<li><p>Delete <cite>node_modules</cite> and reinstall: <cite>rm -rf node_modules &amp;&amp; npm install</cite></p></li>
+</ul>
+</dd>
+<dt><strong>Backend Import Errors</strong>:</dt><dd><ul class="simple">
+<li><p>Ensure you’re in the correct directory</p></li>
+<li><p>Check that all dependencies are installed</p></li>
+<li><p>Verify Python path includes the project directory</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
+<p>If you encounter issues during installation:</p>
+<ol class="arabic simple">
+<li><p><strong>Check the FAQ</strong>: Common questions and solutions</p></li>
+<li><p><strong>Search Issues</strong>: Look for similar problems in the GitHub issues</p></li>
+<li><p><strong>Create an Issue</strong>: Report bugs or request help on GitHub</p></li>
+<li><p><strong>Community Support</strong>: Join the discussion forum or mailing list</p></li>
+</ol>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading"></a></h2>
+<p>After successful installation:</p>
+<ol class="arabic simple">
+<li><p><strong>Quick Start</strong>: Follow the <a class="reference internal" href="quick-start.html"><span class="doc">Quick Start Guide</span></a> tutorial</p></li>
+<li><p><strong>User Guide</strong>: Learn about all features in the <a class="reference internal" href="user-guide.html"><span class="doc">User Guide</span></a></p></li>
+<li><p><strong>Examples</strong>: Explore practical examples in the <span class="xref std std-doc">examples</span> section</p></li>
+<li><p><strong>API Reference</strong>: Study the complete API documentation</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quick-start.html" class="btn btn-neutral float-right" title="Quick Start Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,876 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contributing to QKD Simulation Platform &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="QKD Protocols" href="protocols.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="protocols.html">QKD Protocols</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to QKD Simulation Platform</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fork-and-clone">Fork and Clone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development-environment">Development Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core-components">Core Components</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#development-workflow">Development Workflow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#branch-strategy">Branch Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-feature-branch">Creating a Feature Branch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#commit-guidelines">Commit Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#code-style">Code Style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-style-guide">Python Style Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#javascript-react-style-guide">JavaScript/React Style Guide</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#test-structure">Test Structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests">Running Tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-tests">Writing Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-standards">Documentation Standards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#writing-documentation">Writing Documentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#calculate_qber"><code class="docutils literal notranslate"><span class="pre">calculate_qber()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pull-request-process">Pull Request Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-pull-request">Creating a Pull Request</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#review-process">Review Process</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#areas-for-contribution">Areas for Contribution</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#new-features">New Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id31">Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id32">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#community-guidelines">Community Guidelines</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#code-of-conduct">Code of Conduct</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">Communication</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-help">Getting Help</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recognition">Recognition</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing to QKD Simulation Platform</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/contributing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="contributing-to-qkd-simulation-platform">
+<h1>Contributing to QKD Simulation Platform<a class="headerlink" href="#contributing-to-qkd-simulation-platform" title="Link to this heading"></a></h1>
+<p>Thank you for your interest in contributing to the QKD Simulation Platform! This guide will help you get started with contributing to the project.</p>
+<section id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h2>
+<p>Before contributing, please:</p>
+<ol class="arabic simple">
+<li><p><strong>Read the Documentation</strong>: Familiarize yourself with the project structure and goals</p></li>
+<li><p><strong>Check Existing Issues</strong>: Look for existing issues or discussions about your contribution</p></li>
+<li><p><strong>Follow the Code of Conduct</strong>: Ensure your contributions align with our community standards</p></li>
+<li><p><strong>Set Up Development Environment</strong>: Follow the installation guide for developers</p></li>
+</ol>
+</section>
+<section id="development-setup">
+<h2>Development Setup<a class="headerlink" href="#development-setup" title="Link to this heading"></a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Python 3.8+</strong> with pip</p></li>
+<li><p><strong>Node.js 14+</strong> with npm</p></li>
+<li><p><strong>Git</strong> for version control</p></li>
+<li><p><strong>Code editor</strong> (VS Code, PyCharm, etc.)</p></li>
+<li><p><strong>Testing framework</strong> (pytest for Python, Jest for JavaScript)</p></li>
+</ul>
+</section>
+<section id="fork-and-clone">
+<h3>Fork and Clone<a class="headerlink" href="#fork-and-clone" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Fork the repository</strong> on GitHub</p></li>
+<li><p><strong>Clone your fork</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-username/qkd-simulation-platform.git
+<span class="nb">cd</span><span class="w"> </span>qkd-simulation-platform
+</pre></div>
+</div>
+</li>
+<li><p><strong>Add upstream remote</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>https://github.com/original-owner/qkd-simulation-platform.git
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="development-environment">
+<h3>Development Environment<a class="headerlink" href="#development-environment" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Set up Python environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># On Windows: venv\Scripts\activate</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements-dev.txt<span class="w">  </span><span class="c1"># Development dependencies</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Set up frontend environment</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>frontend
+npm<span class="w"> </span>install
+<span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+</li>
+<li><p><strong>Install pre-commit hooks</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<p>Understanding the codebase structure is essential for effective contributions:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>cow_qkd_repo/
+├── api.py                    # FastAPI application entry point
+├── main.py                   # Main simulation functions and utilities
+├── requirements.txt          # Python dependencies
+├── requirements-dev.txt      # Development dependencies
+├── simulation/               # Core simulation package
+│   ├── __init__.py
+│   ├── Network.py           # Network management and multi-node simulation
+│   ├── Hardware.py          # Optical component models
+│   ├── Sender.py            # Protocol sender implementations
+│   ├── Receiver.py          # Protocol receiver implementations
+│   └── ...
+├── frontend/                # React frontend application
+│   ├── package.json
+│   ├── src/
+│   │   ├── components/      # React components
+│   │   │   ├── QKDForm.js
+│   │   │   ├── QKDNetwork.js
+│   │   │   └── Results.js
+│   │   └── ...
+│   └── ...
+├── docs/                    # Documentation
+│   ├── requirements.txt
+│   └── source/
+│       ├── conf.py
+│       ├── index.rst
+│       └── ...
+├── tests/                   # Test suite
+│   ├── test_network.py
+│   ├── test_hardware.py
+│   ├── test_protocols.py
+│   └── ...
+└── examples/                # Example scripts and tutorials
+    ├── basic_simulation.py
+    ├── protocol_comparison.py
+    └── ...
+</pre></div>
+</div>
+<section id="core-components">
+<h3>Core Components<a class="headerlink" href="#core-components" title="Link to this heading"></a></h3>
+<p><strong>Backend (Python)</strong>:
+- <cite>simulation/</cite>: Core simulation logic
+- <cite>api.py</cite>: REST API endpoints
+- <cite>main.py</cite>: Utility functions and analysis tools</p>
+<p><strong>Frontend (React)</strong>:
+- <cite>frontend/src/components/</cite>: React components
+- <cite>frontend/src/App.js</cite>: Main application
+- <cite>frontend/public/</cite>: Static assets</p>
+<p><strong>Documentation</strong>:
+- <cite>docs/source/</cite>: Sphinx documentation source
+- <cite>docs/requirements.txt</cite>: Documentation dependencies</p>
+<p><strong>Testing</strong>:
+- <cite>tests/</cite>: Unit and integration tests
+- <cite>requirements-dev.txt</cite>: Development dependencies</p>
+</section>
+</section>
+<section id="development-workflow">
+<h2>Development Workflow<a class="headerlink" href="#development-workflow" title="Link to this heading"></a></h2>
+<section id="branch-strategy">
+<h3>Branch Strategy<a class="headerlink" href="#branch-strategy" title="Link to this heading"></a></h3>
+<p>We use a feature branch workflow:</p>
+<ol class="arabic simple">
+<li><p><strong>Main branch</strong>: Stable, production-ready code</p></li>
+<li><p><strong>Develop branch</strong>: Integration branch for features</p></li>
+<li><p><strong>Feature branches</strong>: Individual features and fixes</p></li>
+<li><p><strong>Release branches</strong>: Preparation for releases</p></li>
+</ol>
+</section>
+<section id="creating-a-feature-branch">
+<h3>Creating a Feature Branch<a class="headerlink" href="#creating-a-feature-branch" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Update your local main branch</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>main
+git<span class="w"> </span>pull<span class="w"> </span>upstream<span class="w"> </span>main
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create a feature branch</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+</li>
+<li><p><strong>Make your changes</strong> and commit them:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add feature: brief description&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>Push to your fork</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>feature/your-feature-name
+</pre></div>
+</div>
+</li>
+<li><p><strong>Create a pull request</strong> on GitHub</p></li>
+</ol>
+</section>
+<section id="commit-guidelines">
+<h3>Commit Guidelines<a class="headerlink" href="#commit-guidelines" title="Link to this heading"></a></h3>
+<p>Follow conventional commit format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>type(scope): description
+
+[optional body]
+
+[optional footer]
+</pre></div>
+</div>
+<p><strong>Types</strong>:
+- <cite>feat</cite>: New feature
+- <cite>fix</cite>: Bug fix
+- <cite>docs</cite>: Documentation changes
+- <cite>style</cite>: Code style changes (formatting, etc.)
+- <cite>refactor</cite>: Code refactoring
+- <cite>test</cite>: Adding or updating tests
+- <cite>chore</cite>: Maintenance tasks</p>
+<p><strong>Examples</strong>:
+- <cite>feat(protocols): add new QKD protocol implementation</cite>
+- <cite>fix(network): resolve node connection issue</cite>
+- <cite>docs(api): update API documentation</cite>
+- <cite>test(hardware): add detector model tests</cite></p>
+</section>
+</section>
+<section id="code-style">
+<h2>Code Style<a class="headerlink" href="#code-style" title="Link to this heading"></a></h2>
+<section id="python-style-guide">
+<h3>Python Style Guide<a class="headerlink" href="#python-style-guide" title="Link to this heading"></a></h3>
+<p>Follow PEP 8 with these additions:</p>
+<p><strong>Imports</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p># Standard library imports
+import math
+import random
+from typing import List, Tuple, Optional</p>
+<p># Third-party imports
+import numpy as np
+from fastapi import FastAPI</p>
+<p># Local imports
+from simulation.Network import Network
+from simulation.Hardware import LightSource</p>
+</div></blockquote>
+<p><strong>Naming Conventions</strong>:
+- <strong>Classes</strong>: PascalCase (e.g., <cite>SinglePhotonDetector</cite>)
+- <strong>Functions/Methods</strong>: snake_case (e.g., <cite>generate_photon_count</cite>)
+- <strong>Variables</strong>: snake_case (e.g., <cite>avg_photon_number</cite>)
+- <strong>Constants</strong>: UPPER_SNAKE_CASE (e.g., <cite>MAX_PHOTON_NUMBER</cite>)</p>
+<p><strong>Documentation</strong>:
+- Use docstrings for all public functions and classes
+- Follow Google docstring format
+- Include type hints for function parameters and return values</p>
+<p><strong>Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><dl>
+<dt>def calculate_qber(alice_key: List[int], bob_key: List[int],</dt><dd><blockquote>
+<div><p>dr: float = 0.10, seed: Optional[int] = None) -&gt; Tuple[float, int]:</p>
+</div></blockquote>
+<p>“””Calculate the Quantum Bit Error Rate (QBER) using a random sample.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>alice_key: Alice’s sifted key bits
+bob_key: Bob’s sifted key bits
+dr: Disclose rate for QBER estimation (0-1)
+seed: Random seed for reproducible results</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple of (qber, num_errors)</p>
+</dd>
+<dt>Raises:</dt><dd><p>ValueError: If keys have different lengths</p>
+</dd>
+</dl>
+<p>“””
+if len(alice_key) != len(bob_key):</p>
+<blockquote>
+<div><p>raise ValueError(“Sifted keys must be of the same length”)</p>
+</div></blockquote>
+<p># Implementation…
+return qber, num_errors</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></p>
+</section>
+<section id="javascript-react-style-guide">
+<h3>JavaScript/React Style Guide<a class="headerlink" href="#javascript-react-style-guide" title="Link to this heading"></a></h3>
+<p>Follow Airbnb JavaScript Style Guide with React-specific additions:</p>
+<p><strong>Component Structure</strong>:
+.. code-block:: javascript</p>
+<blockquote>
+<div><p>import React, { useState, useEffect } from ‘react’;
+import PropTypes from ‘prop-types’;
+import { Box, Button } from <a class="reference external" href="mailto:'&#37;&#52;&#48;mui/material">‘<span>&#64;</span>mui/material</a>’;</p>
+<dl>
+<dt>const QKDForm = ({ params, onChange }) =&gt; {</dt><dd><p>const [localParams, setLocalParams] = useState(params);</p>
+<dl>
+<dt>const handleChange = (e) =&gt; {</dt><dd><p>const { name, value, type } = e.target;
+const newValue = type === ‘number’ ? Number(value) : value;
+const newParams = { …localParams, [name]: newValue };</p>
+<p>setLocalParams(newParams);
+onChange(newParams);</p>
+</dd>
+</dl>
+<p>};</p>
+<dl>
+<dt>return (</dt><dd><dl class="simple">
+<dt>&lt;Box component=”form” onSubmit={(e) =&gt; e.preventDefault()}&gt;</dt><dd><p>{/* Component JSX <a href="#id5"><span class="problematic" id="id6">*</span></a>/}</p>
+</dd>
+</dl>
+<p>&lt;/Box&gt;</p>
+</dd>
+</dl>
+<p>);</p>
+</dd>
+</dl>
+<p>};</p>
+<dl class="simple">
+<dt>QKDForm.propTypes = {</dt><dd><p>params: PropTypes.object.isRequired,
+onChange: PropTypes.func.isRequired,</p>
+</dd>
+</dl>
+<p>};</p>
+<p>export default QKDForm;</p>
+</div></blockquote>
+<p><a href="#id7"><span class="problematic" id="id8">``</span></a><a href="#id9"><span class="problematic" id="id10">`</span></a></p>
+<p><strong>Naming Conventions</strong>:
+- <strong>Components</strong>: PascalCase (e.g., <cite>QKDForm</cite>)
+- <strong>Functions</strong>: camelCase (e.g., <cite>handleChange</cite>)
+- <strong>Variables</strong>: camelCase (e.g., <cite>localParams</cite>)
+- <strong>Constants</strong>: UPPER_SNAKE_CASE (e.g., <cite>MAX_NODES</cite>)</p>
+</section>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<section id="test-structure">
+<h3>Test Structure<a class="headerlink" href="#test-structure" title="Link to this heading"></a></h3>
+<p><strong>Unit Tests</strong>:
+- Test individual functions and classes
+- Mock external dependencies
+- Test edge cases and error conditions
+- Aim for high code coverage</p>
+<p><strong>Integration Tests</strong>:
+- Test component interactions
+- Test API endpoints
+- Test end-to-end workflows
+- Test realistic scenarios</p>
+<p><strong>Test Organization</strong>:
+.. code-block:: text</p>
+<blockquote>
+<div><p>tests/
+├── unit/
+│   ├── test_network.py
+│   ├── test_hardware.py
+│   ├── test_protocols.py
+│   └── …
+├── integration/
+│   ├── test_api.py
+│   ├── test_simulation.py
+│   └── …
+├── frontend/
+│   ├── QKDForm.test.js
+│   ├── QKDNetwork.test.js
+│   └── …
+└── conftest.py</p>
+</div></blockquote>
+<p><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a></p>
+</section>
+<section id="running-tests">
+<h3>Running Tests<a class="headerlink" href="#running-tests" title="Link to this heading"></a></h3>
+<p><strong>Python Tests</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p># Run all tests
+pytest</p>
+<p># Run specific test file
+pytest tests/test_network.py</p>
+<p># Run with coverage
+pytest –cov=simulation</p>
+<p># Run with verbose output
+pytest -v</p>
+</div></blockquote>
+<p><strong>Frontend Tests</strong>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>cd frontend
+npm test</p>
+<p># Run with coverage
+npm test – –coverage</p>
+<p># Run specific test
+npm test – QKDForm.test.js</p>
+</div></blockquote>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
+</section>
+<section id="writing-tests">
+<h3>Writing Tests<a class="headerlink" href="#writing-tests" title="Link to this heading"></a></h3>
+<p><strong>Python Test Example</strong>:
+.. code-block:: python</p>
+<blockquote>
+<div><p>import pytest
+from simulation.Network import Network, Node
+from simulation.Hardware import LightSource</p>
+<dl>
+<dt>class TestNetwork:</dt><dd><dl>
+<dt>def setup_method(self):</dt><dd><p>“””Set up test fixtures.”””
+self.network = Network()
+self.node1 = self.network.add_node(‘Alice’)
+self.node2 = self.network.add_node(‘Bob’)</p>
+</dd>
+<dt>def test_add_node(self):</dt><dd><p>“””Test adding nodes to network.”””
+assert len(self.network.nodes) == 2
+assert ‘Alice’ in self.network.nodes
+assert ‘Bob’ in self.network.nodes</p>
+</dd>
+<dt>def test_connect_nodes(self):</dt><dd><p>“””Test connecting nodes with channel.”””
+self.network.connect_nodes(‘Alice’, ‘Bob’, distance_km=20)
+assert ‘Bob’ in self.node1.connected_links
+assert ‘Alice’ in self.node2.connected_links</p>
+</dd>
+<dt>def test_invalid_node_connection(self):</dt><dd><p>“””Test error handling for invalid connections.”””
+with pytest.raises(ValueError):</p>
+<blockquote>
+<div><p>self.network.connect_nodes(‘Alice’, ‘Charlie’, distance_km=20)</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><a href="#id19"><span class="problematic" id="id20">``</span></a><a href="#id21"><span class="problematic" id="id22">`</span></a></p>
+<p><strong>JavaScript Test Example</strong>:
+.. code-block:: javascript</p>
+<blockquote>
+<div><p>import React from ‘react’;
+import { render, screen, fireEvent } from <a class="reference external" href="mailto:'&#37;&#52;&#48;testing-library/react">‘<span>&#64;</span>testing-library/react</a>’;
+import QKDForm from ‘../QKDForm’;</p>
+<dl>
+<dt>describe(‘QKDForm’, () =&gt; {</dt><dd><p>const mockOnChange = jest.fn();
+const defaultParams = {</p>
+<blockquote>
+<div><p>protocol: ‘dps’,
+cow_monitor_pulse_ratio: 0.1,</p>
+</div></blockquote>
+<p>};</p>
+<dl class="simple">
+<dt>beforeEach(() =&gt; {</dt><dd><p>mockOnChange.mockClear();</p>
+</dd>
+</dl>
+<p>});</p>
+<dl>
+<dt>it(‘renders protocol selection’, () =&gt; {</dt><dd><p>render(&lt;QKDForm params={defaultParams} onChange={mockOnChange} /&gt;);</p>
+<p>expect(screen.getByLabelText(/protocol/i)).toBeInTheDocument();</p>
+</dd>
+</dl>
+<p>});</p>
+<dl>
+<dt>it(‘calls onChange when protocol changes’, () =&gt; {</dt><dd><p>render(&lt;QKDForm params={defaultParams} onChange={mockOnChange} /&gt;);</p>
+<p>const protocolSelect = screen.getByLabelText(/protocol/i);
+fireEvent.change(protocolSelect, { target: { value: ‘cow’ } });</p>
+<dl class="simple">
+<dt>expect(mockOnChange).toHaveBeenCalledWith({</dt><dd><p>…defaultParams,
+protocol: ‘cow’,</p>
+</dd>
+</dl>
+<p>});</p>
+</dd>
+</dl>
+<p>});</p>
+</dd>
+</dl>
+<p>});</p>
+</div></blockquote>
+<p><a href="#id23"><span class="problematic" id="id24">``</span></a><a href="#id25"><span class="problematic" id="id26">`</span></a></p>
+</section>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<section id="documentation-standards">
+<h3>Documentation Standards<a class="headerlink" href="#documentation-standards" title="Link to this heading"></a></h3>
+<p><strong>Code Documentation</strong>:
+- Document all public APIs
+- Include usage examples
+- Explain complex algorithms
+- Provide parameter descriptions</p>
+<p><strong>User Documentation</strong>:
+- Write clear, concise instructions
+- Include screenshots and diagrams
+- Provide troubleshooting guides
+- Keep documentation up-to-date</p>
+<p><strong>API Documentation</strong>:
+- Document all endpoints
+- Include request/response examples
+- Explain error codes
+- Provide authentication details</p>
+</section>
+<section id="writing-documentation">
+<h3>Writing Documentation<a class="headerlink" href="#writing-documentation" title="Link to this heading"></a></h3>
+<p><strong>Sphinx Documentation</strong>:
+.. code-block:: rst</p>
+<blockquote>
+<div><dl class="py function">
+<dt class="sig sig-object py" id="calculate_qber">
+<span class="sig-name descname"><span class="pre">calculate_qber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alice_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bob_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#calculate_qber" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Quantum Bit Error Rate (QBER) using a random sample.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>alice_key</strong> (<em>list</em>) – Alice’s sifted key bits</p></li>
+<li><p><strong>bob_key</strong> (<em>list</em>) – Bob’s sifted key bits</p></li>
+<li><p><strong>dr</strong> (<em>float</em>) – Disclose rate for QBER estimation (0-1)</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Random seed for reproducible results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of (qber, num_errors)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If keys have different lengths</p>
+</dd>
+</dl>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">alice_key</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">bob_key</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">qber</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">calculate_qber</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QBER: </span><span class="si">{</span><span class="n">qber</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, Errors: </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div></blockquote>
+<p><a href="#id27"><span class="problematic" id="id28">``</span></a><a href="#id29"><span class="problematic" id="id30">`</span></a></p>
+<p><strong>README Updates</strong>:
+- Update README.md for significant changes
+- Include installation instructions
+- Provide usage examples
+- List dependencies and requirements</p>
+</section>
+</section>
+<section id="pull-request-process">
+<h2>Pull Request Process<a class="headerlink" href="#pull-request-process" title="Link to this heading"></a></h2>
+<section id="creating-a-pull-request">
+<h3>Creating a Pull Request<a class="headerlink" href="#creating-a-pull-request" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p><strong>Ensure your code is ready</strong>:
+- All tests pass
+- Code follows style guidelines
+- Documentation is updated
+- No sensitive information is included</p></li>
+<li><p><strong>Create the pull request</strong>:
+- Use a descriptive title
+- Fill out the PR template
+- Link related issues
+- Add appropriate labels</p></li>
+<li><p><strong>PR Template</strong>:
+.. code-block:: markdown</p>
+<blockquote>
+<div><p>## Description
+Brief description of the changes</p>
+<p>## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] Performance improvement
+- [ ] Refactoring</p>
+<p>## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] Manual testing completed</p>
+<p>## Checklist
+- [ ] Code follows style guidelines
+- [ ] Documentation is updated
+- [ ] Tests are added/updated
+- [ ] No breaking changes</p>
+</div></blockquote>
+</li>
+<li><p><strong>Respond to feedback</strong>:
+- Address review comments
+- Make requested changes
+- Update PR as needed
+- Be responsive to maintainers</p></li>
+</ol>
+</section>
+<section id="review-process">
+<h3>Review Process<a class="headerlink" href="#review-process" title="Link to this heading"></a></h3>
+<p><strong>Code Review Checklist</strong>:
+- [ ] Code follows style guidelines
+- [ ] Tests are comprehensive
+- [ ] Documentation is updated
+- [ ] No security issues
+- [ ] Performance is acceptable
+- [ ] Error handling is appropriate
+- [ ] No breaking changes (unless intended)</p>
+<p><strong>Review Guidelines</strong>:
+- Be constructive and respectful
+- Focus on code quality and correctness
+- Suggest improvements when possible
+- Approve when criteria are met</p>
+</section>
+</section>
+<section id="areas-for-contribution">
+<h2>Areas for Contribution<a class="headerlink" href="#areas-for-contribution" title="Link to this heading"></a></h2>
+<section id="new-features">
+<h3>New Features<a class="headerlink" href="#new-features" title="Link to this heading"></a></h3>
+<p><strong>Protocol Implementations</strong>:
+- Implement new QKD protocols
+- Add protocol-specific parameters
+- Create protocol comparison tools
+- Develop protocol optimization algorithms</p>
+<p><strong>Hardware Models</strong>:
+- Add new optical component models
+- Improve existing component accuracy
+- Add realistic noise models
+- Implement hardware calibration tools</p>
+<p><strong>Network Features</strong>:
+- Add new network topologies
+- Implement routing algorithms
+- Add network optimization tools
+- Create network visualization features</p>
+<p><strong>Analysis Tools</strong>:
+- Add statistical analysis tools
+- Implement performance optimization
+- Create security analysis tools
+- Add data export/import features</p>
+</section>
+<section id="bug-fixes">
+<h3>Bug Fixes<a class="headerlink" href="#bug-fixes" title="Link to this heading"></a></h3>
+<p><strong>Common Issues</strong>:
+- Simulation accuracy problems
+- Performance bottlenecks
+- User interface bugs
+- Documentation errors
+- Test failures</p>
+<p><strong>Reporting Bugs</strong>:
+- Use the issue template
+- Provide detailed reproduction steps
+- Include error messages and logs
+- Describe expected vs. actual behavior</p>
+</section>
+<section id="id31">
+<h3>Documentation<a class="headerlink" href="#id31" title="Link to this heading"></a></h3>
+<p><strong>User Documentation</strong>:
+- Improve user guides
+- Add tutorials and examples
+- Create troubleshooting guides
+- Update API documentation</p>
+<p><strong>Developer Documentation</strong>:
+- Improve code documentation
+- Add architecture diagrams
+- Create development guides
+- Update contribution guidelines</p>
+<p><strong>Research Documentation</strong>:
+- Document protocol implementations
+- Add mathematical derivations
+- Create validation studies
+- Document performance analysis</p>
+</section>
+<section id="id32">
+<h3>Testing<a class="headerlink" href="#id32" title="Link to this heading"></a></h3>
+<p><strong>Test Coverage</strong>:
+- Add missing unit tests
+- Improve integration tests
+- Add performance tests
+- Create automated testing</p>
+<p><strong>Test Infrastructure</strong>:
+- Improve test frameworks
+- Add continuous integration
+- Create test data generators
+- Implement test reporting</p>
+</section>
+</section>
+<section id="community-guidelines">
+<h2>Community Guidelines<a class="headerlink" href="#community-guidelines" title="Link to this heading"></a></h2>
+<section id="code-of-conduct">
+<h3>Code of Conduct<a class="headerlink" href="#code-of-conduct" title="Link to this heading"></a></h3>
+<p><strong>Our Standards</strong>:
+- Be respectful and inclusive
+- Use welcoming and inclusive language
+- Be collaborative and constructive
+- Focus on what is best for the community</p>
+<p><strong>Unacceptable Behavior</strong>:
+- Harassment or discrimination
+- Trolling or insulting comments
+- Publishing others’ private information
+- Other conduct inappropriate for a professional environment</p>
+</section>
+<section id="communication">
+<h3>Communication<a class="headerlink" href="#communication" title="Link to this heading"></a></h3>
+<p><strong>GitHub Issues</strong>:
+- Use issue templates
+- Be clear and specific
+- Provide context and examples
+- Respond to maintainer questions</p>
+<p><strong>Discussion Forum</strong>:
+- Be respectful and constructive
+- Help other community members
+- Share knowledge and experiences
+- Follow forum guidelines</p>
+<p><strong>Pull Requests</strong>:
+- Be responsive to feedback
+- Explain your changes clearly
+- Help with testing and review
+- Follow contribution guidelines</p>
+</section>
+</section>
+<section id="getting-help">
+<h2>Getting Help<a class="headerlink" href="#getting-help" title="Link to this heading"></a></h2>
+<p><strong>For Contributors</strong>:
+- Read the documentation thoroughly
+- Check existing issues and discussions
+- Ask questions in the discussion forum
+- Contact maintainers for guidance</p>
+<p><strong>For Maintainers</strong>:
+- Be responsive to community questions
+- Provide clear feedback on contributions
+- Help new contributors get started
+- Maintain project quality and standards</p>
+<p><strong>Resources</strong>:
+- Project documentation
+- GitHub discussions
+- Issue tracker
+- Mailing list (if available)</p>
+</section>
+<section id="recognition">
+<h2>Recognition<a class="headerlink" href="#recognition" title="Link to this heading"></a></h2>
+<p><strong>Contributor Recognition</strong>:
+- Contributors are listed in CONTRIBUTORS.md
+- Significant contributions are acknowledged in releases
+- Contributors may be invited to join the maintainer team
+- Community recognition for valuable contributions</p>
+<p><strong>Types of Contributions</strong>:
+- Code contributions
+- Documentation improvements
+- Bug reports and fixes
+- Feature suggestions
+- Community support
+- Testing and validation</p>
+<p>Thank you for contributing to the QKD Simulation Platform! Your contributions help make this project better for everyone in the quantum communication community.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="protocols.html" class="btn btn-neutral float-left" title="QKD Protocols" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

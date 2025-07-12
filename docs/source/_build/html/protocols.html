@@ -1,0 +1,922 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QKD Protocols &mdash; qkdProtocols 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to QKD Simulation Platform" href="contributing.html" />
+    <link rel="prev" title="Simulation Models" href="simulation-models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            qkdProtocols
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick-start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user-guide.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api-reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-models.html">Simulation Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">QKD Protocols</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dps-qkd-differential-phase-shift">DPS-QKD (Differential Phase Shift)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#theory">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mathematical-model">Mathematical Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#usage-example">Usage Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance-characteristics">Performance Characteristics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cow-qkd-coherent-one-way">COW-QKD (Coherent One-Way)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id17">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19">Mathematical Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id33">Usage Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id38">Performance Characteristics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bb84-qkd-bennett-brassard-1984">BB84-QKD (Bennett-Brassard 1984)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id39">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id40">Theory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id41">Mathematical Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id42">Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id55">Usage Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id60">Performance Characteristics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#protocol-comparison">Protocol Comparison</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#performance-metrics">Performance Metrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-case-recommendations">Use Case Recommendations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-considerations">Implementation Considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#future-protocol-extensions">Future Protocol Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to QKD Simulation Platform</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">qkdProtocols</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">QKD Protocols</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/protocols.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="qkd-protocols">
+<h1>QKD Protocols<a class="headerlink" href="#qkd-protocols" title="Link to this heading"></a></h1>
+<p>This section provides comprehensive documentation of the three QKD protocols implemented in the platform: DPS-QKD, COW-QKD, and BB84-QKD.</p>
+<section id="dps-qkd-differential-phase-shift">
+<h2>DPS-QKD (Differential Phase Shift)<a class="headerlink" href="#dps-qkd-differential-phase-shift" title="Link to this heading"></a></h2>
+<section id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h3>
+<p>Differential Phase Shift Quantum Key Distribution (DPS-QKD) is a protocol that encodes information in the phase difference between consecutive optical pulses. It was developed to provide a simple and robust implementation of QKD using standard optical components.</p>
+</section>
+<section id="theory">
+<h3>Theory<a class="headerlink" href="#theory" title="Link to this heading"></a></h3>
+<p><strong>Principle</strong>: Information is encoded in the phase difference between consecutive pulses rather than the absolute phase of individual pulses.</p>
+<p><strong>Encoding Scheme</strong>:
+- <strong>Bit 0</strong>: Phase difference <span class="math notranslate nohighlight">\(\Delta\phi = 0\)</span>
+- <strong>Bit 1</strong>: Phase difference <span class="math notranslate nohighlight">\(\Delta\phi = \pi\)</span></p>
+<p><strong>Detection Method</strong>: Mach-Zehnder interferometer with two detectors (DM1 and DM2)</p>
+<p><strong>Key Features</strong>:
+- Simple phase encoding
+- Robust against phase drift
+- Uses standard telecom components
+- High key rate potential</p>
+</section>
+<section id="mathematical-model">
+<h3>Mathematical Model<a class="headerlink" href="#mathematical-model" title="Link to this heading"></a></h3>
+<p><strong>Phase Encoding</strong>:
+For pulse pair <span class="math notranslate nohighlight">\((n-1, n)\)</span>:
+- Random bit <span class="math notranslate nohighlight">\(b \in \{0,1\}\)</span>
+- Phase difference <span class="math notranslate nohighlight">\(\Delta\phi_n = b \cdot \pi\)</span>
+- Absolute phase <span class="math notranslate nohighlight">\(\phi_n = \phi_{n-1} + \Delta\phi_n\)</span></p>
+<p><strong>Interference Measurement</strong>:
+The Mach-Zehnder interferometer measures the phase difference:
+- Detector 1 (DM1) click probability: <span class="math notranslate nohighlight">\(P_1 = \cos^2(\Delta\phi/2)\)</span>
+- Detector 2 (DM2) click probability: <span class="math notranslate nohighlight">\(P_2 = \sin^2(\Delta\phi/2)\)</span></p>
+<p><strong>Bit Inference</strong>:
+- DM1 click only: <span class="math notranslate nohighlight">\(b_{inferred} = 0\)</span>
+- DM2 click only: <span class="math notranslate nohighlight">\(b_{inferred} = 1\)</span>
+- Both or neither click: inconclusive measurement</p>
+</section>
+<section id="implementation">
+<h3>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h3>
+<p>The DPS-QKD implementation is split between sender and receiver classes:</p>
+<p><strong>Sender Implementation</strong> (<a class="reference internal" href="api-reference.html#simulation.Sender.SenderDPS" title="simulation.Sender.SenderDPS"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Sender.SenderDPS</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SenderDPS</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">avg_photon_number</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">avg_photon_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase_modulator</span> <span class="o">=</span> <span class="n">PhaseModulator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_bits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_sent_phase</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_and_send_pulse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_slot</span><span class="p">):</span>
+        <span class="n">photon_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_sent_phase</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># First pulse - random phase</span>
+            <span class="n">modulated_phase</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
+            <span class="n">current_secret_bit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Encode bit in phase difference</span>
+            <span class="n">current_secret_bit</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_bits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_secret_bit</span><span class="p">)</span>
+            <span class="n">desired_phase_difference</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">current_secret_bit</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+            <span class="n">modulated_phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase_modulator</span><span class="o">.</span><span class="n">modulate_phase</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_sent_phase</span><span class="p">,</span> <span class="n">desired_phase_difference</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_sent_phase</span> <span class="o">=</span> <span class="n">modulated_phase</span>
+        <span class="k">return</span> <span class="n">modulated_phase</span><span class="p">,</span> <span class="n">photon_count</span>
+</pre></div>
+</div>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></p>
+<p><strong>Receiver Implementation</strong> (<a class="reference internal" href="api-reference.html#simulation.Receiver.ReceiverDPS" title="simulation.Receiver.ReceiverDPS"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Receiver.ReceiverDPS</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ReceiverDPS</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector_efficiency</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mzi</span> <span class="o">=</span> <span class="n">MachZehnderInterferometer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detector_dm1</span> <span class="o">=</span> <span class="n">SinglePhotonDetector</span><span class="p">(</span><span class="n">detector_efficiency</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detector_dm2</span> <span class="o">=</span> <span class="n">SinglePhotonDetector</span><span class="p">(</span><span class="n">detector_efficiency</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">receive_and_measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_slot</span><span class="p">,</span> <span class="n">current_pulse_photons</span><span class="p">,</span>
+                          <span class="n">current_pulse_phase</span><span class="p">,</span> <span class="n">previous_pulse_photons</span><span class="p">,</span>
+                          <span class="n">previous_pulse_phase</span><span class="p">):</span>
+        <span class="c1"># Calculate interference probabilities</span>
+        <span class="n">prob_dm1</span><span class="p">,</span> <span class="n">prob_dm2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mzi</span><span class="o">.</span><span class="n">interfere_pulses</span><span class="p">(</span>
+            <span class="n">previous_pulse_phase</span><span class="p">,</span> <span class="n">current_pulse_phase</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Simulate detection</span>
+        <span class="n">click_dm1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector_dm1</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">prob_dm1</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">click_dm2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector_dm2</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">prob_dm2</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Infer bit</span>
+        <span class="k">if</span> <span class="n">click_dm1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">click_dm2</span><span class="p">:</span>
+            <span class="n">bob_bit</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">click_dm2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">click_dm1</span><span class="p">:</span>
+            <span class="n">bob_bit</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bob_bit</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Inconclusive</span>
+
+        <span class="k">return</span> <span class="n">click_dm1</span><span class="p">,</span> <span class="n">click_dm2</span><span class="p">,</span> <span class="n">measured_phase_diff</span><span class="p">,</span> <span class="n">bob_bit</span>
+</pre></div>
+</div>
+<p><a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+<p><strong>Key Generation Process</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_and_share_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_node</span><span class="p">,</span> <span class="n">num_pulses</span><span class="p">,</span>
+                         <span class="n">pulse_repetition_rate_ns</span><span class="p">,</span> <span class="n">phase_flip_prob</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="c1"># Generate pulse train</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_pulses</span><span class="p">):</span>
+        <span class="n">time_slot</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">pulse_repetition_rate_ns</span>
+        <span class="n">modulated_phase</span><span class="p">,</span> <span class="n">photon_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prepare_and_send_pulse</span><span class="p">(</span><span class="n">time_slot</span><span class="p">)</span>
+
+    <span class="c1"># Transmit through channel</span>
+    <span class="n">channel_processed_pulses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pulse</span> <span class="ow">in</span> <span class="n">alice_pulses_sent_info</span><span class="p">:</span>
+        <span class="n">received_photons</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">transmit_pulse</span><span class="p">(</span><span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;photon_count&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Apply phase flip noise</span>
+        <span class="n">modulated_phase</span> <span class="o">=</span> <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;modulated_phase&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">phase_flip_prob</span><span class="p">:</span>
+            <span class="n">modulated_phase</span> <span class="o">=</span> <span class="p">(</span><span class="n">modulated_phase</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="n">channel_processed_pulses</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;received_photon_count&#39;</span><span class="p">:</span> <span class="n">received_photons</span><span class="p">,</span>
+            <span class="s1">&#39;modulated_phase&#39;</span><span class="p">:</span> <span class="n">modulated_phase</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Bob&#39;s measurements</span>
+    <span class="n">bob_clicks_and_inferred_bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">current_pulse</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">channel_processed_pulses</span><span class="p">):</span>
+        <span class="n">previous_pulse</span> <span class="o">=</span> <span class="n">channel_processed_pulses</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">dummy_pulse</span>
+
+        <span class="n">click_dm1</span><span class="p">,</span> <span class="n">click_dm2</span><span class="p">,</span> <span class="n">measured_phase_diff</span><span class="p">,</span> <span class="n">bob_bit</span> <span class="o">=</span> \
+            <span class="n">target_node</span><span class="o">.</span><span class="n">receive_and_measure</span><span class="p">(</span>
+                <span class="n">current_pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+                <span class="n">current_pulse</span><span class="p">[</span><span class="s1">&#39;received_photon_count&#39;</span><span class="p">],</span>
+                <span class="n">current_pulse</span><span class="p">[</span><span class="s1">&#39;modulated_phase&#39;</span><span class="p">],</span>
+                <span class="n">previous_pulse</span><span class="p">[</span><span class="s1">&#39;received_photon_count&#39;</span><span class="p">],</span>
+                <span class="n">previous_pulse</span><span class="p">[</span><span class="s1">&#39;modulated_phase&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">bob_clicks_and_inferred_bits</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">current_pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;click_dm1&#39;</span><span class="p">:</span> <span class="n">click_dm1</span><span class="p">,</span>
+            <span class="s1">&#39;click_dm2&#39;</span><span class="p">:</span> <span class="n">click_dm2</span><span class="p">,</span>
+            <span class="s1">&#39;measured_phase_diff&#39;</span><span class="p">:</span> <span class="n">measured_phase_diff</span><span class="p">,</span>
+            <span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">:</span> <span class="n">bob_bit</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Sifting process</span>
+    <span class="n">alice_sifted_key</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bob_sifted_key</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_pulses_sent_info</span><span class="p">)):</span>
+        <span class="n">alice_pn_minus_1</span> <span class="o">=</span> <span class="n">alice_pulses_sent_info</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">alice_pn</span> <span class="o">=</span> <span class="n">alice_pulses_sent_info</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="n">bob_measurement</span> <span class="o">=</span> <span class="n">bob_clicks_and_inferred_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">bob_measurement</span><span class="p">[</span><span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Calculate Alice&#39;s intended bit</span>
+            <span class="n">alice_intended_delta_phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">alice_pn</span><span class="p">[</span><span class="s1">&#39;modulated_phase&#39;</span><span class="p">]</span> <span class="o">-</span>
+                                      <span class="n">alice_pn_minus_1</span><span class="p">[</span><span class="s1">&#39;modulated_phase&#39;</span><span class="p">])</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">alice_intended_delta_phi</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
+                <span class="n">alice_intended_delta_phi</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+
+            <span class="n">alice_intended_bit</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">alice_intended_delta_phi</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
+
+            <span class="n">alice_sifted_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alice_intended_bit</span><span class="p">)</span>
+            <span class="n">bob_sifted_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bob_measurement</span><span class="p">[</span><span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">alice_sifted_key</span><span class="p">,</span> <span class="n">bob_sifted_key</span>
+</pre></div>
+</div>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a></p>
+</section>
+<section id="usage-example">
+<h3>Usage Example<a class="headerlink" href="#usage-example" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">simulation.Network</span><span class="w"> </span><span class="kn">import</span> <span class="n">Network</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">main</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_qber</span><span class="p">,</span> <span class="n">postprocessing</span>
+
+<span class="c1"># Create network</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="n">alice</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="n">avg_photon_number</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">bob</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">detector_efficiency</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">connect_nodes</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">distance_km</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Generate key</span>
+<span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="n">generate_and_share_key</span><span class="p">(</span>
+    <span class="n">bob</span><span class="p">,</span> <span class="n">num_pulses</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">pulse_repetition_rate_ns</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">phase_flip_prob</span><span class="o">=</span><span class="mf">0.05</span>
+<span class="p">)</span>
+
+<span class="c1"># Analyze results</span>
+<span class="n">qber</span><span class="p">,</span> <span class="n">num_errors</span> <span class="o">=</span> <span class="n">calculate_qber</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span>
+<span class="n">final_key_len</span><span class="p">,</span> <span class="n">postproc</span> <span class="o">=</span> <span class="n">postprocessing</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">),</span> <span class="n">qber</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QBER: </span><span class="si">{</span><span class="n">qber</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sifted key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final key length: </span><span class="si">{</span><span class="n">final_key_len</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+</section>
+<section id="performance-characteristics">
+<h3>Performance Characteristics<a class="headerlink" href="#performance-characteristics" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Sifting Efficiency</strong>: ~25% of raw bits</p></li>
+<li><p><strong>QBER Range</strong>: 3-11% for practical systems</p></li>
+<li><p><strong>Key Rate</strong>: High potential due to simple encoding</p></li>
+<li><p><strong>Security</strong>: Based on quantum interference</p></li>
+<li><p><strong>Hardware Requirements</strong>: Standard telecom components</p></li>
+</ul>
+</section>
+</section>
+<section id="cow-qkd-coherent-one-way">
+<h2>COW-QKD (Coherent One-Way)<a class="headerlink" href="#cow-qkd-coherent-one-way" title="Link to this heading"></a></h2>
+<section id="id17">
+<h3>Overview<a class="headerlink" href="#id17" title="Link to this heading"></a></h3>
+<p>Coherent One-Way Quantum Key Distribution (COW-QKD) is a protocol that uses intensity modulation to encode information and includes monitoring pulses for eavesdropping detection. It was designed to be simple, robust, and secure against various attacks.</p>
+</section>
+<section id="id18">
+<h3>Theory<a class="headerlink" href="#id18" title="Link to this heading"></a></h3>
+<p><strong>Principle</strong>: Information is encoded in the intensity of optical pulses, with monitoring pulses used to detect eavesdropping attempts.</p>
+<p><strong>Encoding Scheme</strong>:
+- <strong>Bit 0</strong>: Vacuum pulse followed by coherent pulse (intensity <span class="math notranslate nohighlight">\(I_0\)</span> then <span class="math notranslate nohighlight">\(I_1\)</span>)
+- <strong>Bit 1</strong>: Coherent pulse followed by vacuum pulse (intensity <span class="math notranslate nohighlight">\(I_1\)</span> then <span class="math notranslate nohighlight">\(I_0\)</span>)
+- <strong>Monitoring</strong>: Pairs of coherent pulses for eavesdropping detection</p>
+<p><strong>Detection Method</strong>: Single photon detector with intensity monitoring</p>
+<p><strong>Key Features</strong>:
+- Simple intensity modulation
+- Built-in eavesdropping detection
+- Robust against various attacks
+- High key rate potential</p>
+</section>
+<section id="id19">
+<h3>Mathematical Model<a class="headerlink" href="#id19" title="Link to this heading"></a></h3>
+<p><strong>Pulse Types</strong>:
+- <strong>Data Pulse 0</strong>: <span class="math notranslate nohighlight">\(I_0 = \mu_{off}\)</span>, <span class="math notranslate nohighlight">\(I_1 = \mu_{on}\)</span>
+- <strong>Data Pulse 1</strong>: <span class="math notranslate nohighlight">\(I_0 = \mu_{on}\)</span>, <span class="math notranslate nohighlight">\(I_1 = \mu_{off}\)</span>
+- <strong>Monitoring Pulse</strong>: <span class="math notranslate nohighlight">\(I_0 = \mu_{on}\)</span>, <span class="math notranslate nohighlight">\(I_1 = \mu_{on}\)</span></p>
+<p><strong>Detection Model</strong>:
+- Click probability: <span class="math notranslate nohighlight">\(P_{click} = 1 - e^{-\eta I}\)</span>
+- Where <span class="math notranslate nohighlight">\(\eta\)</span> is detector efficiency and <span class="math notranslate nohighlight">\(I\)</span> is intensity</p>
+<p><strong>Sifting Process</strong>:
+- Keep bit if both Alice and Bob identify pulse as data
+- Discard if either identifies as monitoring
+- Check monitoring pulses for eavesdropping detection</p>
+</section>
+<section id="id20">
+<h3>Implementation<a class="headerlink" href="#id20" title="Link to this heading"></a></h3>
+<p><strong>Sender Implementation</strong> (<a class="reference internal" href="api-reference.html#simulation.Sender.SenderCOW" title="simulation.Sender.SenderCOW"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Sender.SenderCOW</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SenderCOW</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">avg_photon_number</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">monitor_pulse_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                 <span class="n">extinction_ratio_db</span><span class="o">=</span><span class="mf">20.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">avg_photon_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intensity_modulator</span> <span class="o">=</span> <span class="n">IntensityModulator</span><span class="p">(</span><span class="n">extinction_ratio_db</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">avg_photon_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitor_pulse_ratio</span> <span class="o">=</span> <span class="n">monitor_pulse_ratio</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_pulse_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_total_pulses</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_bits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">num_pairs</span> <span class="o">=</span> <span class="n">num_total_pulses</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">time_slot</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">mu_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensity_modulator</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">)</span>
+        <span class="n">mu_off</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">intensity_modulator</span><span class="o">.</span><span class="n">modulate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_pairs</span><span class="p">):</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor_pulse_ratio</span><span class="p">:</span>
+                <span class="c1"># Monitoring pulse pair</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span><span class="p">,</span>
+                        <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">(</span><span class="n">mu_on</span><span class="p">),</span>
+                        <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                        <span class="s1">&#39;intended_bit&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="s1">&#39;monitor_first&#39;</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">(</span><span class="n">mu_on</span><span class="p">),</span>
+                        <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                        <span class="s1">&#39;intended_bit&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="s1">&#39;monitor_second&#39;</span>
+                    <span class="p">}</span>
+                <span class="p">])</span>
+                <span class="n">time_slot</span> <span class="o">+=</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Data pulse pair</span>
+                <span class="n">bit</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_bits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># Vacuum then coherent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                        <span class="p">{</span>
+                            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span><span class="p">,</span>
+                            <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">(</span><span class="n">mu_off</span><span class="p">),</span>
+                            <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                            <span class="s1">&#39;intended_bit&#39;</span><span class="p">:</span> <span class="n">bit</span><span class="p">,</span>
+                            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="s1">&#39;data_first&#39;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">(</span><span class="n">mu_on</span><span class="p">),</span>
+                            <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                            <span class="s1">&#39;intended_bit&#39;</span><span class="p">:</span> <span class="n">bit</span><span class="p">,</span>
+                            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="s1">&#39;data_second&#39;</span>
+                        <span class="p">}</span>
+                    <span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Coherent then vacuum</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+                        <span class="p">{</span>
+                            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span><span class="p">,</span>
+                            <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">(</span><span class="n">mu_on</span><span class="p">),</span>
+                            <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                            <span class="s1">&#39;intended_bit&#39;</span><span class="p">:</span> <span class="n">bit</span><span class="p">,</span>
+                            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="s1">&#39;data_first&#39;</span>
+                        <span class="p">},</span>
+                        <span class="p">{</span>
+                            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">(</span><span class="n">mu_off</span><span class="p">),</span>
+                            <span class="s1">&#39;phase&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                            <span class="s1">&#39;intended_bit&#39;</span><span class="p">:</span> <span class="n">bit</span><span class="p">,</span>
+                            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="s1">&#39;data_second&#39;</span>
+                        <span class="p">}</span>
+                    <span class="p">])</span>
+                <span class="n">time_slot</span> <span class="o">+=</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span>
+</pre></div>
+</div>
+<p><a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
+<p><strong>Receiver Implementation</strong> (<a class="reference internal" href="api-reference.html#simulation.Receiver.ReceiverCOW" title="simulation.Receiver.ReceiverCOW"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Receiver.ReceiverCOW</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ReceiverCOW</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector_efficiency</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">,</span>
+                 <span class="n">detection_threshold_photons</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_detector</span> <span class="o">=</span> <span class="n">SinglePhotonDetector</span><span class="p">(</span><span class="n">detector_efficiency</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detection_threshold_photons</span> <span class="o">=</span> <span class="n">detection_threshold_photons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">received_pulses_info</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">measure_pulse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_slot</span><span class="p">,</span> <span class="n">incident_photons</span><span class="p">,</span> <span class="n">pulse_type</span><span class="p">):</span>
+        <span class="n">click</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">incident_photons</span><span class="p">)</span>
+        <span class="n">bob_inferred_bit</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">is_monitoring_click</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">pulse_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">):</span>
+            <span class="c1"># Data pulse - infer bit based on click</span>
+            <span class="k">if</span> <span class="n">click</span><span class="p">:</span>
+                <span class="n">bob_inferred_bit</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bob_inferred_bit</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="n">pulse_type</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;monitor&#39;</span><span class="p">):</span>
+            <span class="c1"># Monitoring pulse - check for eavesdropping</span>
+            <span class="k">if</span> <span class="n">click</span><span class="p">:</span>
+                <span class="n">is_monitoring_click</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">received_pulses_info</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span><span class="p">,</span>
+            <span class="s1">&#39;incident_photons&#39;</span><span class="p">:</span> <span class="n">incident_photons</span><span class="p">,</span>
+            <span class="s1">&#39;click&#39;</span><span class="p">:</span> <span class="n">click</span><span class="p">,</span>
+            <span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">:</span> <span class="n">bob_inferred_bit</span><span class="p">,</span>
+            <span class="s1">&#39;is_monitoring_click&#39;</span><span class="p">:</span> <span class="n">is_monitoring_click</span><span class="p">,</span>
+            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="n">pulse_type</span>
+        <span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">click</span><span class="p">,</span> <span class="n">bob_inferred_bit</span><span class="p">,</span> <span class="n">is_monitoring_click</span>
+</pre></div>
+</div>
+<p><a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a></p>
+<p><strong>Key Generation Process</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_and_share_key_cow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_node</span><span class="p">,</span> <span class="n">num_pulses</span><span class="p">,</span>
+                             <span class="n">pulse_repetition_rate_ns</span><span class="p">,</span> <span class="n">monitor_pulse_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                             <span class="n">detection_threshold_photons</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">phase_flip_prob</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                             <span class="n">bit_flip_error_prob</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="c1"># Prepare pulse train</span>
+    <span class="n">alice_sent_pulses_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cow_sender</span><span class="o">.</span><span class="n">prepare_pulse_train</span><span class="p">(</span><span class="n">num_pulses</span><span class="p">)</span>
+
+    <span class="c1"># Transmit through channel</span>
+    <span class="n">bob_received_signals</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sent_pulse</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alice_sent_pulses_info</span><span class="p">):</span>
+        <span class="n">received_photons</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">transmit_pulse</span><span class="p">(</span><span class="n">sent_pulse</span><span class="p">[</span><span class="s1">&#39;photon_count&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Apply noise</span>
+        <span class="n">final_phase</span> <span class="o">=</span> <span class="n">sent_pulse</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">phase_flip_prob</span><span class="p">:</span>
+            <span class="n">final_phase</span> <span class="o">=</span> <span class="p">(</span><span class="n">final_phase</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="n">bob_received_signals</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">sent_pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;received_photons&#39;</span><span class="p">:</span> <span class="n">received_photons</span><span class="p">,</span>
+            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="n">sent_pulse</span><span class="p">[</span><span class="s1">&#39;pulse_type&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;final_phase&#39;</span><span class="p">:</span> <span class="n">final_phase</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Bob&#39;s measurements</span>
+    <span class="n">bob_measurements</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">received_signal</span> <span class="ow">in</span> <span class="n">bob_received_signals</span><span class="p">:</span>
+        <span class="n">click</span><span class="p">,</span> <span class="n">bob_inferred_bit</span><span class="p">,</span> <span class="n">is_monitoring_click</span> <span class="o">=</span> \
+            <span class="n">target_node</span><span class="o">.</span><span class="n">cow_receiver</span><span class="o">.</span><span class="n">measure_pulse</span><span class="p">(</span>
+                <span class="n">received_signal</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+                <span class="n">received_signal</span><span class="p">[</span><span class="s1">&#39;received_photons&#39;</span><span class="p">],</span>
+                <span class="n">received_signal</span><span class="p">[</span><span class="s1">&#39;pulse_type&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">bob_measurements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">received_signal</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;click&#39;</span><span class="p">:</span> <span class="n">click</span><span class="p">,</span>
+            <span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">:</span> <span class="n">bob_inferred_bit</span><span class="p">,</span>
+            <span class="s1">&#39;is_monitoring_click&#39;</span><span class="p">:</span> <span class="n">is_monitoring_click</span><span class="p">,</span>
+            <span class="s1">&#39;pulse_type&#39;</span><span class="p">:</span> <span class="n">received_signal</span><span class="p">[</span><span class="s1">&#39;pulse_type&#39;</span><span class="p">]</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Sifting process</span>
+    <span class="n">alice_sifted_key</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bob_sifted_key</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_sent_pulses_info</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_sent_pulses_info</span><span class="p">):</span>
+            <span class="k">break</span>
+
+        <span class="n">pulse1</span> <span class="o">=</span> <span class="n">alice_sent_pulses_info</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">pulse2</span> <span class="o">=</span> <span class="n">alice_sent_pulses_info</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">bob_measurement1</span> <span class="o">=</span> <span class="n">bob_measurements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">bob_measurement2</span> <span class="o">=</span> <span class="n">bob_measurements</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Check if both pulses are data pulses</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">pulse1</span><span class="p">[</span><span class="s1">&#39;pulse_type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="n">pulse2</span><span class="p">[</span><span class="s1">&#39;pulse_type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)):</span>
+
+            <span class="c1"># Check if Bob agrees on data pulses</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">bob_measurement1</span><span class="p">[</span><span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                <span class="n">bob_measurement2</span><span class="p">[</span><span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+
+                <span class="c1"># Apply bit flip error</span>
+                <span class="n">alice_bit</span> <span class="o">=</span> <span class="n">pulse1</span><span class="p">[</span><span class="s1">&#39;intended_bit&#39;</span><span class="p">]</span>
+                <span class="n">bob_bit</span> <span class="o">=</span> <span class="n">bob_measurement1</span><span class="p">[</span><span class="s1">&#39;bob_inferred_bit&#39;</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">bit_flip_error_prob</span><span class="p">:</span>
+                    <span class="n">bob_bit</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">bob_bit</span>
+
+                <span class="n">alice_sifted_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alice_bit</span><span class="p">)</span>
+                <span class="n">bob_sifted_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bob_bit</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">alice_sifted_key</span><span class="p">,</span> <span class="n">bob_sifted_key</span>
+</pre></div>
+</div>
+<p><a href="#id29"><span class="problematic" id="id30">``</span></a><a href="#id31"><span class="problematic" id="id32">`</span></a></p>
+</section>
+<section id="id33">
+<h3>Usage Example<a class="headerlink" href="#id33" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create network</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="n">alice</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="n">avg_photon_number</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">bob</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">detector_efficiency</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">connect_nodes</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">distance_km</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Generate key with COW protocol</span>
+<span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="n">generate_and_share_key_cow</span><span class="p">(</span>
+    <span class="n">bob</span><span class="p">,</span> <span class="n">num_pulses</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">pulse_repetition_rate_ns</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">monitor_pulse_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">detection_threshold_photons</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">phase_flip_prob</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">bit_flip_error_prob</span><span class="o">=</span><span class="mf">0.05</span>
+<span class="p">)</span>
+
+<span class="c1"># Analyze results</span>
+<span class="n">qber</span><span class="p">,</span> <span class="n">num_errors</span> <span class="o">=</span> <span class="n">calculate_qber</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span>
+<span class="n">final_key_len</span><span class="p">,</span> <span class="n">postproc</span> <span class="o">=</span> <span class="n">postprocessing</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">),</span> <span class="n">qber</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;COW-QKD Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QBER: </span><span class="si">{</span><span class="n">qber</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sifted key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final key length: </span><span class="si">{</span><span class="n">final_key_len</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a href="#id34"><span class="problematic" id="id35">``</span></a><a href="#id36"><span class="problematic" id="id37">`</span></a></p>
+</section>
+<section id="id38">
+<h3>Performance Characteristics<a class="headerlink" href="#id38" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Sifting Efficiency</strong>: ~40% of raw bits</p></li>
+<li><p><strong>QBER Range</strong>: 3-10% for practical systems</p></li>
+<li><p><strong>Key Rate</strong>: High due to simple intensity modulation</p></li>
+<li><p><strong>Security</strong>: Built-in eavesdropping detection</p></li>
+<li><p><strong>Hardware Requirements</strong>: Standard optical components</p></li>
+</ul>
+</section>
+</section>
+<section id="bb84-qkd-bennett-brassard-1984">
+<h2>BB84-QKD (Bennett-Brassard 1984)<a class="headerlink" href="#bb84-qkd-bennett-brassard-1984" title="Link to this heading"></a></h2>
+<section id="id39">
+<h3>Overview<a class="headerlink" href="#id39" title="Link to this heading"></a></h3>
+<p>BB84 is the original quantum key distribution protocol, proposed by Bennett and Brassard in 1984. It uses four quantum states in two conjugate bases to achieve secure key distribution based on the principles of quantum mechanics.</p>
+</section>
+<section id="id40">
+<h3>Theory<a class="headerlink" href="#id40" title="Link to this heading"></a></h3>
+<p><strong>Principle</strong>: Information is encoded in quantum states using two conjugate bases, with security based on the quantum uncertainty principle.</p>
+<p><strong>Encoding Scheme</strong>:
+- <strong>Rectilinear Basis (R)</strong>: <span class="math notranslate nohighlight">\(|0\rangle\)</span> (horizontal), <span class="math notranslate nohighlight">\(|1\rangle\)</span> (vertical)
+- <strong>Diagonal Basis (D)</strong>: <span class="math notranslate nohighlight">\(|+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\)</span>, <span class="math notranslate nohighlight">\(|-\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)\)</span></p>
+<p><strong>Detection Method</strong>: Single photon detector with basis switching</p>
+<p><strong>Key Features</strong>:
+- Original QKD protocol
+- Information-theoretic security
+- Basis reconciliation
+- Proven security against various attacks</p>
+</section>
+<section id="id41">
+<h3>Mathematical Model<a class="headerlink" href="#id41" title="Link to this heading"></a></h3>
+<p><strong>State Preparation</strong>:
+- Random bit <span class="math notranslate nohighlight">\(b \in \{0,1\}\)</span>
+- Random basis <span class="math notranslate nohighlight">\(B \in \{R,D\}\)</span>
+- State: <span class="math notranslate nohighlight">\(|\psi\rangle = |b\rangle_B\)</span></p>
+<p><strong>Measurement</strong>:
+- Random basis choice <span class="math notranslate nohighlight">\(B' \in \{R,D\}\)</span>
+- Measurement outcome: <span class="math notranslate nohighlight">\(b' \in \{0,1\}\)</span> or no detection</p>
+<p><strong>Sifting Process</strong>:
+- Keep bit if <span class="math notranslate nohighlight">\(B = B'\)</span> and detection occurred
+- Discard if <span class="math notranslate nohighlight">\(B \neq B'\)</span> or no detection</p>
+<p><strong>Security</strong>: Based on quantum uncertainty principle - measuring in wrong basis disturbs the state</p>
+</section>
+<section id="id42">
+<h3>Implementation<a class="headerlink" href="#id42" title="Link to this heading"></a></h3>
+<p><strong>Sender Implementation</strong> (<a class="reference internal" href="api-reference.html#simulation.Sender.SenderBB84" title="simulation.Sender.SenderBB84"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Sender.SenderBB84</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SenderBB84</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">avg_photon_number</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">avg_photon_number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_bits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chosen_bases</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_and_send_pulse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_slot</span><span class="p">):</span>
+        <span class="n">chosen_bit</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_bits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chosen_bit</span><span class="p">)</span>
+
+        <span class="n">chosen_basis</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chosen_bases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chosen_basis</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">chosen_basis</span> <span class="o">==</span> <span class="s1">&#39;R&#39;</span><span class="p">:</span>
+            <span class="n">encoded_state</span> <span class="o">=</span> <span class="s1">&#39;|0⟩&#39;</span> <span class="k">if</span> <span class="n">chosen_bit</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;|1⟩&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">encoded_state</span> <span class="o">=</span> <span class="s1">&#39;|+⟩&#39;</span> <span class="k">if</span> <span class="n">chosen_bit</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;|-⟩&#39;</span>
+
+        <span class="n">photon_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">light_source</span><span class="o">.</span><span class="n">generate_single_pulse_photon_count</span><span class="p">()</span>
+
+        <span class="n">pulse_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span><span class="p">,</span>
+            <span class="s1">&#39;photon_count&#39;</span><span class="p">:</span> <span class="n">photon_count</span><span class="p">,</span>
+            <span class="s1">&#39;encoded_state&#39;</span><span class="p">:</span> <span class="n">encoded_state</span><span class="p">,</span>
+            <span class="s1">&#39;chosen_bit&#39;</span><span class="p">:</span> <span class="n">chosen_bit</span><span class="p">,</span>
+            <span class="s1">&#39;chosen_basis&#39;</span><span class="p">:</span> <span class="n">chosen_basis</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sent_pulses_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pulse_info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">encoded_state</span><span class="p">,</span> <span class="n">photon_count</span><span class="p">,</span> <span class="n">chosen_bit</span><span class="p">,</span> <span class="n">chosen_basis</span>
+</pre></div>
+</div>
+<p><a href="#id43"><span class="problematic" id="id44">``</span></a><a href="#id45"><span class="problematic" id="id46">`</span></a></p>
+<p><strong>Receiver Implementation</strong> (<a class="reference internal" href="api-reference.html#simulation.Receiver.ReceiverBB84" title="simulation.Receiver.ReceiverBB84"><code class="xref py py-class docutils literal notranslate"><span class="pre">simulation.Receiver.ReceiverBB84</span></code></a>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ReceiverBB84</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">detector_efficiency</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">SinglePhotonDetector</span><span class="p">(</span><span class="n">detector_efficiency</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_measurements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chosen_bases</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">received_pulses_info</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">receive_and_measure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_slot</span><span class="p">,</span> <span class="n">incident_photons</span><span class="p">,</span> <span class="n">encoded_state</span><span class="p">):</span>
+        <span class="n">chosen_basis</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chosen_bases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chosen_basis</span><span class="p">)</span>
+
+        <span class="n">click_occurred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">incident_photons</span><span class="p">)</span>
+        <span class="n">measured_bit</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">click_occurred</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">chosen_basis</span> <span class="o">==</span> <span class="s1">&#39;R&#39;</span><span class="p">:</span>
+                <span class="c1"># Measure in rectilinear basis</span>
+                <span class="k">if</span> <span class="n">encoded_state</span> <span class="o">==</span> <span class="s1">&#39;|0⟩&#39;</span><span class="p">:</span>
+                    <span class="n">measured_bit</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.02</span> <span class="k">else</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">encoded_state</span> <span class="o">==</span> <span class="s1">&#39;|1⟩&#39;</span><span class="p">:</span>
+                    <span class="n">measured_bit</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.02</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">measured_bit</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Measure in diagonal basis</span>
+                <span class="k">if</span> <span class="n">encoded_state</span> <span class="o">==</span> <span class="s1">&#39;|+⟩&#39;</span><span class="p">:</span>
+                    <span class="n">measured_bit</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.02</span> <span class="k">else</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">encoded_state</span> <span class="o">==</span> <span class="s1">&#39;|-⟩&#39;</span><span class="p">:</span>
+                    <span class="n">measured_bit</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.02</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">measured_bit</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_measurements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">measured_bit</span><span class="p">)</span>
+
+        <span class="n">measurement_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">time_slot</span><span class="p">,</span>
+            <span class="s1">&#39;incident_photons&#39;</span><span class="p">:</span> <span class="n">incident_photons</span><span class="p">,</span>
+            <span class="s1">&#39;encoded_state&#39;</span><span class="p">:</span> <span class="n">encoded_state</span><span class="p">,</span>
+            <span class="s1">&#39;chosen_basis&#39;</span><span class="p">:</span> <span class="n">chosen_basis</span><span class="p">,</span>
+            <span class="s1">&#39;click_occurred&#39;</span><span class="p">:</span> <span class="n">click_occurred</span><span class="p">,</span>
+            <span class="s1">&#39;measured_bit&#39;</span><span class="p">:</span> <span class="n">measured_bit</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">received_pulses_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">measurement_info</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">measured_bit</span><span class="p">,</span> <span class="n">chosen_basis</span><span class="p">,</span> <span class="n">click_occurred</span>
+</pre></div>
+</div>
+<p><a href="#id47"><span class="problematic" id="id48">``</span></a><a href="#id49"><span class="problematic" id="id50">`</span></a></p>
+<p><strong>Key Generation Process</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">generate_and_share_key_bb84</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_node</span><span class="p">,</span> <span class="n">num_pulses</span><span class="p">,</span>
+                              <span class="n">pulse_repetition_rate_ns</span><span class="p">,</span> <span class="n">phase_flip_prob</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="c1"># Generate pulse train</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_pulses</span><span class="p">):</span>
+        <span class="n">time_slot</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">pulse_repetition_rate_ns</span>
+        <span class="n">encoded_state</span><span class="p">,</span> <span class="n">photon_count</span><span class="p">,</span> <span class="n">chosen_bit</span><span class="p">,</span> <span class="n">chosen_basis</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">bb84_sender</span><span class="o">.</span><span class="n">prepare_and_send_pulse</span><span class="p">(</span><span class="n">time_slot</span><span class="p">)</span>
+
+    <span class="c1"># Transmit through channel</span>
+    <span class="n">channel_processed_pulses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pulse</span> <span class="ow">in</span> <span class="n">alice_pulses_sent_info</span><span class="p">:</span>
+        <span class="n">received_photons</span> <span class="o">=</span> <span class="n">channel</span><span class="o">.</span><span class="n">transmit_pulse</span><span class="p">(</span><span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;photon_count&#39;</span><span class="p">])</span>
+
+        <span class="n">channel_processed_pulses</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;received_photon_count&#39;</span><span class="p">:</span> <span class="n">received_photons</span><span class="p">,</span>
+            <span class="s1">&#39;encoded_state&#39;</span><span class="p">:</span> <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;encoded_state&#39;</span><span class="p">]</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Bob&#39;s measurements</span>
+    <span class="n">bob_measurements</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">pulse</span> <span class="ow">in</span> <span class="n">channel_processed_pulses</span><span class="p">:</span>
+        <span class="n">measured_bit</span><span class="p">,</span> <span class="n">chosen_basis</span><span class="p">,</span> <span class="n">click_occurred</span> <span class="o">=</span> \
+            <span class="n">target_node</span><span class="o">.</span><span class="n">bb84_receiver</span><span class="o">.</span><span class="n">receive_and_measure</span><span class="p">(</span>
+                <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+                <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;received_photon_count&#39;</span><span class="p">],</span>
+                <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;encoded_state&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">bob_measurements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s1">&#39;time_slot&#39;</span><span class="p">:</span> <span class="n">pulse</span><span class="p">[</span><span class="s1">&#39;time_slot&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;measured_bit&#39;</span><span class="p">:</span> <span class="n">measured_bit</span><span class="p">,</span>
+            <span class="s1">&#39;chosen_basis&#39;</span><span class="p">:</span> <span class="n">chosen_basis</span><span class="p">,</span>
+            <span class="s1">&#39;click_occurred&#39;</span><span class="p">:</span> <span class="n">click_occurred</span>
+        <span class="p">})</span>
+
+    <span class="c1"># Sifting process</span>
+    <span class="n">alice_sifted_key</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bob_sifted_key</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">alice_pulse</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">alice_pulses_sent_info</span><span class="p">):</span>
+        <span class="n">bob_measurement</span> <span class="o">=</span> <span class="n">bob_measurements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="c1"># Check if bases match and detection occurred</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">alice_pulse</span><span class="p">[</span><span class="s1">&#39;chosen_basis&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">bob_measurement</span><span class="p">[</span><span class="s1">&#39;chosen_basis&#39;</span><span class="p">]</span> <span class="ow">and</span>
+            <span class="n">bob_measurement</span><span class="p">[</span><span class="s1">&#39;click_occurred&#39;</span><span class="p">]):</span>
+
+            <span class="n">alice_sifted_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">alice_pulse</span><span class="p">[</span><span class="s1">&#39;chosen_bit&#39;</span><span class="p">])</span>
+            <span class="n">bob_sifted_key</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bob_measurement</span><span class="p">[</span><span class="s1">&#39;measured_bit&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">alice_sifted_key</span><span class="p">,</span> <span class="n">bob_sifted_key</span>
+</pre></div>
+</div>
+<p><a href="#id51"><span class="problematic" id="id52">``</span></a><a href="#id53"><span class="problematic" id="id54">`</span></a></p>
+</section>
+<section id="id55">
+<h3>Usage Example<a class="headerlink" href="#id55" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create network</span>
+<span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="p">()</span>
+<span class="n">alice</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="n">avg_photon_number</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">bob</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">detector_efficiency</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">dark_count_rate</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+<span class="n">network</span><span class="o">.</span><span class="n">connect_nodes</span><span class="p">(</span><span class="s1">&#39;Alice&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">distance_km</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Generate key with BB84 protocol</span>
+<span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span> <span class="o">=</span> <span class="n">alice</span><span class="o">.</span><span class="n">generate_and_share_key_bb84</span><span class="p">(</span>
+    <span class="n">bob</span><span class="p">,</span> <span class="n">num_pulses</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">pulse_repetition_rate_ns</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">phase_flip_prob</span><span class="o">=</span><span class="mf">0.05</span>
+<span class="p">)</span>
+
+<span class="c1"># Analyze results</span>
+<span class="n">qber</span><span class="p">,</span> <span class="n">num_errors</span> <span class="o">=</span> <span class="n">calculate_qber</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span>
+<span class="n">final_key_len</span><span class="p">,</span> <span class="n">postproc</span> <span class="o">=</span> <span class="n">postprocessing</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">),</span> <span class="n">qber</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BB84-QKD Results:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;QBER: </span><span class="si">{</span><span class="n">qber</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sifted key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final key length: </span><span class="si">{</span><span class="n">final_key_len</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a href="#id56"><span class="problematic" id="id57">``</span></a><a href="#id58"><span class="problematic" id="id59">`</span></a></p>
+</section>
+<section id="id60">
+<h3>Performance Characteristics<a class="headerlink" href="#id60" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Sifting Efficiency</strong>: ~50% of raw bits</p></li>
+<li><p><strong>QBER Range</strong>: 3-11% for practical systems</p></li>
+<li><p><strong>Key Rate</strong>: Moderate due to basis reconciliation</p></li>
+<li><p><strong>Security</strong>: Information-theoretic security</p></li>
+<li><p><strong>Hardware Requirements</strong>: Polarization or phase encoding</p></li>
+</ul>
+</section>
+</section>
+<section id="protocol-comparison">
+<h2>Protocol Comparison<a class="headerlink" href="#protocol-comparison" title="Link to this heading"></a></h2>
+<section id="performance-metrics">
+<h3>Performance Metrics<a class="headerlink" href="#performance-metrics" title="Link to this heading"></a></h3>
+<div class="line-block">
+<div class="line">Protocol | Sifting Efficiency | QBER Range | Key Rate | Security Level | Hardware Complexity |</div>
+</div>
+<p><a href="#id61"><span class="problematic" id="id62">|----------|</span></a>——————-<a href="#id63"><span class="problematic" id="id64">|------------|</span></a>———-<a href="#id65"><span class="problematic" id="id66">|----------------|</span></a>——————-|
+| DPS-QKD  | ~25%              | 3-11%      | High     | High           | Low               |
+| COW-QKD  | ~40%              | 3-10%      | High     | High           | Low               |
+| BB84-QKD | ~50%              | 3-11%      | Moderate | Highest        | Medium            |</p>
+</section>
+<section id="use-case-recommendations">
+<h3>Use Case Recommendations<a class="headerlink" href="#use-case-recommendations" title="Link to this heading"></a></h3>
+<p><strong>DPS-QKD</strong>:
+- High-speed applications
+- Simple hardware requirements
+- Phase-stable environments
+- Cost-sensitive deployments</p>
+<p><strong>COW-QKD</strong>:
+- Security-critical applications
+- Eavesdropping detection required
+- Robust performance needed
+- Monitoring capabilities desired</p>
+<p><strong>BB84-QKD</strong>:
+- Maximum security requirements
+- Research and development
+- Educational purposes
+- Standard QKD implementations</p>
+</section>
+<section id="implementation-considerations">
+<h3>Implementation Considerations<a class="headerlink" href="#implementation-considerations" title="Link to this heading"></a></h3>
+<p><strong>DPS-QKD</strong>:
+- Requires phase stability
+- Sensitive to phase noise
+- Simple implementation
+- High key rate potential</p>
+<p><strong>COW-QKD</strong>:
+- Requires intensity control
+- Monitoring pulse overhead
+- Robust against attacks
+- Built-in security features</p>
+<p><strong>BB84-QKD</strong>:
+- Requires basis switching
+- Basis reconciliation overhead
+- Proven security
+- Standard protocol</p>
+</section>
+</section>
+<section id="future-protocol-extensions">
+<h2>Future Protocol Extensions<a class="headerlink" href="#future-protocol-extensions" title="Link to this heading"></a></h2>
+<p>The platform is designed to easily accommodate new QKD protocols:</p>
+<ol class="arabic simple">
+<li><p><strong>Protocol Interface</strong>: Standard interface for new protocols</p></li>
+<li><p><strong>Modular Design</strong>: Separate sender/receiver implementations</p></li>
+<li><p><strong>Parameter Configuration</strong>: Flexible parameter system</p></li>
+<li><p><strong>Analysis Integration</strong>: Automatic QBER and key rate analysis</p></li>
+</ol>
+<p>Adding a new protocol involves:</p>
+<ol class="arabic simple">
+<li><p>Implementing sender and receiver classes</p></li>
+<li><p>Adding protocol-specific parameters</p></li>
+<li><p>Integrating with the network model</p></li>
+<li><p>Adding frontend support</p></li>
+<li><p>Updating documentation</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="simulation-models.html" class="btn btn-neutral float-left" title="Simulation Models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to QKD Simulation Platform" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Jayesh Patil.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
