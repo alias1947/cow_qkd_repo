@@ -25,7 +25,7 @@ const formatScientific = (value) => {
     return value.toExponential(2);
 };
 
-// Helper to format SKR in k, M, or G units
+ // Helper to format SKR in k, M, or G units
 function formatSKR(value) {
   if (value === undefined || value === null) return 'N/A';
   if (value >= 1e9) return (value / 1e9).toFixed(2) + ' Gbps';
