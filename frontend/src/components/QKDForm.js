@@ -45,7 +45,7 @@ export default function QKDForm({ params, onChange }) {
             label="COW Detection Threshold (Photons)"
             type="number"
             size="small"
-            value={params.cow_detection_threshold_photons}
+            value={params.cow_detection_threshold_photons ?? 1}
             onChange={handleChange}
             sx={{ minWidth: 200 }}
           />
@@ -55,16 +55,6 @@ export default function QKDForm({ params, onChange }) {
             type="number"
             size="small"
             value={params.cow_extinction_ratio_db}
-            onChange={handleChange}
-            sx={{ minWidth: 200 }}
-          />
-          <TextField
-            name="bit_flip_error_prob"
-            label="Bit Flip Error Probability (0-1)"
-            type="number"
-            size="small"
-            inputProps={{ step: 0.01, min: 0, max: 1 }}
-            value={params.bit_flip_error_prob ?? 0.05}
             onChange={handleChange}
             sx={{ minWidth: 200 }}
           />

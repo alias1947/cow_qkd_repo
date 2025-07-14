@@ -59,7 +59,7 @@ def postprocessing(raw_key_length, qber, dr=0.10, error_correction_efficiency=1.
     final_key_length = max(0, int(key_after_pa))
     
     # Warn if QBER is too high for secure key generation
-    if qber > 0.11:  # 11% is typically the upper limit for BB84
+    if qber > 0.10:  # 10% is now the upper limit for all protocols
         print(f"WARNING: QBER ({qber:.4f}) is too high for secure key generation!")
     
     return final_key_length, {
