@@ -88,7 +88,8 @@ def simulate(params: SimParams):
             qber, num_errors = calculate_qber(alice_key, bob_key)
             final_key_len, postproc = postprocessing(len(alice_key), qber)
             total_time_s = (next(n.num_pulses for n in params.nodes if n.id == ch.from_) * next(n.pulse_repetition_rate for n in params.nodes if n.id == ch.from_)) / 1e9 if next(n.num_pulses for n in params.nodes if n.id == ch.from_) > 0 else 0
-            secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
+            # secure_key_rate_bps = final_key_len / total_time_s if total_time_s > 0 else 0
+            secure_key_rate_bps = final_key_len / num_pulses_per_link if num_pulses_per_link > 0 else 0
             theory_compliance = (0.03 <= qber <= 0.10)
             theory_message = "QBER is within the practical range (3-10%) for QKD." if theory_compliance else f"WARNING: QBER ({qber:.4f}) is outside the practical range for QKD."
             
