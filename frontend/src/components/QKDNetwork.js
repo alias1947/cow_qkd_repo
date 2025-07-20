@@ -22,13 +22,19 @@ const defaultNodeParams = () => ({
   num_pulses: 10000,
   pulse_repetition_rate: 1,
 });
-const defaultEdgeParams = () => ({
-  fiber_length_km: 10,
-  fiber_attenuation_db_per_km: 0.2,
-  wavelength_nm: 1550,
-  fiber_type: "standard_single_mode",
-  phase_flip_prob: 0.05,
-});
+const defaultEdgeParams = (protocol) => {
+  const params = {
+    fiber_length_km: 10,
+    fiber_attenuation_db_per_km: 0.2,
+    wavelength_nm: 1550,
+    fiber_type: "standard_single_mode",
+    phase_flip_prob: 0.05,
+  };
+  if (protocol === 'cow') {
+    params.bit_flip_error_prob = 0.05;
+  }
+  return params;
+};
 
 const nodeStyle = {
   background: "#e3f2fd",
@@ -44,7 +50,7 @@ const nodeStyle = {
   color: "#1976d2",
 };
 
-function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSelectedType }) {
+function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSelectedType, protocol }) {
   if (!selected) {
     return (
       <div style={{ padding: 16, color: '#888' }}>
@@ -121,14 +127,26 @@ function Sidebar({ selected, onChange, onRemove, type, edges, setSelected, setSe
           <input type="number" step="0.001" min="0" max="1" value={selected.data.phase_flip_prob}
             onChange={e => onChange({ ...selected, data: { ...selected.data, phase_flip_prob: Number(e.target.value) } })} />
         </label><br/>
-        <Button variant="contained" color="error" sx={{ mt: 1 }} onClick={() => onRemove(selected.id)} startIcon={<DeleteIcon />}>Remove Channel</Button>
+        {protocol === 'cow' && (
+          <>
+            <label>Bit Flip Error Probability (0-1):<br/>
+              <input type="number" step="0.01" min="0" max="1" value={selected.data.bit_flip_error_prob ?? 0.05}
+                onChange={e => onChange({ ...selected, data: { ...selected.data, bit_flip_error_prob: e.target.value === '' ? 0.05 : Number(e.target.value) } })} />
+            </label>
+            <br />
+            <Button variant="contained" color="error" sx={{ mt: 1 }} onClick={() => onRemove(selected.id)} startIcon={<DeleteIcon />}>Remove Channel</Button>
+          </>
+        )}
+        {protocol !== 'cow' && (
+          <Button variant="contained" color="error" sx={{ mt: 1 }} onClick={() => onRemove(selected.id)} startIcon={<DeleteIcon />}>Remove Channel</Button>
+        )}
       </div>
     );
   }
   return null;
 }
 
-export default function QKDNetwork({ onNetworkChange }) {
+export default function QKDNetwork({ onNetworkChange, protocol }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([
     { id: '1', position: { x: 0, y: 100 }, data: { label: '1', ...defaultNodeParams() }, style: nodeStyle },
     { id: '2', position: { x: 200, y: 100 }, data: { label: '2', ...defaultNodeParams() }, style: nodeStyle },
@@ -191,8 +209,8 @@ export default function QKDNetwork({ onNetworkChange }) {
   // On connect (draw edge)
   const onConnect = useCallback((params) => {
     pushHistory();
-    setEdges((eds) => addEdge({ ...params, id: uuidv4().slice(0, 8), data: { ...defaultEdgeParams() }, animated: true, style: { stroke: '#333', strokeWidth: 2 } }, eds));
-  }, [setEdges, pushHistory]);
+    setEdges((eds) => addEdge({ ...params, id: uuidv4().slice(0, 8), data: { ...defaultEdgeParams(protocol) }, animated: true, style: { stroke: '#333', strokeWidth: 2 } }, eds));
+  }, [setEdges, pushHistory, protocol]);
 
   // On element click
   const onElementClick = useCallback((event, element) => {
@@ -230,19 +248,25 @@ export default function QKDNetwork({ onNetworkChange }) {
           num_pulses: n.data.num_pulses,
           pulse_repetition_rate: n.data.pulse_repetition_rate,
         })),
-        channels: edges.map((e, idx) => ({
-          id: idx + 1,
-          from: Number(nodes.find(n => n.id === e.source).data.label),
-          to: Number(nodes.find(n => n.id === e.target).data.label),
-          fiber_length_km: e.data.fiber_length_km,
-          fiber_attenuation_db_per_km: e.data.fiber_attenuation_db_per_km,
-          wavelength_nm: e.data.wavelength_nm,
-          fiber_type: e.data.fiber_type,
-          phase_flip_prob: e.data.phase_flip_prob,
-        })),
+        channels: edges.map((e, idx) => {
+          const channel = {
+            id: idx + 1,
+            from: Number(nodes.find(n => n.id === e.source).data.label),
+            to: Number(nodes.find(n => n.id === e.target).data.label),
+            fiber_length_km: e.data.fiber_length_km,
+            fiber_attenuation_db_per_km: e.data.fiber_attenuation_db_per_km,
+            wavelength_nm: e.data.wavelength_nm,
+            fiber_type: e.data.fiber_type,
+            phase_flip_prob: e.data.phase_flip_prob,
+          };
+          if (protocol === 'cow' && e.data.bit_flip_error_prob !== undefined) {
+            channel.bit_flip_error_prob = e.data.bit_flip_error_prob;
+          }
+          return channel;
+        }),
       });
     }
-  }, [nodes, edges, onNetworkChange]);
+  }, [nodes, edges, onNetworkChange, protocol]);
 
   return (
     <div style={{ display: 'flex', height: 420, marginBottom: 32, border: '1px solid #ccc', borderRadius: 8, background: '#f7fafd' }}>
@@ -275,6 +299,7 @@ export default function QKDNetwork({ onNetworkChange }) {
           edges={edges}
           setSelected={setSelected}
           setSelectedType={setSelectedType}
+          protocol={protocol}
         />
       </div>
     </div>
