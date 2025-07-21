@@ -25,6 +25,14 @@ const formatScientific = (value) => {
     return value.toExponential(2);
 };
 
+ // Helper to format SKR in k, M, or G units
+function formatSKR(value) {
+  if (value === undefined || value === null) return 'N/A';
+  if (value >= 1e9) return (value / 1e9).toFixed(2) + ' Gbps';
+  if (value >= 1e6) return (value / 1e6).toFixed(2) + ' Mbps';
+  if (value >= 1e3) return (value / 1e3).toFixed(2) + ' kbps';
+  return value + ' bps';
+}
 
 export default function Results({ results }) {
   const [tab, setTab] = useState("summary");
@@ -82,7 +90,7 @@ export default function Results({ results }) {
                 <th style={{ padding: 8, textAlign: "left" }}>Protocol</th>
                 <th style={{ padding: 8, textAlign: "left" }}>QBER</th>
                 <th style={{ padding: 8, textAlign: "left" }}>Final Key Len</th>
-                <th style={{ padding: 8, textAlign: "left" }}>SKR (bps)</th>
+                <th style={{ padding: 8, textAlign: "left" }}>SKR</th>
                 <th style={{ padding: 8, textAlign: "left" }}>Compliance</th>
               </tr>
             </thead>
@@ -93,7 +101,7 @@ export default function Results({ results }) {
                   <td style={{ padding: 8 }}>{result.protocol.toUpperCase()}</td>
                   <td style={{ padding: 8 }}>{formatPercent(result.qber)}</td>
                   <td style={{ padding: 8 }}>{result.final_key_length}</td>
-                  <td style={{ padding: 8 }}>{result.secure_key_rate_bps ? result.secure_key_rate_bps.toFixed(2) : 'N/A'}</td>
+                  <td style={{ padding: 8 }}>{formatSKR(result.secure_key_rate_bps)}</td>
                   <td style={{ padding: 8, color: result.theory_compliance ? "green" : "red" }}>
                     {result.theory_message}
                   </td>

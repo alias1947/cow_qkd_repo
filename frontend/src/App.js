@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
 
 function App() {
-  const [params, setParams] = useState({ protocol: "dps", cow_monitor_pulse_ratio: 0.1, cow_detection_threshold_photons: 0, cow_extinction_ratio_db: 20 });
+  const [params, setParams] = useState({ protocol: "dps", cow_monitor_pulse_ratio: 0.1, cow_detection_threshold_photons: 1, cow_extinction_ratio_db: 20 });
   const [network, setNetwork] = useState({ nodes: [ { id: 1, detector_efficiency: 0.9, dark_count_rate: 1e-8, mu: 0.2 }, { id: 2, detector_efficiency: 0.9, dark_count_rate: 1e-8, mu: 0.2 } ], channels: [] });
   const [results, setResults] = useState(null);
   const [networkKey, setNetworkKey] = useState(0); // Key to force network reset
@@ -81,7 +81,7 @@ function App() {
     setParams({ 
       protocol: "dps", 
       cow_monitor_pulse_ratio: 0.1, 
-      cow_detection_threshold_photons: 0, 
+      cow_detection_threshold_photons: 1, 
       cow_extinction_ratio_db: 20 
     });
     setNetwork({ 
@@ -124,7 +124,7 @@ function App() {
         </Typography>
       )}
       
-      <QKDNetwork key={networkKey} onNetworkChange={handleNetworkChange} />
+      <QKDNetwork key={networkKey} onNetworkChange={handleNetworkChange} protocol={params.protocol} />
       <div style={{ display: 'flex', gap: '16px', margin: '16px 0' }}>
         <Button onClick={handleSimulate} variant="contained" color="primary" sx={{ px: 4, py: 1.5, fontWeight: 600, fontSize: 18 }} startIcon={<PlayArrowIcon />}>Run Simulation</Button>
         <Button onClick={handleReset} variant="outlined" color="secondary" sx={{ px: 3, py: 1.5, fontWeight: 600, fontSize: 16 }} startIcon={<RestartAltIcon />}>Reset All</Button>
